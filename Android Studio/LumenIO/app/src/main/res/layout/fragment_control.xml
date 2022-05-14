@@ -19,7 +19,7 @@
             android:layout_width="330dp"
             android:layout_height="24dp"
             android:background="@{Color.argb(profile.brightness, profile.red, profile.green, profile.blue)}"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="#000000"
             android:backgroundTintMode="add"
             android:layout_marginTop="50dp"
             app:layout_constraintBottom_toTopOf="@+id/linearLayoutValues"
