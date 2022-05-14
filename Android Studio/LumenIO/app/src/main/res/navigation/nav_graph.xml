@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/ControlFragment">
+
+    <fragment
+        android:id="@+id/ControlFragment"
+        android:name="it.davidepalladino.lumenio.ControlFragment"
+        android:label="ControlFragment"
+        tools:layout="@layout/fragment_control">
+
+        <action
+            android:id="@+id/action_ControlFragment_to_LibraryFragment"
+            app:destination="@id/LibraryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/LibraryFragment"
+        android:name="it.davidepalladino.lumenio.LibraryFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_library">
+
+        <action
+            android:id="@+id/action_LibraryFragment_to_ControlFragment"
+            app:destination="@id/ControlFragment" />
+    </fragment>
+</navigation>
