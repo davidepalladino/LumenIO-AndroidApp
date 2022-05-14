@@ -15,168 +15,195 @@
         tools:context=".ControlFragment">
 
         <View
-            android:id="@+id/viewColor"
-            android:layout_width="330dp"
-            android:layout_height="24dp"
+            android:id="@+id/sample"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginHorizontal="25dp"
             android:background="@{Color.argb(profile.brightness, profile.red, profile.green, profile.blue)}"
             android:backgroundTint="#000000"
             android:backgroundTintMode="add"
-            android:layout_marginTop="50dp"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayoutValues"
+            android:elevation="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/valuesSet"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TableRow
-            android:id="@+id/linearLayoutValues"
-            android:layout_width="330dp"
-            android:layout_height="24dp"
+            android:id="@+id/valuesSet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="50dp"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewColor"
-            app:layout_constraintBottom_toTopOf="@id/linearLayoutBrightness" >
+            app:layout_constraintTop_toBottomOf="@+id/sample" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:gravity="center" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(profile.brightness)}"
-                    android:layout_column="0"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    tools:text="0" />
+                    android:text="BRT" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(profile.red)}"
-                    android:layout_column="1"
-                    android:layout_weight="1"
-                    android:gravity="center"
+                    android:text='@{String.format("%03d", profile.brightness)}'
                     tools:text="0" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:gravity="center" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(profile.green)}"
-                    android:layout_column="2"
-                    android:layout_weight="1"
-                    android:gravity="center"
+                    android:text="R" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text='@{String.format("%03d", profile.red)}'
                     tools:text="0" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:gravity="center" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(profile.blue)}"
-                    android:layout_column="3"
-                    android:layout_weight="1"
-                    android:gravity="center"
+                    android:text="G" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text='@{String.format("%03d", profile.green)}'
                     tools:text="0" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text='@{String.format("%03d", profile.blue)}'
+                    tools:text="0" />
+            </LinearLayout>
         </TableRow>
 
-        <!-- BRIGHTNESS -->
-        <LinearLayout
-            android:id="@+id/linearLayoutBrightness"
+        <TableRow
+            android:id="@+id/sliders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="30dp"
             android:layout_marginHorizontal="25dp"
-            android:layout_marginTop="50dp"
-            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayoutValues" >
+            app:layout_constraintTop_toBottomOf="@+id/valuesSet"
+            android:paddingVertical="30dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="BRGT" />
+                android:layout_column="0"
+                android:layout_weight="6"
+                android:gravity="start"
+                android:orientation="vertical">
 
-            <SeekBar
-                android:id="@+id/seekBarBrightness"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:text="BRT" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:text="RED" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:text="GREEN" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:text="BLUE" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="255"
-                android:progress="@{profile.brightness}"
-                android:onProgressChanged="@{(seekbar, progress, fromUser) -> profile.setBrightness(progress)}"/>
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:orientation="vertical">
 
-        <!-- RED -->
-        <LinearLayout
-            android:id="@+id/linearLayoutRed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="25dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutBrightness">
+                <SeekBar
+                    android:id="@+id/seekBarBrightness"
+                    android:layout_width="match_parent"
+                    android:layout_height="19dp"
+                    android:layout_marginVertical="5dp"
+                    android:max="255"
+                    android:onProgressChanged="@{(seekbar, progress, fromUser) -> profile.setBrightness(progress)}"
+                    android:progress="@{profile.brightness}" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RED" />
+                <SeekBar
+                    android:id="@+id/seekBarRed"
+                    android:layout_width="match_parent"
+                    android:layout_height="19dp"
+                    android:layout_marginVertical="5dp"
+                    android:max="255"
+                    android:onProgressChanged="@{(seekbar, progress, fromUser) -> profile.setRed(progress)}"
+                    android:progress="@{profile.red}" />
 
-            <SeekBar
-                android:id="@+id/seekBarRed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="255"
-                android:progress="@{profile.red}"
-                android:onProgressChanged="@{(seekbar, progress, fromUser) -> profile.setRed(progress)}"/>
-        </LinearLayout>
+                <SeekBar
+                    android:id="@+id/seekBarGreen"
+                    android:layout_width="match_parent"
+                    android:layout_height="19dp"
+                    android:layout_marginVertical="5dp"
+                    android:max="255"
+                    android:onProgressChanged="@{(seekbar, progress, fromUser) -> profile.setGreen(progress)}"
+                    android:progress="@{profile.green}" />
 
-        <!-- GREEN -->
-        <LinearLayout
-            android:id="@+id/linearLayoutGreen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="25dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutRed">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="GREEN" />
-
-            <SeekBar
-                android:id="@+id/seekBarGreen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="255"
-                android:progress="@{profile.green}"
-                android:onProgressChanged="@{(seekbar, progress, fromUser) -> profile.setGreen(progress)}"/>
-        </LinearLayout>
-
-        <!-- BLUE -->
-        <LinearLayout
-            android:id="@+id/linearLayoutBlue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="25dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutGreen">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BLUE" />
-
-            <SeekBar
-                android:id="@+id/seekBarBlue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="255"
-                android:progress="@{profile.blue}"
-                android:onProgressChanged="@{(seekbar, progress, fromUser) -> profile.setBlue(progress)}"/>
-        </LinearLayout>
-
+                <SeekBar
+                    android:id="@+id/seekBarBlue"
+                    android:layout_width="match_parent"
+                    android:layout_height="19dp"
+                    android:layout_marginVertical="5dp"
+                    android:max="255"
+                    android:onProgressChanged="@{(seekbar, progress, fromUser) -> profile.setBlue(progress)}"
+                    android:progress="@{profile.blue}" />
+            </LinearLayout>
+        </TableRow>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

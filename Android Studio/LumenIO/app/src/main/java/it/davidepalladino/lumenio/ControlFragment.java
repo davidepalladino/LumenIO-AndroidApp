@@ -23,8 +23,8 @@ public class ControlFragment extends Fragment {
         // Example: The values could be found from SharedPreference.
         profile.setBrightness(255);
         profile.setRed(255);
-        profile.setGreen(182);
-        profile.setBlue(112);
+        profile.setGreen(97);
+        profile.setBlue(92);
 
         binding = FragmentControlBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
