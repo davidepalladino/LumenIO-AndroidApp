@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel;
 
 public class ProfileViewModel extends ViewModel {
     private final MutableLiveData<String> name = new MutableLiveData<String>("");
-    private final MutableLiveData<Integer> brightness = new MutableLiveData<Integer>(0);
-    private final MutableLiveData<Integer> red = new MutableLiveData<Integer>(0);
-    private final MutableLiveData<Integer> green = new MutableLiveData<Integer>(0);
-    private final MutableLiveData<Integer> blue = new MutableLiveData<Integer>(0);
+    private final MutableLiveData<Integer> brightness = new MutableLiveData<Integer>(255);
+    private final MutableLiveData<Integer> red = new MutableLiveData<Integer>(255);
+    private final MutableLiveData<Integer> green = new MutableLiveData<Integer>(97);
+    private final MutableLiveData<Integer> blue = new MutableLiveData<Integer>(92);
 
     public void setBrightness(int brightness) { this.brightness.setValue(brightness); }
 

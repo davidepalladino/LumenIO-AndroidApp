@@ -1,6 +1,7 @@
 package it.davidepalladino.lumenio;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,7 @@ public class ControlFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         profile = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
-        // Example: The values could be found from SharedPreference.
-        profile.setBrightness(255);
-        profile.setRed(255);
-        profile.setGreen(97);
-        profile.setBlue(92);
+        Log.d("VIEW_PAGER", "CREATED_VIEW");
 
         binding = FragmentControlBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
