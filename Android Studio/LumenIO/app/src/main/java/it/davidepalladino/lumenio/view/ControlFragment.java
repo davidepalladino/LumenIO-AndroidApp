@@ -1,6 +1,7 @@
 package it.davidepalladino.lumenio.view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +16,21 @@ import it.davidepalladino.lumenio.databinding.FragmentControlBinding;
 
 public class ControlFragment extends Fragment {
     private FragmentControlBinding binding;
-    private ProfileViewModel profile;
+    private ProfileViewModel profileViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        profile = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
-//        profile.setProfileRepository(requireActivity().getApplication());
+        profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
         binding = FragmentControlBinding.inflate(inflater, container, false);
-        binding.setLifecycleOwner(this);
-        binding.setProfile(profile);
+//        binding.setLifecycleOwner(this);
+//        binding.setProfileViewModel(profileViewModel);
+
+        profileViewModel.getSelectedProfile().observe(requireActivity(), profile -> {
+            // Update the cached copy of the words in the adapter.
+            binding.setProfileViewModel(profile);
+        });
+
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,7 +38,7 @@ public class ControlFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        binding.getProfile().insert();
+//                        profileViewModel.insert();
 
                         Snackbar.make(view, "Saved", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
