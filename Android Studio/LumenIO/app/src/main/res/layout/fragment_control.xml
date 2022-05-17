@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <data>
-        <variable name="profile" type="it.davidepalladino.lumenio.data.ProfileViewModel" />
+        <variable name="profile" type="it.davidepalladino.lumenio.view.ProfileViewModel" />
         <import type="android.graphics.Color" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ControlFragment">
+        tools:context=".view.ControlFragment">
 
         <View
             android:id="@+id/sample"
@@ -206,14 +206,26 @@
             </LinearLayout>
         </TableRow>
 
-        <TextView
-            android:id="@+id/tag"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sliders"
+            android:text="@{profile.name}"
+            android:onTextChanged="@{(text, start, before, count) -> profile.setName(String.valueOf(text))}"
             tools:text="TAG" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_round_add" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

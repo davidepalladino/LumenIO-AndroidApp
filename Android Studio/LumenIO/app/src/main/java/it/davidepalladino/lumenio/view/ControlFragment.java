@@ -1,7 +1,6 @@
-package it.davidepalladino.lumenio;
+package it.davidepalladino.lumenio.view;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import it.davidepalladino.lumenio.databinding.FragmentControlBinding;
-import it.davidepalladino.lumenio.data.ProfileViewModel;
 
 public class ControlFragment extends Fragment {
     private FragmentControlBinding binding;
@@ -20,12 +20,26 @@ public class ControlFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         profile = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
-
-        Log.d("VIEW_PAGER", "CREATED_VIEW");
+//        profile.setProfileRepository(requireActivity().getApplication());
 
         binding = FragmentControlBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
         binding.setProfile(profile);
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.getProfile().insert();
+
+                        Snackbar.make(view, "Saved", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                }).start();
+            }
+        });
 
         return binding.getRoot();
     }

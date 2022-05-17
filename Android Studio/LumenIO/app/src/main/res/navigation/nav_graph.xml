@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/ControlFragment"
-        android:name="it.davidepalladino.lumenio.ControlFragment"
+        android:name="it.davidepalladino.lumenio.view.ControlFragment"
         android:label="ControlFragment"
         tools:layout="@layout/fragment_control">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/LibraryFragment"
-        android:name="it.davidepalladino.lumenio.LibraryFragment"
+        android:name="it.davidepalladino.lumenio.view.LibraryFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_library">
 

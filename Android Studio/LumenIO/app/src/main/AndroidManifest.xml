@@ -9,13 +9,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LumenIO">
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.LumenIO.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
