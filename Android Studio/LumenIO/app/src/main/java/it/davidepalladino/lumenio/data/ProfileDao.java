@@ -19,5 +19,6 @@ public interface ProfileDao {
     LiveData<List<Profile>> getAll();
 
     @Query("SELECT * FROM profiles WHERE id = :id")
-    LiveData<Profile> getById(int id);
+    Profile getById(int id);
+//    LiveData<Profile> getById(int id);
 }

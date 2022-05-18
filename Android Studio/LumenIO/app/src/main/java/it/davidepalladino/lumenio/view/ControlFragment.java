@@ -23,13 +23,13 @@ public class ControlFragment extends Fragment {
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
         binding = FragmentControlBinding.inflate(inflater, container, false);
-//        binding.setLifecycleOwner(this);
-//        binding.setProfileViewModel(profileViewModel);
+        binding.setLifecycleOwner(this);
+        binding.setProfileViewModel(profileViewModel);
 
-        profileViewModel.getSelectedProfile().observe(requireActivity(), profile -> {
-            // Update the cached copy of the words in the adapter.
-            binding.setProfileViewModel(profile);
-        });
+//        profileViewModel.getSelectedProfile().observe(requireActivity(), profile -> {
+//            // Update the cached copy of the words in the adapter.
+//            binding.setProfileViewModel(profile);
+//        });
 
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -38,7 +38,7 @@ public class ControlFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-//                        profileViewModel.insert();
+                        profileViewModel.insert();
 
                         Snackbar.make(view, "Saved", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
