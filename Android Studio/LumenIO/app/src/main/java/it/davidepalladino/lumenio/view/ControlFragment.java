@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.databinding.FragmentControlBinding;
 
 public class ControlFragment extends Fragment {
@@ -24,12 +25,8 @@ public class ControlFragment extends Fragment {
 
         binding = FragmentControlBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
-        binding.setProfileViewModel(profileViewModel);
 
-//        profileViewModel.getSelectedProfile().observe(requireActivity(), profile -> {
-//            // Update the cached copy of the words in the adapter.
-//            binding.setProfileViewModel(profile);
-//        });
+        binding.setProfileViewModel(profileViewModel);
 
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -38,7 +35,7 @@ public class ControlFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        profileViewModel.insert();
+//                        profileViewModel.insert();
 
                         Snackbar.make(view, "Saved", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();

@@ -18,62 +18,37 @@ import it.davidepalladino.lumenio.data.ProfileDao;
 import it.davidepalladino.lumenio.data.ProfileRepository;
 
 public class ProfileViewModel extends AndroidViewModel {
+    private static final String TAG = "ProfileViewModel";
     public ProfileRepository profileRepository;
-    public LiveData<List<Profile>> allProfiles;
-
-    private MutableLiveData<String> name;
-    private MutableLiveData<Integer> brightness;
-    private MutableLiveData<Integer> red;
-    private MutableLiveData<Integer> green;
-    private MutableLiveData<Integer> blue;
+    private final MutableLiveData<Profile> selectedProfile = new MutableLiveData<>(null);
 
     public ProfileViewModel(Application application) {
         super(application);
 
         this.profileRepository = new ProfileRepository(application);
 
-        this.allProfiles = profileRepository.getAll();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Profile profileSelected = profileRepository.getById(1);
-                if (profileSelected == null) {
-                    profileSelected = new Profile("Manual", 10,10,10,10);
-                }
-
-                name = new MutableLiveData<String>(profileSelected.name);
-                brightness = new MutableLiveData<Integer>(profileSelected.brightness);
-                red = new MutableLiveData<Integer>(profileSelected.red);
-                blue = new MutableLiveData<Integer>(profileSelected.green);
-                green = new MutableLiveData<Integer>(profileSelected.blue);
-            }
-        }).start();
+        profileRepository.getById(1).observeForever(profile -> selectedProfile.postValue(profile != null ? profile : new Profile("Manual", 10, 10, 10, 10)));
     }
 
-    public void setName(String name) { this.name.setValue(name); }
+    public MutableLiveData<Profile> getSelectedProfile() {
+        return selectedProfile;
+    }
 
-    public MutableLiveData<String> getName() { return this.name; }
+    public void setSelectedProfile(Profile profile) {
+        Log.d(TAG, String.valueOf(profile.red));
+        this.selectedProfile.setValue(profile);
+    }
 
-    public void setBrightness(int brightness) { this.brightness.setValue(brightness); }
+    public LiveData<List<Profile>> getAll() {
+        return profileRepository.getAll();
+    }
 
-    public MutableLiveData<Integer> getBrightness() { return this.brightness; }
+    public LiveData<Profile> getById(int id) {
+        return profileRepository.getById(1);
+    }
 
-    public void setRed(int red) { this.red.setValue(red); }
-
-    public MutableLiveData<Integer> getRed() { return this.red; }
-
-    public void setGreen(int green) { this.green.setValue(green); }
-
-    public MutableLiveData<Integer> getGreen() { return this.green; }
-
-    public void setBlue(int blue) { this.blue.setValue(blue); }
-
-    public MutableLiveData<Integer> getBlue() { return this.blue; }
-
-    public LiveData<List<Profile>> getAllProfiles() { return this.allProfiles; }
-
-    public void insert() {
-        profileRepository.insert(new Profile(this.name.getValue(), this.brightness.getValue(), this.red.getValue(), this.green.getValue(), this.blue.getValue()));
+    public void insert(Profile profile) {
+        profileRepository.insert(profile);
     }
 
 
