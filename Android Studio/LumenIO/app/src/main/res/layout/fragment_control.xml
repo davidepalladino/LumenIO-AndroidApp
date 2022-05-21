@@ -185,7 +185,8 @@
                     android:layout_height="19dp"
                     android:layout_marginVertical="5dp"
                     android:max="255"
-                    android:progress="@={profileViewModel.selectedProfile.blue}" />
+                    android:progress="@{profileViewModel.selectedProfile.blue}"
+                    android:onProgressChanged="@{(seekbar, progress, fromuser) -> profileViewModel.setBlue(progress)}"/>
             </LinearLayout>
         </TableRow>
 

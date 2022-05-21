@@ -36,7 +36,13 @@ public class ProfileViewModel extends AndroidViewModel {
 
     public void setSelectedProfile(Profile profile) {
         Log.d(TAG, String.valueOf(profile.red));
-        this.selectedProfile.setValue(profile);
+        this.selectedProfile.postValue(profile);
+    }
+
+    public void setBlue(int blue) {
+        Profile selectedProfile = this.selectedProfile.getValue();
+        selectedProfile.blue = blue;
+        this.selectedProfile.postValue(selectedProfile);
     }
 
     public LiveData<List<Profile>> getAll() {
@@ -50,32 +56,4 @@ public class ProfileViewModel extends AndroidViewModel {
     public void insert(Profile profile) {
         profileRepository.insert(profile);
     }
-
-
-
-
-
-
-
-
-
-//    public LiveData<Profile> selectedProfile;
-
-//    public ProfileViewModel(Application application) {
-//        super(application);
-//
-//        this.profileRepository = new ProfileRepository(application);
-//        this.allProfiles = profileRepository.getAll();
-//        this.selectedProfile = profileRepository.getById(1);
-//    }
-//
-////    public void setBlue(int blue) { this.selectedProfile.getValue().blue = blue; }
-////
-////    public int getBlue() { return this.selectedProfile.getValue().blue; }
-//
-//    public LiveData<List<Profile>> getAllProfiles() { return this.allProfiles; }
-//
-//    public LiveData<Profile> getSelectedProfile() { return this.selectedProfile; }
-//
-//    public void insert(Profile profile) { profileRepository.insert(profile); }
 }

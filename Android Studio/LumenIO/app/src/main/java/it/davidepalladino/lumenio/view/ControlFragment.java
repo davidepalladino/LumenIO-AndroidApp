@@ -28,7 +28,6 @@ public class ControlFragment extends Fragment {
 
         binding.setProfileViewModel(profileViewModel);
 
-
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
