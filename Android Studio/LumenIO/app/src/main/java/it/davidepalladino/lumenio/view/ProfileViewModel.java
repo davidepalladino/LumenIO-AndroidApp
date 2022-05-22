@@ -50,13 +50,15 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public long insert() {
-        long newiD = profileRepository.insert(new Profile(this.selectedName.getValue(), this.selectedBrightness.getValue(), this.selectedRed.getValue(), this.selectedGreen.getValue(), this.selectedBlue.getValue()));
-        this.selectedID.postValue(newiD);
-        return newiD;
+        long newID = profileRepository.insert(new Profile(this.selectedName.getValue(), this.selectedBrightness.getValue(), this.selectedRed.getValue(), this.selectedGreen.getValue(), this.selectedBlue.getValue()));
+        this.selectedID.postValue(newID);
+        return newID;
     }
 
     public void update() {
-        profileRepository.update(new Profile(this.selectedID.getValue(), this.selectedName.getValue(), this.selectedBrightness.getValue(), this.selectedRed.getValue(), this.selectedGreen.getValue(), this.selectedBlue.getValue()));
+        Profile selectedProfile = new Profile(this.selectedName.getValue(), this.selectedBrightness.getValue(), this.selectedRed.getValue(), this.selectedGreen.getValue(), this.selectedBlue.getValue());
+        selectedProfile.id = selectedID.getValue();
+        profileRepository.update(selectedProfile);
     }
 
     public void setSelectedName(String selectedName) { this.selectedName.setValue(selectedName); }

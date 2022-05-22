@@ -23,13 +23,13 @@ public class Profile {
         this.blue = blue;
     }
 
-    @Ignore
-    public Profile(long id, @NonNull String name, int brightness, int red, int green, int blue) {
-        this.id = id;
-        this.name = name;
-        this.brightness = brightness;
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
-    }
+//    @Ignore
+//    public Profile(long id, @NonNull String name, int brightness, int red, int green, int blue) {
+//        this.id = id;
+//        this.name = name;
+//        this.brightness = brightness;
+//        this.red = red;
+//        this.green = green;
+//        this.blue = blue;
+//    }
 }
