@@ -8,9 +8,6 @@
         <variable name="profileViewModel" type="it.davidepalladino.lumenio.view.ProfileViewModel" />
         <import type="android.graphics.Color" />
     </data>
-
-
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

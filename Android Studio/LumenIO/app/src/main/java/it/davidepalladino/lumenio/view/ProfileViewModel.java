@@ -15,7 +15,7 @@ import it.davidepalladino.lumenio.data.ProfileRepository;
 
 public class ProfileViewModel extends AndroidViewModel {
     private final ProfileRepository profileRepository;
-//    private LiveData<List<Profile>> allProfiles;
+    private LiveData<List<Profile>> allProfiles;
 
     private final MutableLiveData<Long> selectedID = new MutableLiveData<>((long) 0);
     private final MutableLiveData<String> selectedName = new MutableLiveData<>("");
@@ -27,11 +27,13 @@ public class ProfileViewModel extends AndroidViewModel {
     public ProfileViewModel(Application application) {
         super(application);
         this.profileRepository = new ProfileRepository(application);
+
+        this.allProfiles = profileRepository.getAll();
     }
 
-//    public LiveData<List<Profile>> getAll() {
-//        return profileRepository.getAll();
-//    }
+    public LiveData<List<Profile>> getAll() {
+        return this.allProfiles;
+    }
 
     public void loadSelectedByID(long id) {
         Profile selectedProfile = profileRepository.getById(id);

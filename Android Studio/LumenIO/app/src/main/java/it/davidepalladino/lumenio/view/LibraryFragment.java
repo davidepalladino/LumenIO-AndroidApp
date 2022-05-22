@@ -7,35 +7,33 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.databinding.FragmentLibraryBinding;
 
 public class LibraryFragment extends Fragment {
-
     private FragmentLibraryBinding binding;
+    private ProfileViewModel profileViewModel;
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
         binding = FragmentLibraryBinding.inflate(inflater, container, false);
-        return binding.getRoot();
 
+        return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(LibraryFragment.this)
-                        .navigate(R.id.action_LibraryFragment_to_ControlFragment);
-            }
+        LibraryListAdapter adapter = new LibraryListAdapter(new LibraryListAdapter.ProfileDiff());
+        binding.recycleView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        binding.recycleView.setAdapter(adapter);
+
+        profileViewModel.getAll().observe(requireActivity(), profiles -> {
+            adapter.submitList(profiles);
         });
     }
 
@@ -44,5 +42,4 @@ public class LibraryFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }

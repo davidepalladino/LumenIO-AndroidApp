@@ -105,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
                     return new ControlFragment();
                 case 1:
                     Log.i("VIEW_PAGER", "Created at position" + String.valueOf(position));
-                    return new ControlFragment();
+//                    return new ControlFragment();
                 case 2:
                     Log.i("VIEW_PAGER", "Created at position" + String.valueOf(position));
-                    return new ControlFragment();
+                    return new LibraryFragment();
             }
             return null;
         }

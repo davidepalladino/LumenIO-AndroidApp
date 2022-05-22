@@ -56,6 +56,12 @@ public class ControlFragment extends Fragment {
             }
         });
 
+        return binding.getRoot();
+    }
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         binding.fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,12 +93,6 @@ public class ControlFragment extends Fragment {
                 }).start();
             }
         });
-
-        return binding.getRoot();
-    }
-
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
 //        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
 //            @Override
