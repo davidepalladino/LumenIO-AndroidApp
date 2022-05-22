@@ -9,206 +9,240 @@
         <import type="android.graphics.Color" />
     </data>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginHorizontal="25dp"
-            android:background="@{Color.argb(profileViewModel.selectedProfile.brightness, profileViewModel.selectedProfile.red, profileViewModel.selectedProfile.green, profileViewModel.selectedProfile.blue)}"
-            android:backgroundTint="#000000"
-            android:backgroundTintMode="add"
-            android:elevation="10dp" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginHorizontal="50dp"
-            android:gravity="center" >
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_column="0"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="BRT" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text='@{String.format("%03d", profileViewModel.selectedProfile.brightness)}'
-                    tools:text="0" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_column="0"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="R" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text='@{String.format("%03d", profileViewModel.selectedProfile.red)}'
-                    tools:text="0" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_column="0"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="G" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text='@{String.format("%03d", profileViewModel.selectedProfile.green)}'
-                    tools:text="0" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_column="0"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="B" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text='@{String.format("%03d", profileViewModel.selectedProfile.blue)}'
-                    tools:text="0" />
-            </LinearLayout>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="30dp"
-            android:layout_marginHorizontal="25dp"
-            android:paddingVertical="30dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_column="0"
-                android:layout_weight="6"
-                android:gravity="start"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="5dp"
-                    android:text="BRT" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="5dp"
-                    android:text="RED" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="5dp"
-                    android:text="GREEN" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="5dp"
-                    android:text="BLUE" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_column="1"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:orientation="vertical">
-
-                <SeekBar
-                    android:id="@+id/seekBarBrightness"
-                    android:layout_width="match_parent"
-                    android:layout_height="19dp"
-                    android:layout_marginVertical="5dp"
-                    android:max="255"
-                    android:progress="@={profileViewModel.selectedProfile.brightness}" />
-
-                <SeekBar
-                    android:id="@+id/seekBarRed"
-                    android:layout_width="match_parent"
-                    android:layout_height="19dp"
-                    android:layout_marginVertical="5dp"
-                    android:max="255"
-                    android:progress="@={profileViewModel.selectedProfile.red}" />
-
-                <SeekBar
-                    android:id="@+id/seekBarGreen"
-                    android:layout_width="match_parent"
-                    android:layout_height="19dp"
-                    android:layout_marginVertical="5dp"
-                    android:max="255"
-                    android:progress="@={profileViewModel.selectedProfile.green}" />
-
-                <SeekBar
-                    android:id="@+id/seekBarBlue"
-                    android:layout_width="match_parent"
-                    android:layout_height="19dp"
-                    android:layout_marginVertical="5dp"
-                    android:max="255"
-                    android:progress="@{profileViewModel.selectedProfile.blue}"
-                    android:onProgressChanged="@{(seekbar, progress, fromuser) -> profileViewModel.setBlue(progress)}"/>
-            </LinearLayout>
-        </TableRow>
-
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="100dp"
-            android:text="@={profileViewModel.selectedProfile.name}"
-            tools:text="TAG" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="@dimen/fab_margin"
-                app:srcCompat="@drawable/ic_round_add" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginHorizontal="25dp"
+                        android:background="@{Color.argb(profileViewModel.selectedBrightness, profileViewModel.selectedRed, profileViewModel.selectedGreen, profileViewModel.selectedBlue)}"
+                        android:backgroundTint="#000000"
+                        android:backgroundTintMode="add"
+                        android:elevation="10dp" />
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginHorizontal="50dp"
+                        android:gravity="center" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:gravity="center" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="BRT" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text='@{String.format("%03d", profileViewModel.selectedBrightness)}'
+                                tools:text="0" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:gravity="center" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="R" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text='@{String.format("%03d", profileViewModel.selectedRed)}'
+                                tools:text="0" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:gravity="center" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="G" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text='@{String.format("%03d", profileViewModel.selectedGreen)}'
+                                tools:text="0" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:gravity="center" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="B" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text='@{String.format("%03d", profileViewModel.selectedBlue)}'
+                                tools:text="0" />
+                        </LinearLayout>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginHorizontal="25dp"
+                        android:paddingVertical="30dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_column="0"
+                            android:layout_weight="6"
+                            android:gravity="start"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="5dp"
+                                android:text="BRT" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="5dp"
+                                android:text="RED" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="5dp"
+                                android:text="GREEN" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="5dp"
+                                android:text="BLUE" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:orientation="vertical">
+
+                            <SeekBar
+                                android:id="@+id/seekBarBrightness"
+                                android:layout_width="match_parent"
+                                android:layout_height="19dp"
+                                android:layout_marginVertical="5dp"
+                                android:max="255"
+                                android:progress="@={profileViewModel.selectedBrightness}" />
+
+                            <SeekBar
+                                android:id="@+id/seekBarRed"
+                                android:layout_width="match_parent"
+                                android:layout_height="19dp"
+                                android:layout_marginVertical="5dp"
+                                android:max="255"
+                                android:progress="@={profileViewModel.selectedRed}" />
+
+                            <SeekBar
+                                android:id="@+id/seekBarGreen"
+                                android:layout_width="match_parent"
+                                android:layout_height="19dp"
+                                android:layout_marginVertical="5dp"
+                                android:max="255"
+                                android:progress="@={profileViewModel.selectedGreen}" />
+
+                            <SeekBar
+                                android:id="@+id/seekBarBlue"
+                                android:layout_width="match_parent"
+                                android:layout_height="19dp"
+                                android:layout_marginVertical="5dp"
+                                android:max="255"
+                                android:progress="@={profileViewModel.selectedBlue}" />
+                        </LinearLayout>
+                    </TableRow>
+
+                    <EditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="100dp"
+                        android:text="@={profileViewModel.selectedName}"
+                        tools:text="TAG" />
+                </LinearLayout>
+            </ScrollView>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fab_margin"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/fab_edit"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:srcCompat="@drawable/ic_round_add"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fab_margin"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/fab_add_edit"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:srcCompat="@drawable/ic_round_edit"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_add_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fab_margin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:srcCompat="@drawable/ic_round_selected" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </FrameLayout>
-    </LinearLayout>
 </layout>

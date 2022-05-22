@@ -18,11 +18,13 @@ public class ProfileRepository {
 
     public LiveData<List<Profile>> getAll() { return this.allProfiles; }
 
-    public LiveData<Profile> getById(int id) {
+    public Profile getById(long id) {
         return this.profileDao.getById(id);
     }
 
-    public void insert(Profile profile) {
-        this.profileDao.insert(profile);
+    public long insert(Profile profile) {
+        return this.profileDao.insert(profile);
     }
+
+    public void update(Profile profile) { this.profileDao.update(profile); }
 }

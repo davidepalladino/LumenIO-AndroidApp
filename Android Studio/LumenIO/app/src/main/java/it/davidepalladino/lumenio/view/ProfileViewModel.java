@@ -1,59 +1,81 @@
 package it.davidepalladino.lumenio.view;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
 import it.davidepalladino.lumenio.data.Profile;
-import it.davidepalladino.lumenio.data.ProfileDao;
 import it.davidepalladino.lumenio.data.ProfileRepository;
 
 public class ProfileViewModel extends AndroidViewModel {
-    private static final String TAG = "ProfileViewModel";
-    public ProfileRepository profileRepository;
-    private final MutableLiveData<Profile> selectedProfile = new MutableLiveData<>(null);
+    private final ProfileRepository profileRepository;
+//    private LiveData<List<Profile>> allProfiles;
+
+    private final MutableLiveData<Long> selectedID = new MutableLiveData<>((long) 0);
+    private final MutableLiveData<String> selectedName = new MutableLiveData<>("");
+    private final MutableLiveData<Integer> selectedBrightness = new MutableLiveData<>(0);
+    private final MutableLiveData<Integer> selectedRed = new MutableLiveData<>(0);
+    private final MutableLiveData<Integer> selectedGreen = new MutableLiveData<>(0);
+    private final MutableLiveData<Integer> selectedBlue = new MutableLiveData<>(0);
 
     public ProfileViewModel(Application application) {
         super(application);
-
         this.profileRepository = new ProfileRepository(application);
-
-        profileRepository.getById(1).observeForever(profile -> selectedProfile.postValue(profile != null ? profile : new Profile("Manual", 10, 10, 10, 10)));
     }
 
-    public MutableLiveData<Profile> getSelectedProfile() {
-        return selectedProfile;
+//    public LiveData<List<Profile>> getAll() {
+//        return profileRepository.getAll();
+//    }
+
+    public void loadSelectedByID(long id) {
+        Profile selectedProfile = profileRepository.getById(id);
+
+        if (selectedProfile == null) {
+            selectedProfile = new Profile("", 0, 0, 0, 0);
+            selectedProfile.id = 0;
+        }
+
+        this.selectedID.postValue(selectedProfile.id);
+        this.selectedName.postValue(selectedProfile.name);
+        this.selectedBrightness.postValue(selectedProfile.brightness);
+        this.selectedRed.postValue(selectedProfile.red);
+        this.selectedGreen.postValue(selectedProfile.green);
+        this.selectedBlue.postValue(selectedProfile.blue);
     }
 
-    public void setSelectedProfile(Profile profile) {
-        Log.d(TAG, String.valueOf(profile.red));
-        this.selectedProfile.postValue(profile);
+    public long insert() {
+        long newiD = profileRepository.insert(new Profile(this.selectedName.getValue(), this.selectedBrightness.getValue(), this.selectedRed.getValue(), this.selectedGreen.getValue(), this.selectedBlue.getValue()));
+        this.selectedID.postValue(newiD);
+        return newiD;
     }
 
-    public void setBlue(int blue) {
-        Profile selectedProfile = this.selectedProfile.getValue();
-        selectedProfile.blue = blue;
-        this.selectedProfile.postValue(selectedProfile);
+    public void update() {
+        profileRepository.update(new Profile(this.selectedID.getValue(), this.selectedName.getValue(), this.selectedBrightness.getValue(), this.selectedRed.getValue(), this.selectedGreen.getValue(), this.selectedBlue.getValue()));
     }
 
-    public LiveData<List<Profile>> getAll() {
-        return profileRepository.getAll();
-    }
+    public void setSelectedName(String selectedName) { this.selectedName.setValue(selectedName); }
 
-    public LiveData<Profile> getById(int id) {
-        return profileRepository.getById(1);
-    }
+    public MutableLiveData<String> getSelectedName() { return this.selectedName; }
 
-    public void insert(Profile profile) {
-        profileRepository.insert(profile);
-    }
+    public void setSelectedBrightness(int selectedBrightness) { this.selectedBrightness.setValue(selectedBrightness); }
+
+    public MutableLiveData<Integer> getSelectedBrightness() { return this.selectedBrightness; }
+
+    public void setSelectedRed(int selectedRed) { this.selectedRed.setValue(selectedRed); }
+
+    public MutableLiveData<Integer> getSelectedRed() { return this.selectedRed; }
+
+    public void setSelectedGreen(int selectedGreen) { this.selectedGreen.setValue(selectedGreen); }
+
+    public MutableLiveData<Integer> getSelectedGreen() { return this.selectedGreen; }
+
+    public void setSelectedBlue(int selectedBlue) { this.selectedBlue.setValue(selectedBlue); }
+
+    public MutableLiveData<Integer> getSelectedBlue() { return this.selectedBlue; }
 }

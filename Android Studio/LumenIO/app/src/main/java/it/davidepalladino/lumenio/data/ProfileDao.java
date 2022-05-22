@@ -7,7 +7,7 @@ import java.util.List;
 @Dao
 public interface ProfileDao {
     @Insert
-    void insert(Profile profile);
+    long insert(Profile profile);
 
     @Delete
     void delete(Profile profile);
@@ -19,5 +19,5 @@ public interface ProfileDao {
     LiveData<List<Profile>> getAll();
 
     @Query("SELECT * FROM profiles WHERE id = :id")
-    LiveData<Profile> getById(int id);
+    Profile getById(long id);
 }
