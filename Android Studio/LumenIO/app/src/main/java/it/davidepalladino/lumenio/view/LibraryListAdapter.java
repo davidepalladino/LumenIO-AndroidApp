@@ -1,5 +1,6 @@
 package it.davidepalladino.lumenio.view;
 
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import it.davidepalladino.lumenio.data.Profile;
+import it.davidepalladino.lumenio.databinding.RecycleviewLibraryBinding;
 
 public class LibraryListAdapter extends ListAdapter<Profile, LibraryRecycleViewHolder> {
     public LibraryListAdapter(@NonNull DiffUtil.ItemCallback<Profile> diffCallback) {
@@ -17,13 +19,13 @@ public class LibraryListAdapter extends ListAdapter<Profile, LibraryRecycleViewH
     @NonNull
     @Override
     public LibraryRecycleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return LibraryRecycleViewHolder.create(parent);
+        return new LibraryRecycleViewHolder(RecycleviewLibraryBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull LibraryRecycleViewHolder holder, int position) {
         Profile profile = getItem(position);
-        holder.bind(profile.name);
+        holder.bind(profile.id, profile.name, profile.brightness, profile.red, profile.green, profile.blue);
     }
 
     static class ProfileDiff extends DiffUtil.ItemCallback<Profile> {

@@ -1,5 +1,8 @@
 package it.davidepalladino.lumenio.view;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,23 +12,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.davidepalladino.lumenio.R;
+import it.davidepalladino.lumenio.databinding.FragmentLibraryBinding;
+import it.davidepalladino.lumenio.databinding.RecycleviewLibraryBinding;
 
 public class LibraryRecycleViewHolder extends RecyclerView.ViewHolder {
-    private final TextView textView;
+    private RecycleviewLibraryBinding binding;
+    private long id;
 
-    public LibraryRecycleViewHolder(@NonNull View itemView) {
-        super(itemView);
-        this.textView = itemView.findViewById(R.id.textView);
+    public LibraryRecycleViewHolder(RecycleviewLibraryBinding itemBinding) {
+        super(itemBinding.getRoot());
+        this.binding = itemBinding;
     }
 
-    public void bind(String text) {
-        textView.setText(text);
+    public void bind(long id, String name, int brightness, int red, int green, int blue) {
+        binding.name.setText(name);
+        binding.preview.setBackground(new ColorDrawable(Color.argb(brightness, red, green, blue)));
     }
-
-    static LibraryRecycleViewHolder create(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycleview_library, parent, false);
-        return new LibraryRecycleViewHolder(view);
-    }
-
 }

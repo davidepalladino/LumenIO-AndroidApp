@@ -14,7 +14,7 @@
         <entry key="app/src/main/res/layout/content_main.xml" value="0.5197916666666667" />
         <entry key="app/src/main/res/layout/fragment_control.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.5197916666666667" />
-        <entry key="app/src/main/res/layout/recycleview_library.xml" value="0.28923076923076924" />
+        <entry key="app/src/main/res/layout/recycleview_library.xml" value="0.25" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.294" />
       </map>
     </option>
