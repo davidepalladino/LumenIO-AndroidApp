@@ -3,7 +3,6 @@ package it.davidepalladino.lumenio.view;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Objects;
-
-import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.databinding.FragmentControlBinding;
 
 public class ControlFragment extends Fragment {
@@ -93,14 +89,6 @@ public class ControlFragment extends Fragment {
                 }).start();
             }
         });
-
-//        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                NavHostFragment.findNavController(ControlFragment.this)
-//                        .navigate(R.id.action_ControlFragment_to_LibraryFragment);
-//            }
-//        });
     }
 
     @Override

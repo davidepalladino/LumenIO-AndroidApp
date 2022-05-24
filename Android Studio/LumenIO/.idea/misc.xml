@@ -11,9 +11,13 @@
         <entry key="app/src/main/res/drawable/ic_round_scene.xml" value="0.3195" />
         <entry key="app/src/main/res/drawable/ic_round_selected.xml" value="0.3195" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29010416666666666" />
+        <entry key="app/src/main/res/layout/content_library.xml" value="0.30052083333333335" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.5197916666666667" />
         <entry key="app/src/main/res/layout/fragment_control.xml" value="0.2953125" />
+        <entry key="app/src/main/res/layout/fragment_detail_library.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.5197916666666667" />
+        <entry key="app/src/main/res/layout/fragment_list_library.xml" value="0.2953125" />
+        <entry key="app/src/main/res/layout/recycle_view_library.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/recycleview_library.xml" value="0.25" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.294" />
       </map>

@@ -2,24 +2,15 @@ package it.davidepalladino.lumenio.view;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import it.davidepalladino.lumenio.R;
-import it.davidepalladino.lumenio.databinding.FragmentLibraryBinding;
-import it.davidepalladino.lumenio.databinding.RecycleviewLibraryBinding;
+import it.davidepalladino.lumenio.databinding.RecycleViewLibraryBinding;
 
 public class LibraryRecycleViewHolder extends RecyclerView.ViewHolder {
-    private RecycleviewLibraryBinding binding;
-    private long id;
+    private RecycleViewLibraryBinding binding;
 
-    public LibraryRecycleViewHolder(RecycleviewLibraryBinding itemBinding) {
+    public LibraryRecycleViewHolder(RecycleViewLibraryBinding itemBinding) {
         super(itemBinding.getRoot());
         this.binding = itemBinding;
     }
