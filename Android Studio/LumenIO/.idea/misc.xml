@@ -16,6 +16,8 @@
         <entry key="app/src/main/res/layout/fragment_control.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/fragment_detail_library.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.5197916666666667" />
+        <entry key="app/src/main/res/layout/fragment_library_detail.xml" value="0.5197916666666667" />
+        <entry key="app/src/main/res/layout/fragment_library_list.xml" value="0.5197916666666667" />
         <entry key="app/src/main/res/layout/fragment_list_library.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/recycle_view_library.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/recycleview_library.xml" value="0.25" />
