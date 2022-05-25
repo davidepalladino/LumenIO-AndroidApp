@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        binding.viewPager.setAdapter(new ViewPagerAdapter(this));
+        binding.viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this));
 
-        new TabLayoutMediator(binding.tabs, binding.viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
+        new TabLayoutMediator(binding.tabLayout, binding.viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 switch (position) {
@@ -67,6 +67,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (binding.tabLayout.getSelectedTabPosition() != 0) {
+            binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
+        }
     }
 
     public static class ViewPagerAdapter extends FragmentStateAdapter {

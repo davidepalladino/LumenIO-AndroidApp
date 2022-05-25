@@ -23,7 +23,7 @@ public class LibraryDetailFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true ) {
             @Override
             public void handleOnBackPressed() {
-                NavHostFragment.findNavController(LibraryDetailFragment.this).navigate(R.id.action_DetailLibraryFragment_to_ListLibraryFragment);
+                NavHostFragment.findNavController(LibraryDetailFragment.this).navigate(R.id.action_global_LibraryListFragment);
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -37,8 +37,6 @@ public class LibraryDetailFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 
     @Override
