@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import it.davidepalladino.lumenio.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private ViewPagerAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        binding.viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this));
+        viewPagerAdapter = new ViewPagerAdapter(MainActivity.this);
+        binding.viewPager.setAdapter(viewPagerAdapter);
 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
@@ -73,12 +76,18 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        if (binding.tabLayout.getSelectedTabPosition() != 0) {
+        int tabPosition = binding.tabLayout.getSelectedTabPosition();
+        if (tabPosition != 0) {
+            if (tabPosition == 2 && Navigation.findNavController(this, R.id.nav_host_fragment_content_library).getCurrentDestination().getId() != R.id.LibraryListFragment) { // FIXME:
+                return;
+            }
             binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
         }
     }
 
-    public static class ViewPagerAdapter extends FragmentStateAdapter {
+    public class ViewPagerAdapter extends FragmentStateAdapter {
+        public LibraryFragment libraryFragment = new LibraryFragment();
+
         public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) { super(fragmentActivity);}
 
         @NonNull
@@ -93,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
 //                    return new ControlFragment();
                 case 2:
                     Log.i("VIEW_PAGER", "Created at position" + String.valueOf(position));
-                    return new LibraryFragment();
+                    LibraryFragment libraryFragment = new LibraryFragment();
+                    return libraryFragment;
             }
             return null;
         }

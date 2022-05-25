@@ -24,6 +24,12 @@ public class LibraryFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+//        this.getParentFragmentManager().beginTransaction().setPrimaryNavigationFragment(this).commit();       // TODO: Abilitami!
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
