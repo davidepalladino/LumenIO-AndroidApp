@@ -26,7 +26,9 @@ public class LibraryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        this.getParentFragmentManager().beginTransaction().setPrimaryNavigationFragment(this).commit();       // TODO: Abilitami!
+
+        /* Setting this Fragment as primary to manage the back stack of navigation. */
+        this.getParentFragmentManager().beginTransaction().setPrimaryNavigationFragment(this).commit();
     }
 
     @Override

@@ -74,20 +74,28 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
-        int tabPosition = binding.tabLayout.getSelectedTabPosition();
-        if (tabPosition != 0) {
-            if (tabPosition == 2 && Navigation.findNavController(this, R.id.nav_host_fragment_content_library).getCurrentDestination().getId() != R.id.LibraryListFragment) { // FIXME:
-                return;
-            }
-            binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
+        switch (binding.tabLayout.getSelectedTabPosition()) {
+            case 0:
+                super.onBackPressed();
+                break;
+            case 1:
+                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
+                break;
+            case 2:
+                /* Checking if in this Tab the current destination is an Home or not, to execute the right command. */
+                if (Navigation.findNavController(this, R.id.nav_host_fragment_content_library).getCurrentDestination().getId() != R.id.LibraryListFragment) {
+                    super.onBackPressed();
+                } else {
+                    binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
+                }
+                break;
+            default:
+                super.onBackPressed();
+                break;
         }
     }
 
-    public class ViewPagerAdapter extends FragmentStateAdapter {
-        public LibraryFragment libraryFragment = new LibraryFragment();
-
+    public static class ViewPagerAdapter extends FragmentStateAdapter {
         public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) { super(fragmentActivity);}
 
         @NonNull
@@ -99,11 +107,9 @@ public class MainActivity extends AppCompatActivity {
                     return new ControlFragment();
                 case 1:
                     Log.i("VIEW_PAGER", "Created at position" + String.valueOf(position));
-//                    return new ControlFragment();
                 case 2:
                     Log.i("VIEW_PAGER", "Created at position" + String.valueOf(position));
-                    LibraryFragment libraryFragment = new LibraryFragment();
-                    return libraryFragment;
+                    return new LibraryFragment();
             }
             return null;
         }
