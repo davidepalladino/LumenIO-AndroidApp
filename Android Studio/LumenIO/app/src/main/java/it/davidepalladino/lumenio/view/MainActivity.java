@@ -20,7 +20,6 @@ import it.davidepalladino.lumenio.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
-    private ViewPagerAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,26 +30,23 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        viewPagerAdapter = new ViewPagerAdapter(MainActivity.this);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(MainActivity.this);
         binding.viewPager.setAdapter(viewPagerAdapter);
 
-        new TabLayoutMediator(binding.tabLayout, binding.viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                switch (position) {
-                    case 0:
-                        tab.setText("Control");
-                        tab.setIcon(R.drawable.ic_round_control);
-                        break;
-                    case 1:
-                        tab.setIcon(R.drawable.ic_round_scene);
-                        tab.setText("Scene");
-                        break;
-                    case 2:
-                        tab.setIcon(R.drawable.ic_round_library);
-                        tab.setText("Library");
-                        break;
-                }
+        new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText("Control");
+                    tab.setIcon(R.drawable.ic_round_control);
+                    break;
+//                    case 1:
+//                        tab.setIcon(R.drawable.ic_round_scene);
+//                        tab.setText("Scene");
+//                        break;
+                case 1: // TODO: Replace with 2 during the implementation of Scene.
+                    tab.setIcon(R.drawable.ic_round_library);
+                    tab.setText("Library");
+                    break;
             }
         }).attach();
     }
@@ -78,10 +74,10 @@ public class MainActivity extends AppCompatActivity {
             case 0:
                 super.onBackPressed();
                 break;
-            case 1:
-                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
-                break;
-            case 2:
+//            case 1:
+//                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
+//                break;
+            case 1: // TODO: Replace with 2 during the implementation of Scene.
                 /* Checking if in this Tab the current destination is an Home or not, to execute the right command. */
                 if (Navigation.findNavController(this, R.id.nav_host_fragment_content_library).getCurrentDestination().getId() != R.id.LibraryListFragment) {
                     super.onBackPressed();
@@ -103,12 +99,10 @@ public class MainActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    Log.i("VIEW_PAGER", "Created at position" + String.valueOf(position));
                     return new ControlFragment();
-                case 1:
-                    Log.i("VIEW_PAGER", "Created at position" + String.valueOf(position));
-                case 2:
-                    Log.i("VIEW_PAGER", "Created at position" + String.valueOf(position));
+//                case 1:
+//                    return new SceneFragment();
+                case 1: // TODO: Replace with 2 during the implementation of Scene.
                     return new LibraryFragment();
             }
             return null;
@@ -116,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 3;
+            return 2;   // TODO: Replace with 3 during the implementation of Scene.
         }
     }
 }

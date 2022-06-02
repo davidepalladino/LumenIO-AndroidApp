@@ -2,9 +2,16 @@ package it.davidepalladino.lumenio.view;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 
+import androidx.core.view.ViewCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.FragmentNavigator;
 import androidx.recyclerview.widget.RecyclerView;
 
+import it.davidepalladino.lumenio.R;
+import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.databinding.RecycleViewLibraryBinding;
 
 public class LibraryRecycleViewHolder extends RecyclerView.ViewHolder {
@@ -15,8 +22,22 @@ public class LibraryRecycleViewHolder extends RecyclerView.ViewHolder {
         this.binding = itemBinding;
     }
 
-    public void bind(long id, String name, int brightness, int red, int green, int blue) {
-        binding.name.setText(name);
-        binding.preview.setBackground(new ColorDrawable(Color.argb(brightness, red, green, blue)));
+    public void bind(Profile profile) {
+        binding.name.setText(profile.name);
+        binding.name.setTransitionName(profile.name);     // Setting this and commenting that in `setOnClickListener`, is possible to see the animation.
+        binding.preview.setBackground(new ColorDrawable(Color.argb(profile.brightness, profile.red, profile.green, profile.blue)));
+        binding.item.setOnClickListener(view -> {
+//            binding.name.setTransitionName(profile.name);
+
+            NavController navController =  Navigation.findNavController(view);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("transitionForName", profile.name);
+
+            FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
+                    .addSharedElement(binding.name, profile.name)
+                    .build();
+            navController.navigate(R.id.action_ListLibraryFragment_to_DetailLibraryFragment, bundle, null, extras);
+        });
     }
 }

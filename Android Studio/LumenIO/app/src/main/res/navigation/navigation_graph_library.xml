@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_library"
-    android:label="Detail"
+    android:label="List"
     app:startDestination="@id/LibraryListFragment" >
 
     <fragment
@@ -22,6 +22,5 @@
         android:id="@+id/LibraryDetailFragment"
         android:name="it.davidepalladino.lumenio.view.LibraryDetailFragment"
         android:label="Detail"
-        tools:layout="@layout/fragment_library_detail" >
-    </fragment>
+        tools:layout="@layout/fragment_library_detail" />
 </navigation>
