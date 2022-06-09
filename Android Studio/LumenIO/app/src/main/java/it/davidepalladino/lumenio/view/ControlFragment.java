@@ -19,8 +19,6 @@ public class ControlFragment extends Fragment {
     private FragmentControlBinding binding;
     private ProfileViewModel profileViewModel;
 
-    private boolean isAllFabOpened = false;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
@@ -37,20 +35,6 @@ public class ControlFragment extends Fragment {
         binding.setLifecycleOwner(this);
 
         binding.setProfileViewModel(profileViewModel);
-
-        binding.fabAddEdit.setOnClickListener(view -> {
-            if (!isAllFabOpened) {
-                binding.fabAdd.show();
-                binding.fabEdit.show();
-
-                isAllFabOpened = true;
-            } else {
-                binding.fabAdd.hide();
-                binding.fabEdit.hide();
-
-                isAllFabOpened = false;
-            }
-        });
 
         return binding.getRoot();
     }
@@ -69,21 +53,6 @@ public class ControlFragment extends Fragment {
                         profileSelectedPreference.apply();
 
                         Snackbar.make(view, "Saved", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                }).start();
-            }
-        });
-
-        binding.fabEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        profileViewModel.update();
-
-                        Snackbar.make(view, "Updated", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
                 }).start();

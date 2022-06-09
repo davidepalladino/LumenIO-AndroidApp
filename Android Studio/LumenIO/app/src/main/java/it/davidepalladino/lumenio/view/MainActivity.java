@@ -1,6 +1,5 @@
 package it.davidepalladino.lumenio.view;
 
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,6 @@ import androidx.navigation.Navigation;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -37,14 +35,14 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     tab.setText("Control");
-                    tab.setIcon(R.drawable.ic_round_control);
+                    tab.setIcon(R.drawable.ic_round_control_tab);
                     break;
 //                    case 1:
 //                        tab.setIcon(R.drawable.ic_round_scene);
 //                        tab.setText("Scene");
 //                        break;
                 case 1: // TODO: Replace with 2 during the implementation of Scene.
-                    tab.setIcon(R.drawable.ic_round_library);
+                    tab.setIcon(R.drawable.ic_round_library_tab);
                     tab.setText("Library");
                     break;
             }
