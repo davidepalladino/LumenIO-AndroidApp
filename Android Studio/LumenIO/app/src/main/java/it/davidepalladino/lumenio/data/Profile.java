@@ -3,7 +3,15 @@ package it.davidepalladino.lumenio.data;
 import androidx.annotation.NonNull;
 import androidx.room.*;
 
-@Entity(tableName = "profiles")
+@Entity(
+    tableName = "profiles",
+    indices = {
+        @Index(
+            value = "name",
+            unique = true
+        )
+    }
+)
 public class Profile {
     @PrimaryKey(autoGenerate = true)
     public long id;

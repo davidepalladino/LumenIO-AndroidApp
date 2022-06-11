@@ -26,5 +26,5 @@ public class ProfileRepository {
         return this.profileDao.insert(profile);
     }
 
-    public void update(Profile profile) { this.profileDao.update(profile); }
+    public int update(Profile profile) { return this.profileDao.update(profile); }
 }

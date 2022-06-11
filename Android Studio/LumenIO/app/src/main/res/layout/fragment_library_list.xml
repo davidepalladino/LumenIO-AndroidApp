@@ -5,7 +5,7 @@
     tools:context=".view.fragment.LibraryListFragment" >
 
     <data>
-        <variable name="controlViewModel" type="it.davidepalladino.lumenio.view.viewModel.ControlViewModel" />
+        <variable name="libraryViewModel" type="it.davidepalladino.lumenio.view.viewModel.LibraryViewModel" />
     </data>
 
     <LinearLayout

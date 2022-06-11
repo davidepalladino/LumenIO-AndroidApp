@@ -16,11 +16,11 @@ import androidx.transition.TransitionInflater;
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.databinding.FragmentLibraryListBinding;
 import it.davidepalladino.lumenio.util.LibraryListAdapter;
-import it.davidepalladino.lumenio.view.viewModel.ControlViewModel;
+import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
 
 public class LibraryListFragment extends Fragment {
     private FragmentLibraryListBinding binding;
-    private ControlViewModel controlViewModel;
+    private LibraryViewModel libraryViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class LibraryListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        controlViewModel = new ViewModelProvider(requireActivity()).get(ControlViewModel.class);
+        libraryViewModel = new ViewModelProvider(requireActivity()).get(LibraryViewModel.class);
 
         binding = FragmentLibraryListBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -51,7 +51,7 @@ public class LibraryListFragment extends Fragment {
         binding.recycleView.setAdapter(adapter);
 
         final ViewGroup parentView = (ViewGroup) view.getParent(); // Can use `binding` instead.
-        controlViewModel.getAll().observe(requireActivity(), profiles -> {
+        libraryViewModel.getAll().observe(requireActivity(), profiles -> {
             adapter.submitList(profiles);
             parentView.getViewTreeObserver()
                     .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {

@@ -13,7 +13,7 @@ public interface ProfileDao {
     void delete(Profile profile);
 
     @Update
-    void update(Profile profile);
+    int update(Profile profile);
 
     @Query("SELECT * FROM profiles ORDER BY name ASC")
     LiveData<List<Profile>> getAll();

@@ -7,15 +7,22 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import it.davidepalladino.lumenio.databinding.FragmentLibraryBinding;
+import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
 
 public class LibraryFragment extends Fragment {
     private FragmentLibraryBinding binding;
+    private LibraryViewModel libraryViewModel;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentLibraryBinding.inflate(inflater, container, false);
+
+        libraryViewModel = new ViewModelProvider(requireActivity()).get(LibraryViewModel.class);
+
         return binding.getRoot();
     }
 

@@ -2,7 +2,12 @@ package it.davidepalladino.lumenio.view.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteConstraintException;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.databinding.FragmentControlBinding;
 import it.davidepalladino.lumenio.view.viewModel.ControlViewModel;
 
@@ -50,12 +56,23 @@ public class ControlFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        SharedPreferences.Editor profileSelectedPreference = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
-                        profileSelectedPreference.putLong("SELECTED_PROFILE_ID", controlViewModel.insert());
-                        profileSelectedPreference.apply();
+                        String snackbarMessage = "";
 
-                        Snackbar.make(view, "Saved", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                        try {
+                            long newID = controlViewModel.insert();
+                            SharedPreferences.Editor profileSelectedPreference = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
+                            profileSelectedPreference.putLong("SELECTED_PROFILE_ID", newID);
+                            profileSelectedPreference.apply();
+
+                            snackbarMessage = controlViewModel.getSelectedName().getValue() + getString(R.string.snackbarProfileSaved);
+                        } catch (SQLiteConstraintException e) {
+                            snackbarMessage = controlViewModel.getSelectedName().getValue() + getString(R.string.snackbarProfileNotSavedForName);
+                        }
+
+                        SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
+                        spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, controlViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        Snackbar.make(binding.getRoot(), spannableSnackbarMessage, 5000).setAnchorView(binding.fabAdd).show();
                     }
                 }).start();
             }
