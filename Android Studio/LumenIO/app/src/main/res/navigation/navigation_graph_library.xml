@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/LibraryListFragment"
-        android:name="it.davidepalladino.lumenio.view.LibraryListFragment"
+        android:name="it.davidepalladino.lumenio.view.fragment.LibraryListFragment"
         android:label="List"
         tools:layout="@layout/fragment_library_list" >
 
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/LibraryDetailFragment"
-        android:name="it.davidepalladino.lumenio.view.LibraryDetailFragment"
+        android:name="it.davidepalladino.lumenio.view.fragment.LibraryDetailFragment"
         android:label="Detail"
         tools:layout="@layout/fragment_library_detail" />
 </navigation>

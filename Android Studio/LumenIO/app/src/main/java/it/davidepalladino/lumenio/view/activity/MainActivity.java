@@ -1,4 +1,4 @@
-package it.davidepalladino.lumenio.view;
+package it.davidepalladino.lumenio.view.activity;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -15,6 +15,8 @@ import android.view.MenuItem;
 
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.databinding.ActivityMainBinding;
+import it.davidepalladino.lumenio.view.fragment.ControlFragment;
+import it.davidepalladino.lumenio.view.fragment.LibraryFragment;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;

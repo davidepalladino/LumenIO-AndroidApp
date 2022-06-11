@@ -1,4 +1,4 @@
-package it.davidepalladino.lumenio.view;
+package it.davidepalladino.lumenio.view.viewModel;
 
 import android.app.Application;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.data.ProfileRepository;
 
-public class ProfileViewModel extends AndroidViewModel {
+public class ControlViewModel extends AndroidViewModel {
     private final ProfileRepository profileRepository;
     private LiveData<List<Profile>> allProfiles;
 
@@ -22,7 +22,7 @@ public class ProfileViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> selectedGreen = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> selectedBlue = new MutableLiveData<>(0);
 
-    public ProfileViewModel(Application application) {
+    public ControlViewModel(Application application) {
         super(application);
         this.profileRepository = new ProfileRepository(application);
 

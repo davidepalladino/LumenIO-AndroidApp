@@ -3,10 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.ControlFragment" >
+    tools:context=".view.fragment.ControlFragment" >
 
     <data>
-        <variable name="profileViewModel" type="it.davidepalladino.lumenio.view.ProfileViewModel" />
+        <variable name="controlViewModel" type="it.davidepalladino.lumenio.view.viewModel.ControlViewModel" />
+        <variable name="controlFragment" type="it.davidepalladino.lumenio.view.fragment.ControlFragment" />
         <import type="android.graphics.Color" />
     </data>
         <FrameLayout
@@ -67,7 +68,7 @@
                                 <View
                                     android:layout_width="125dp"
                                     android:layout_height="125dp"
-                                    android:background="@{Color.argb(profileViewModel.selectedBrightness, profileViewModel.selectedRed, profileViewModel.selectedGreen, profileViewModel.selectedBlue)}"
+                                    android:background="@{Color.argb(controlViewModel.selectedBrightness, controlViewModel.selectedRed, controlViewModel.selectedGreen, controlViewModel.selectedBlue)}"
                                     android:backgroundTint="#000000"
                                     android:backgroundTintMode="add"
                                     android:layout_marginTop="5dp"
@@ -89,7 +90,7 @@
                                         android:layout_height="wrap_content"
                                         android:maxLines="1"
                                         android:maxLength="20"
-                                        android:text="@={profileViewModel.selectedName}"
+                                        android:text="@={controlViewModel.selectedName}"
                                         tools:text="Name" />
 
                                     <LinearLayout
@@ -135,25 +136,25 @@
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text='@{String.format("%03d", profileViewModel.selectedBrightness)}'
+                                                android:text='@{String.format("%03d", controlViewModel.selectedBrightness)}'
                                                 tools:text="0" />
 
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text='@{String.format("%03d", profileViewModel.selectedRed)}'
+                                                android:text='@{String.format("%03d", controlViewModel.selectedRed)}'
                                                 tools:text="0" />
 
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text='@{String.format("%03d", profileViewModel.selectedGreen)}'
+                                                android:text='@{String.format("%03d", controlViewModel.selectedGreen)}'
                                                 tools:text="0" />
 
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text='@{String.format("%03d", profileViewModel.selectedBlue)}'
+                                                android:text='@{String.format("%03d", controlViewModel.selectedBlue)}'
                                                 tools:text="0" />
                                         </LinearLayout>
                                     </LinearLayout>
@@ -251,7 +252,8 @@
                                         android:layout_height="19dp"
                                         android:layout_marginVertical="5dp"
                                         android:max="255"
-                                        android:progress="@={profileViewModel.selectedBrightness}" />
+                                        android:onProgressChanged="@{() -> controlFragment.updateDevice()}"
+                                        android:progress="@={controlViewModel.selectedBrightness}" />
 
                                     <SeekBar
                                         android:id="@+id/seekBarRed"
@@ -259,7 +261,8 @@
                                         android:layout_height="19dp"
                                         android:layout_marginVertical="5dp"
                                         android:max="255"
-                                        android:progress="@={profileViewModel.selectedRed}" />
+                                        android:onProgressChanged="@{() -> controlFragment.updateDevice()}"
+                                        android:progress="@={controlViewModel.selectedRed}" />
 
                                     <SeekBar
                                         android:id="@+id/seekBarGreen"
@@ -267,7 +270,8 @@
                                         android:layout_height="19dp"
                                         android:layout_marginVertical="5dp"
                                         android:max="255"
-                                        android:progress="@={profileViewModel.selectedGreen}" />
+                                        android:onProgressChanged="@{() -> controlFragment.updateDevice()}"
+                                        android:progress="@={controlViewModel.selectedGreen}" />
 
                                     <SeekBar
                                         android:id="@+id/seekBarBlue"
@@ -275,7 +279,8 @@
                                         android:layout_height="19dp"
                                         android:layout_marginVertical="5dp"
                                         android:max="255"
-                                        android:progress="@={profileViewModel.selectedBlue}" />
+                                        android:onProgressChanged="@{() -> controlFragment.updateDevice()}"
+                                        android:progress="@={controlViewModel.selectedBlue}" />
                                 </LinearLayout>
                             </TableRow>
                         </LinearLayout>

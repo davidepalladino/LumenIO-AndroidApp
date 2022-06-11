@@ -1,4 +1,4 @@
-package it.davidepalladino.lumenio.view;
+package it.davidepalladino.lumenio.view.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,27 +14,29 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.snackbar.Snackbar;
 
 import it.davidepalladino.lumenio.databinding.FragmentControlBinding;
+import it.davidepalladino.lumenio.view.viewModel.ControlViewModel;
 
 public class ControlFragment extends Fragment {
     private FragmentControlBinding binding;
-    private ProfileViewModel profileViewModel;
+    private ControlViewModel controlViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        controlViewModel = new ViewModelProvider(requireActivity()).get(ControlViewModel.class);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 SharedPreferences profileSelected = requireActivity().getPreferences(Context.MODE_PRIVATE);
-                profileViewModel.loadSelectedByID(profileSelected.getLong("SELECTED_PROFILE_ID", 0));
+                controlViewModel.loadSelectedByID(profileSelected.getLong("SELECTED_PROFILE_ID", 0));
             }
         }).start();
 
         binding = FragmentControlBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
 
-        binding.setProfileViewModel(profileViewModel);
+        binding.setControlViewModel(controlViewModel);
+        binding.setControlFragment(this);
 
         return binding.getRoot();
     }
@@ -49,7 +51,7 @@ public class ControlFragment extends Fragment {
                     @Override
                     public void run() {
                         SharedPreferences.Editor profileSelectedPreference = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
-                        profileSelectedPreference.putLong("SELECTED_PROFILE_ID", profileViewModel.insert());
+                        profileSelectedPreference.putLong("SELECTED_PROFILE_ID", controlViewModel.insert());
                         profileSelectedPreference.apply();
 
                         Snackbar.make(view, "Saved", Snackbar.LENGTH_LONG)
@@ -64,5 +66,9 @@ public class ControlFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void updateDevice() {
+        // TODO: Updating the BT device.
     }
 }

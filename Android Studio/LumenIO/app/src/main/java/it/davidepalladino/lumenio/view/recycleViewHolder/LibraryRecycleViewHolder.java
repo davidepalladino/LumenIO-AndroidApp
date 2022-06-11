@@ -1,4 +1,4 @@
-package it.davidepalladino.lumenio.view;
+package it.davidepalladino.lumenio.view.recycleViewHolder;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;

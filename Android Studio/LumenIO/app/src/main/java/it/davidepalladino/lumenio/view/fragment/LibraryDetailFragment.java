@@ -1,4 +1,4 @@
-package it.davidepalladino.lumenio.view;
+package it.davidepalladino.lumenio.view.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

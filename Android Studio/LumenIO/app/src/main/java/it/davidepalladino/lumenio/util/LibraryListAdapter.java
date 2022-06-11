@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.databinding.RecycleViewLibraryBinding;
-import it.davidepalladino.lumenio.view.LibraryRecycleViewHolder;
+import it.davidepalladino.lumenio.view.recycleViewHolder.LibraryRecycleViewHolder;
 
 public class LibraryListAdapter extends ListAdapter<Profile, LibraryRecycleViewHolder> {
     public LibraryListAdapter(@NonNull DiffUtil.ItemCallback<Profile> diffCallback) {

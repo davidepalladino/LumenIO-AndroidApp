@@ -2,10 +2,10 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.LibraryListFragment" >
+    tools:context=".view.fragment.LibraryListFragment" >
 
     <data>
-        <variable name="profileViewModel" type="it.davidepalladino.lumenio.view.ProfileViewModel" />
+        <variable name="controlViewModel" type="it.davidepalladino.lumenio.view.viewModel.ControlViewModel" />
     </data>
 
     <LinearLayout
