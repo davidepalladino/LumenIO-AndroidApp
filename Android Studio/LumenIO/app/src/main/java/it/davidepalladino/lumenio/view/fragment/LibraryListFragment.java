@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,8 +26,6 @@ public class LibraryListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         TransitionInflater inflater = TransitionInflater.from(requireContext());
-////        setSharedElementEnterTransition(inflater.inflateTransition(R.transition.change_bounds));
-////        setSharedElementReturnTransition(inflater.inflateTransition(R.transition.change_bounds));
         setEnterTransition(inflater.inflateTransition(R.transition.fade));
         setExitTransition(inflater.inflateTransition(R.transition.fade));
     }
@@ -38,31 +35,19 @@ public class LibraryListFragment extends Fragment {
         libraryViewModel = new ViewModelProvider(requireActivity()).get(LibraryViewModel.class);
 
         binding = FragmentLibraryListBinding.inflate(inflater, container, false);
+        binding.setLifecycleOwner(this);
+
         return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        postponeEnterTransition();
-
         LibraryListAdapter adapter = new LibraryListAdapter(new LibraryListAdapter.ProfileDiff());
-        binding.recycleView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        binding.recycleView.setAdapter(adapter);
+        binding.listProfiles.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        binding.listProfiles.setAdapter(adapter);
 
-        final ViewGroup parentView = (ViewGroup) view.getParent(); // Can use `binding` instead.
-        libraryViewModel.getAll().observe(requireActivity(), profiles -> {
-            adapter.submitList(profiles);
-            parentView.getViewTreeObserver()
-                    .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                        @Override
-                        public boolean onPreDraw(){
-                            parentView.getViewTreeObserver().removeOnPreDrawListener(this);
-                            startPostponedEnterTransition();
-                            return true;
-                        }
-                    });
-        });
+        libraryViewModel.getAll().observe(requireActivity(), adapter::submitList);
     }
 
     @Override

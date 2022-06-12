@@ -8,6 +8,7 @@
     <dimen name="headerCardMarginTop">5dp</dimen>
     <dimen name="headerCardMarginStart">5dp</dimen>
     <dimen name="iconHeaderCardMarginEnd">10dp</dimen>
-    <dimen name="textHeaderCardSize">22sp</dimen>
+    <dimen name="textHeaderCardSize">20sp</dimen>
     <dimen name="bodyCardPadding">10dp</dimen>
+    <dimen name="itemListViewCornerRadius">5dp</dimen>
 </resources>

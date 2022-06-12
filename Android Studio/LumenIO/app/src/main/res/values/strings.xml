@@ -7,6 +7,7 @@
     <string name="red">RED</string>
     <string name="green">GREEN</string>
     <string name="blue">BLUE</string>
+
     <string name="snackbarProfileSaved">\" was saved.\"</string>
     <string name="snackbarProfileNotSavedForName">\" was not saved because this name already exists.\"</string>
 </resources>

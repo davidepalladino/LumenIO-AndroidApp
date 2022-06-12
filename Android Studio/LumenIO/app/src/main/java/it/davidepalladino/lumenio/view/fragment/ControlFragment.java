@@ -34,7 +34,7 @@ public class ControlFragment extends Fragment {
             @Override
             public void run() {
                 SharedPreferences profileSelected = requireActivity().getPreferences(Context.MODE_PRIVATE);
-                controlViewModel.loadSelectedByID(profileSelected.getLong("SELECTED_PROFILE_ID", 0));
+                controlViewModel.loadByID(profileSelected.getLong("SELECTED_PROFILE_ID", 0));
             }
         }).start();
 

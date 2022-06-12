@@ -53,6 +53,8 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:textStyle="bold"
                                     android:textSize="@dimen/textHeaderCardSize"
                                     android:textColor="@color/primaryColor"
                                     android:text="@string/preview" />
@@ -78,33 +80,41 @@
                                     android:elevation="5dp"
                                     tools:background="#FFFFFF"/>
 
-                                <LinearLayout
+                                <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="125dp"
                                     android:orientation="vertical"
-                                    android:layout_marginStart="10dp" >
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginEnd="5dp"
+                                    android:layout_marginBottom="10dp" >
 
                                     <EditText
                                         android:id="@+id/name"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:maxLines="1"
+                                        android:inputType="text"
                                         android:maxLength="20"
+                                        android:maxLines="1"
                                         android:text="@={controlViewModel.selectedName}"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
                                         tools:text="Name" />
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:orientation="horizontal"
-                                        android:layout_marginStart="4dp">
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent">
 
                                         <LinearLayout
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:orientation="vertical"
+                                            android:layout_marginStart="3dp"
+                                            android:layout_marginEnd="15dp"
                                             android:gravity="start"
-                                            android:layout_marginEnd="15dp">
+                                            android:orientation="vertical">
 
                                             <TextView
                                                 android:layout_width="wrap_content"
@@ -158,7 +168,7 @@
                                                 tools:text="0" />
                                         </LinearLayout>
                                     </LinearLayout>
-                                </LinearLayout>
+                                </androidx.constraintlayout.widget.ConstraintLayout>
                             </LinearLayout>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -193,6 +203,8 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:textStyle="bold"
                                     android:textSize="@dimen/textHeaderCardSize"
                                     android:textColor="@color/primaryColor"
                                     android:text="@string/controls" />

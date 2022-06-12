@@ -23,6 +23,13 @@ public class Profile {
     public int green;
     public int blue;
 
+    @NonNull
+    public long createdAt;
+
+    @NonNull
+    public long updatedAt;
+    public long usedAt;
+
     public Profile(@NonNull String name, int brightness, int red, int green, int blue) {
         this.name = name;
         this.brightness = brightness;

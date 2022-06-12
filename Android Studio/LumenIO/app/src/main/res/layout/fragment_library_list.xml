@@ -15,10 +15,10 @@
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycle_view"
+            android:id="@+id/listProfiles"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/recycle_view_library"/>
+            tools:listitem="@layout/recycle_view_library" />
     </LinearLayout>
 </layout>
 

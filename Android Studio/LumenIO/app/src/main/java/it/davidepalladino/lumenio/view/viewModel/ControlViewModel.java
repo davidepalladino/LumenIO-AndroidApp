@@ -23,8 +23,8 @@ public class ControlViewModel extends AndroidViewModel {
         this.profileRepository = new ProfileRepository(application);
     }
 
-    public void loadSelectedByID(long id) {
-        Profile selectedProfile = profileRepository.getById(id);
+    public void loadByID(long id) {
+        Profile selectedProfile = profileRepository.getOneById(id);
 
         if (selectedProfile == null) {
             selectedProfile = new Profile("", 0, 0, 0, 0);
