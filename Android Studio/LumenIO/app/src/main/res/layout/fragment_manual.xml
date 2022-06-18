@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.fragment.ControlFragment" >
+    tools:context=".view.fragment.ManualFragment" >
 
     <data>
-        <variable name="controlViewModel" type="it.davidepalladino.lumenio.view.viewModel.ControlViewModel" />
-        <variable name="controlFragment" type="it.davidepalladino.lumenio.view.fragment.ControlFragment" />
+        <variable name="manualViewModel" type="it.davidepalladino.lumenio.view.viewModel.ManualViewModel" />
+        <variable name="manualFragment" type="it.davidepalladino.lumenio.view.fragment.ManualFragment" />
         <import type="android.graphics.Color" />
     </data>
         <FrameLayout
@@ -27,9 +27,9 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/cardMarginTop"
-                        android:layout_marginHorizontal="@dimen/cardMarginHorizontal"
-                        app:cardCornerRadius="@dimen/cardCornerRadius" >
+                        android:layout_marginTop="@dimen/card_margin_top"
+                        android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                        app:cardCornerRadius="@dimen/card_corner_radius" >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -40,23 +40,23 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal"
-                                android:padding="@dimen/headerCardPadding"
-                                android:layout_marginTop="@dimen/headerCardMarginTop"
-                                android:layout_marginStart="@dimen/headerCardMarginStart" >
+                                android:padding="@dimen/header_card_padding"
+                                android:layout_marginTop="@dimen/header_card_margin_top"
+                                android:layout_marginStart="@dimen/header_card_margin_start" >
 
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:src="@drawable/ic_round_preview_card"
-                                    android:layout_marginEnd="@dimen/iconHeaderCardMarginEnd" />
+                                    android:layout_marginEnd="@dimen/icon_header_card_margin_end" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:textStyle="bold"
-                                    android:textSize="@dimen/textHeaderCardSize"
-                                    android:textColor="@color/primaryColor"
+                                    android:textSize="@dimen/text_header_card_size"
+                                    android:textColor="@color/primary_color"
                                     android:text="@string/preview" />
 
                             </LinearLayout>
@@ -65,12 +65,12 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                android:padding="@dimen/bodyCardPadding" >
+                                android:padding="@dimen/body_card_padding" >
 
                                 <View
-                                    android:layout_width="125dp"
-                                    android:layout_height="125dp"
-                                    android:background="@{Color.argb(controlViewModel.selectedBrightness, controlViewModel.selectedRed, controlViewModel.selectedGreen, controlViewModel.selectedBlue)}"
+                                    android:layout_width="150dp"
+                                    android:layout_height="150dp"
+                                    android:background="@{Color.argb(manualViewModel.selectedBrightness, manualViewModel.selectedRed, manualViewModel.selectedGreen, manualViewModel.selectedBlue)}"
                                     android:backgroundTint="#000000"
                                     android:backgroundTintMode="add"
                                     android:layout_marginTop="5dp"
@@ -82,7 +82,7 @@
 
                                 <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="125dp"
+                                    android:layout_height="150dp"
                                     android:orientation="vertical"
                                     android:layout_marginTop="5dp"
                                     android:layout_marginStart="10dp"
@@ -96,10 +96,22 @@
                                         android:inputType="text"
                                         android:maxLength="20"
                                         android:maxLines="1"
-                                        android:text="@={controlViewModel.selectedName}"
+                                        android:text="@={manualViewModel.selectedName}"
                                         app:layout_constraintStart_toStartOf="parent"
                                         app:layout_constraintTop_toTopOf="parent"
                                         tools:text="Name" />
+
+                                    <TextView
+                                        android:id="@+id/message_name"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:paddingLeft="4dp"
+                                        android:textSize="@dimen/message_text_view_size"
+                                        android:textColor="@color/error"
+                                        android:visibility="gone"
+                                        app:layout_constraintTop_toBottomOf="@+id/name"
+                                        tools:text="Message"
+                                        tools:visibility="visible"/>
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
@@ -119,23 +131,23 @@
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text="@string/brightnessShort" />
+                                                android:text="@string/brightness_label" />
 
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text="@string/red" />
+                                                android:text="@string/red_label" />
 
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text="@string/green" />
+                                                android:text="@string/green_label" />
 
 
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text="@string/blue" />
+                                                android:text="@string/blue_label" />
                                         </LinearLayout>
 
                                         <LinearLayout
@@ -146,25 +158,25 @@
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text='@{String.format("%03d", controlViewModel.selectedBrightness)}'
+                                                android:text='@{String.format("%03d", manualViewModel.selectedBrightness)}'
                                                 tools:text="0" />
 
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text='@{String.format("%03d", controlViewModel.selectedRed)}'
+                                                android:text='@{String.format("%03d", manualViewModel.selectedRed)}'
                                                 tools:text="0" />
 
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text='@{String.format("%03d", controlViewModel.selectedGreen)}'
+                                                android:text='@{String.format("%03d", manualViewModel.selectedGreen)}'
                                                 tools:text="0" />
 
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text='@{String.format("%03d", controlViewModel.selectedBlue)}'
+                                                android:text='@{String.format("%03d", manualViewModel.selectedBlue)}'
                                                 tools:text="0" />
                                         </LinearLayout>
                                     </LinearLayout>
@@ -176,10 +188,10 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/cardMarginTop"
-                        android:layout_marginHorizontal="@dimen/cardMarginHorizontal"
-                        android:layout_marginBottom="@dimen/cardMarginBottom"
-                        app:cardCornerRadius="@dimen/cardCornerRadius" >
+                        android:layout_marginTop="@dimen/card_margin_top"
+                        android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                        android:layout_marginBottom="@dimen/card_margin_bottom"
+                        app:cardCornerRadius="@dimen/card_corner_radius" >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -190,23 +202,23 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal"
-                                android:padding="@dimen/headerCardPadding"
-                                android:layout_marginTop="@dimen/headerCardMarginTop"
-                                android:layout_marginStart="@dimen/headerCardMarginStart" >
+                                android:padding="@dimen/header_card_padding"
+                                android:layout_marginTop="@dimen/header_card_margin_top"
+                                android:layout_marginStart="@dimen/header_card_margin_start" >
 
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:src="@drawable/ic_round_control_card"
-                                    android:layout_marginEnd="@dimen/iconHeaderCardMarginEnd" />
+                                    android:layout_marginEnd="@dimen/icon_header_card_margin_end" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:textStyle="bold"
-                                    android:textSize="@dimen/textHeaderCardSize"
-                                    android:textColor="@color/primaryColor"
+                                    android:textSize="@dimen/text_header_card_size"
+                                    android:textColor="@color/primary_color"
                                     android:text="@string/controls" />
 
                             </LinearLayout>
@@ -215,7 +227,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:padding="@dimen/bodyCardPadding" >
+                                android:padding="@dimen/body_card_padding" >
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -227,27 +239,31 @@
 
                                     <TextView
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginVertical="5dp"
-                                        android:text="@string/brightnessShort" />
+                                        android:layout_height="@dimen/seek_bar_height"
+                                        android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
+                                        android:gravity="center_vertical"
+                                        android:text="@string/brightness_label" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginVertical="5dp"
-                                        android:text="@string/red" />
+                                        android:layout_height="@dimen/seek_bar_height"
+                                        android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
+                                        android:gravity="center_vertical"
+                                        android:text="@string/red_label" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginVertical="5dp"
-                                        android:text="@string/green" />
+                                        android:layout_height="@dimen/seek_bar_height"
+                                        android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
+                                        android:gravity="center_vertical"
+                                        android:text="@string/green_label" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginVertical="5dp"
-                                        android:text="@string/blue" />
+                                        android:layout_height="@dimen/seek_bar_height"
+                                        android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
+                                        android:gravity="center_vertical"
+                                        android:text="@string/blue_label" />
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -261,38 +277,38 @@
                                     <SeekBar
                                         android:id="@+id/seekBarBrightness"
                                         android:layout_width="match_parent"
-                                        android:layout_height="19dp"
-                                        android:layout_marginVertical="5dp"
+                                        android:layout_height="@dimen/seek_bar_height"
+                                        android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
                                         android:max="255"
-                                        android:onProgressChanged="@{() -> controlFragment.updateDevice()}"
-                                        android:progress="@={controlViewModel.selectedBrightness}" />
+                                        android:onProgressChanged="@{() -> manualFragment.updateDevice()}"
+                                        android:progress="@={manualViewModel.selectedBrightness}" />
 
                                     <SeekBar
                                         android:id="@+id/seekBarRed"
                                         android:layout_width="match_parent"
-                                        android:layout_height="19dp"
-                                        android:layout_marginVertical="5dp"
+                                        android:layout_height="@dimen/seek_bar_height"
+                                        android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
                                         android:max="255"
-                                        android:onProgressChanged="@{() -> controlFragment.updateDevice()}"
-                                        android:progress="@={controlViewModel.selectedRed}" />
+                                        android:onProgressChanged="@{() -> manualFragment.updateDevice()}"
+                                        android:progress="@={manualViewModel.selectedRed}" />
 
                                     <SeekBar
                                         android:id="@+id/seekBarGreen"
                                         android:layout_width="match_parent"
-                                        android:layout_height="19dp"
-                                        android:layout_marginVertical="5dp"
+                                        android:layout_height="@dimen/seek_bar_height"
+                                        android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
                                         android:max="255"
-                                        android:onProgressChanged="@{() -> controlFragment.updateDevice()}"
-                                        android:progress="@={controlViewModel.selectedGreen}" />
+                                        android:onProgressChanged="@{() -> manualFragment.updateDevice()}"
+                                        android:progress="@={manualViewModel.selectedGreen}" />
 
                                     <SeekBar
                                         android:id="@+id/seekBarBlue"
                                         android:layout_width="match_parent"
-                                        android:layout_height="19dp"
-                                        android:layout_marginVertical="5dp"
+                                        android:layout_height="@dimen/seek_bar_height"
+                                        android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
                                         android:max="255"
-                                        android:onProgressChanged="@{() -> controlFragment.updateDevice()}"
-                                        android:progress="@={controlViewModel.selectedBlue}" />
+                                        android:onProgressChanged="@{() -> manualFragment.updateDevice()}"
+                                        android:progress="@={manualViewModel.selectedBlue}" />
                                 </LinearLayout>
                             </TableRow>
                         </LinearLayout>

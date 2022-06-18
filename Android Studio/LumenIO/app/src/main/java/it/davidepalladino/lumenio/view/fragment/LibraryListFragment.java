@@ -2,11 +2,15 @@ package it.davidepalladino.lumenio.view.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +29,8 @@ public class LibraryListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
+
         TransitionInflater inflater = TransitionInflater.from(requireContext());
         setEnterTransition(inflater.inflateTransition(R.transition.fade));
         setExitTransition(inflater.inflateTransition(R.transition.fade));
@@ -37,22 +43,45 @@ public class LibraryListFragment extends Fragment {
         binding = FragmentLibraryListBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
 
-        return binding.getRoot();
-    }
-
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         LibraryListAdapter adapter = new LibraryListAdapter(new LibraryListAdapter.ProfileDiff());
         binding.listProfiles.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.listProfiles.setAdapter(adapter);
 
         libraryViewModel.getAll().observe(requireActivity(), adapter::submitList);
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        appCompatActivity.getSupportActionBar().setTitle(R.string.app_name);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.menu_library_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            requireActivity().onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

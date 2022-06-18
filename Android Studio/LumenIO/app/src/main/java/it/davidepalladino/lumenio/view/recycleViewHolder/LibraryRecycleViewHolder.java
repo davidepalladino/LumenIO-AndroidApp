@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.databinding.RecycleViewLibraryBinding;
+import it.davidepalladino.lumenio.view.fragment.LibraryDetailFragment;
 
 public class LibraryRecycleViewHolder extends RecyclerView.ViewHolder {
     private RecycleViewLibraryBinding binding;
@@ -29,7 +30,7 @@ public class LibraryRecycleViewHolder extends RecyclerView.ViewHolder {
             NavController navController =  Navigation.findNavController(view);
 
             Bundle bundle = new Bundle();
-            bundle.putLong("profileID", profile.id);        // TODO: Create constant on some resource.
+            bundle.putLong(LibraryDetailFragment.BUNDLE_PROFILE_ID, profile.id);
 
             navController.navigate(R.id.action_ListLibraryFragment_to_DetailLibraryFragment, bundle, null);
         });

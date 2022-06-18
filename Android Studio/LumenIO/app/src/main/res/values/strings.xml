@@ -1,13 +1,27 @@
 <resources>
-    <string name="appName">LumenIO</string>
+    <string name="app_name">LumenIO</string>
 
     <string name="preview">Preview</string>
     <string name="controls">Controls</string>
-    <string name="brightnessShort">BRT</string>
-    <string name="red">RED</string>
-    <string name="green">GREEN</string>
-    <string name="blue">BLUE</string>
+    <string name="brightness_label">BRT</string>
+    <string name="red_label">RED</string>
+    <string name="green_label">GREEN</string>
+    <string name="blue_label">BLUE</string>
 
-    <string name="snackbarProfileSaved">\" was saved.\"</string>
-    <string name="snackbarProfileNotSavedForName">\" was not saved because this name already exists.\"</string>
+    <string name="profile_saved">has been saved.</string>
+    <string name="profile_updated">has been updated.</string>
+    <string name="profile_deleted">has been deleted.</string>
+    <string name="profile_not_saved_for_name">has not been saved because this name already exists.</string>
+    <string name="profile_not_updated_for_name">has not been updated because this name already exists.</string>
+    <string name="empty_field">This field cannot be empty</string>
+    <string name="accept">Accept</string>
+    <string name="discard">Discard</string>
+    <string name="edit">Edit</string>
+    <string name="remove">Remove</string>
+    <string name="filter">Filter</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="detail">Detail</string>
+    <string name="manual">Manual</string>
+    <string name="library">Library</string>
+    <string name="list">List</string>
 </resources>

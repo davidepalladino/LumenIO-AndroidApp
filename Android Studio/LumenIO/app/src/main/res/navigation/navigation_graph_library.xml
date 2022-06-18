@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_library"
-    android:label="List"
+    android:label="@string/list"
     app:startDestination="@id/LibraryListFragment" >
 
     <fragment
         android:id="@+id/LibraryListFragment"
         android:name="it.davidepalladino.lumenio.view.fragment.LibraryListFragment"
-        android:label="List"
+        android:label="@string/list"
         tools:layout="@layout/fragment_library_list" >
 
         <action
@@ -21,6 +21,6 @@
     <fragment
         android:id="@+id/LibraryDetailFragment"
         android:name="it.davidepalladino.lumenio.view.fragment.LibraryDetailFragment"
-        android:label="Detail"
+        android:label="@string/detail"
         tools:layout="@layout/fragment_library_detail" />
 </navigation>

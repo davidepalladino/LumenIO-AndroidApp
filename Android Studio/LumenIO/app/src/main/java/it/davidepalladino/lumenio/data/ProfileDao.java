@@ -20,4 +20,7 @@ public interface ProfileDao {
 
     @Query("SELECT * FROM profiles WHERE id = :id")
     Profile getOneById(long id);
+
+    @Query("SELECT * FROM profiles WHERE name = :name")
+    Profile getOneByName(String name);
 }

@@ -10,12 +10,10 @@ import androidx.navigation.Navigation;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.databinding.ActivityMainBinding;
-import it.davidepalladino.lumenio.view.fragment.ControlFragment;
+import it.davidepalladino.lumenio.view.fragment.ManualFragment;
 import it.davidepalladino.lumenio.view.fragment.LibraryFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText("Control");
-                    tab.setIcon(R.drawable.ic_round_control_tab);
+                    tab.setText(getString(R.string.manual));
+                    tab.setIcon(R.drawable.ic_round_manual_tab);
                     break;
 //                    case 1:
 //                        tab.setIcon(R.drawable.ic_round_scene);
@@ -45,27 +43,10 @@ public class MainActivity extends AppCompatActivity {
 //                        break;
                 case 1: // TODO: Replace with 2 during the implementation of Scene.
                     tab.setIcon(R.drawable.ic_round_library_tab);
-                    tab.setText("Library");
+                    tab.setText(getString(R.string.library));
                     break;
             }
         }).attach();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -99,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return new ControlFragment();
+                    return new ManualFragment();
 //                case 1:
 //                    return new SceneFragment();
                 case 1: // TODO: Replace with 2 during the implementation of Scene.

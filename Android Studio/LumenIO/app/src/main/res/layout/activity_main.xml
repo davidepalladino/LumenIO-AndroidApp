@@ -29,10 +29,10 @@
         app:tabMode="fixed"
         app:tabPaddingTop="10dp"
         app:tabPaddingBottom="5dp"
-        app:tabBackground="@color/primaryLightColor"
-        app:tabIconTint="@color/primaryTextColor"
-        app:tabTextColor="@color/primaryTextColor"
-        app:tabIndicatorColor="@color/secondaryColor" />
+        app:tabBackground="@color/primary_light_color"
+        app:tabIconTint="@color/primary_text_color"
+        app:tabTextColor="@color/primary_text_color"
+        app:tabIndicatorColor="@color/secondary_color" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"

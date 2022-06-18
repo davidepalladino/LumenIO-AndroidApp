@@ -22,9 +22,24 @@ public class ProfileRepository {
         return this.profileDao.getOneById(id);
     }
 
+    public Profile getOneByName(String name) {
+        return this.profileDao.getOneByName(name);
+    }
+
     public long insert(Profile profile) {
+        profile.createdAt = System.currentTimeMillis() / 1000;
+        profile.updatedAt = 0;
+        profile.usedAt = 0;
+
         return this.profileDao.insert(profile);
     }
 
-    public int update(Profile profile) { return this.profileDao.update(profile); }
+    public int update(Profile profile) {
+        profile.updatedAt = System.currentTimeMillis() / 1000;
+        return this.profileDao.update(profile);
+    }
+
+    public void delete(Profile profile) {
+        this.profileDao.delete(profile);
+    }
 }
