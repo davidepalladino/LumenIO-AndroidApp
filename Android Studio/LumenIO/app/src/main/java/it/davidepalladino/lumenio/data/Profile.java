@@ -38,7 +38,7 @@ public class Profile {
         this.blue = blue;
     }
 
-    public void setEditableValues(@NonNull String name, int brightness, int red, int green, int blue) {
+    public void setValues(@NonNull String name, int brightness, int red, int green, int blue) {
         this.name = name;
         this.brightness = brightness;
         this.red = red;

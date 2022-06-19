@@ -27,19 +27,40 @@ public class ProfileRepository {
     }
 
     public long insert(Profile profile) {
-        profile.createdAt = System.currentTimeMillis() / 1000;
+        cleanName(profile);
+
+        long actualTime = System.currentTimeMillis() / 1000;
+        profile.createdAt = actualTime;
         profile.updatedAt = 0;
-        profile.usedAt = 0;
+        profile.usedAt = actualTime;
 
         return this.profileDao.insert(profile);
     }
 
-    public int update(Profile profile) {
+    public int updateValues(Profile profile) {
+        cleanName(profile);
+
         profile.updatedAt = System.currentTimeMillis() / 1000;
+        return this.profileDao.update(profile);
+    }
+
+    public int updateUse(Profile profile) {
+        profile.usedAt = System.currentTimeMillis() / 1000;
         return this.profileDao.update(profile);
     }
 
     public void delete(Profile profile) {
         this.profileDao.delete(profile);
+    }
+
+    //^[^\s][\d\D]*[^\s]$
+    private void cleanName(Profile profile) {
+        if (profile.name.charAt(0) == ' ') {
+            profile.name = profile.name.substring(1);
+        }
+
+        if (profile.name.charAt(profile.name.length() - 1) == ' ') {
+            profile.name = profile.name.substring(0, profile.name.length() - 1);
+        }
     }
 }

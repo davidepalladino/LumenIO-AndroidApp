@@ -10,10 +10,11 @@
 
     <string name="profile_saved">has been saved.</string>
     <string name="profile_updated">has been updated.</string>
-    <string name="profile_deleted">has been deleted.</string>
+    <string name="profile_removed">has been removed.</string>
     <string name="profile_not_saved_for_name">has not been saved because this name already exists.</string>
     <string name="profile_not_updated_for_name">has not been updated because this name already exists.</string>
     <string name="empty_field">This field cannot be empty</string>
+    <string name="incorrect_start_end_field">This field starts/ends with white character</string>
     <string name="accept">Accept</string>
     <string name="discard">Discard</string>
     <string name="edit">Edit</string>
@@ -24,4 +25,15 @@
     <string name="manual">Manual</string>
     <string name="library">Library</string>
     <string name="list">List</string>
+    <string name="control_it">Control it</string>
+    <string name="set_as_scene">Set as scene</string>
+    <string name="date">Date</string>
+    <string name="created_at">Created at</string>
+    <string name="updated_at">Updated at</string>
+    <string name="used_at">Used at</string>
+    <string name="questionRemoveProfilePre">Are you sure to remove the</string>
+    <string name="questionRemoveProfilePost">profile?</string>
+    <string name="profile_loaded">This profile has been loaded in Manual tab.</string>
+    <string name="empty_library_list">No profiles yet!</string>
+    <string name="empty_library_list_description">You can save a profile to the library by the Manual tab</string>
 </resources>

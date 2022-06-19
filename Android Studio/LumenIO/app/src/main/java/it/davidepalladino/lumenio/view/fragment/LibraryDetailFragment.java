@@ -1,13 +1,13 @@
 package it.davidepalladino.lumenio.view.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextWatcher;
 import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +36,7 @@ import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
 
 public class LibraryDetailFragment extends Fragment {
     public static final String BUNDLE_PROFILE_ID = "PROFILE_ID";
+
     private FragmentLibraryDetailBinding binding;
     private LibraryViewModel libraryViewModel;
     private ManualViewModel manualViewModel;
@@ -62,25 +63,7 @@ public class LibraryDetailFragment extends Fragment {
         binding = FragmentLibraryDetailBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
         binding.setLibraryViewModel(libraryViewModel);
-
-        binding.nameEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (start == 0 && before > 0 && count == 0) {
-                    binding.messageName.setText(getString(R.string.empty_field));
-                    binding.messageName.setVisibility(View.VISIBLE);
-                } else if (start == 0 && before == 0 && count > 0) {
-                    binding.messageName.setText("");
-                    binding.messageName.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) { }
-        });
+        binding.setButtonsHandler(new ButtonsHandler());
 
         new Thread(() -> libraryViewModel.loadByID(getArguments().getLong(BUNDLE_PROFILE_ID))).start();
 
@@ -140,6 +123,7 @@ public class LibraryDetailFragment extends Fragment {
 
             this.menu.clear();
             this.inflater.inflate(R.menu.menu_library_detail_edit, this.menu);
+
             return true;
         } else if (id == R.id.discard) {
             disableEditMode();
@@ -148,6 +132,7 @@ public class LibraryDetailFragment extends Fragment {
 
             this.menu.clear();
             this.inflater.inflate(R.menu.menu_library_detail_no_edit, this.menu);
+
             return true;
         } else if (id == R.id.accept) {
             updateProfile();
@@ -155,14 +140,52 @@ public class LibraryDetailFragment extends Fragment {
 
             this.menu.clear();
             this.inflater.inflate(R.menu.menu_library_detail_no_edit, this.menu);
+
             return true;
         } else if (id == R.id.remove) {
-            deleteProfile();
-            requireActivity().onBackPressed();
+            showRemoveDialog();
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkName(CharSequence s, int start, int before, int count) {
+        if (s.toString().matches(getString(R.string.sentence_incorrect_only_white_space))) {
+            binding.messageName.setText(getString(R.string.empty_field));
+            binding.messageName.setVisibility(View.VISIBLE);
+        } else if (s.toString().matches(getString(R.string.sentence_incorrect_white_space_start_end))) {
+            binding.messageName.setText(R.string.incorrect_start_end_field);
+            binding.messageName.setVisibility(View.VISIBLE);
+        } else if (s.toString().matches(getString(R.string.sentence_correct))) {
+            binding.messageName.setText("");
+            binding.messageName.setVisibility(View.GONE);
+        }
+    }
+
+    private void showRemoveDialog() {
+        String dialogMessage = getString(R.string.questionRemoveProfilePre) + " " + binding.nameTextView.getText().toString() + " " + getString(R.string.questionRemoveProfilePost);
+
+        SpannableString spannableDialogMessage = new SpannableString(dialogMessage);
+        spannableDialogMessage.setSpan(
+                new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)),
+                getString(R.string.questionRemoveProfilePre).length() + 1,
+                getString(R.string.questionRemoveProfilePre).length() + 1 + binding.nameTextView.getText().toString().length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(requireActivity());
+        alertDialog
+                .setMessage(spannableDialogMessage)
+                .setPositiveButton(getString(R.string.remove), (dialog, idDialog) -> {
+                    deleteProfile();
+                    requireActivity().onBackPressed();
+                })
+                .setNegativeButton(getString(R.string.discard), (dialog, idDialog) -> {
+                })
+                .create()
+                .show();
     }
 
     public void updateDevice() {
@@ -174,7 +197,7 @@ public class LibraryDetailFragment extends Fragment {
             String snackbarMessage = "";
 
             try {
-                libraryViewModel.update();
+                libraryViewModel.updateValues();
                 libraryViewModel.reload();
 
                 if (Objects.requireNonNull(libraryViewModel.getSelectedID().getValue()).longValue() == Objects.requireNonNull(manualViewModel.getSelectedID().getValue()).longValue()) {
@@ -199,19 +222,16 @@ public class LibraryDetailFragment extends Fragment {
 
             try {
                 libraryViewModel.delete();
-                libraryViewModel.update();
                 if (libraryViewModel.getSelectedID().getValue() == (manualViewModel.getSelectedID().getValue())) {
                     manualViewModel.loadByID(0);
                 }
 
-                snackbarMessage = libraryViewModel.getSelectedName().getValue() + " " + getString(R.string.profile_deleted);
+                snackbarMessage = libraryViewModel.getSelectedName().getValue() + " " + getString(R.string.profile_removed);
                 SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
                 spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, libraryViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 Snackbar.make(binding.getRoot(), spannableSnackbarMessage, 5000).show();
-            } catch (SQLiteConstraintException ignored) {
-
-            }
+            } catch (SQLiteConstraintException ignored) { }
         }).start();
     }
 
@@ -231,5 +251,23 @@ public class LibraryDetailFragment extends Fragment {
         /* Disabling the keyboard. */
         InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0);
+    }
+
+
+
+    public class ButtonsHandler {
+        public void controlIt(View v) {
+            new Thread(() -> {
+                SharedPreferences.Editor profileSelectedPreference = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+                profileSelectedPreference.putLong(getString(R.string.latest_profile_selected), libraryViewModel.getSelectedID().getValue());
+                profileSelectedPreference.apply();
+
+                libraryViewModel.updateUse();
+                libraryViewModel.reload();
+                manualViewModel.loadByID(libraryViewModel.getSelectedID().getValue());
+
+                Snackbar.make(binding.getRoot(), getString(R.string.profile_loaded), 5000).show();
+            }).start();
+        }
     }
 }

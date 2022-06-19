@@ -16,7 +16,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.transition.TransitionInflater;
 
+import java.util.List;
+
 import it.davidepalladino.lumenio.R;
+import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.databinding.FragmentLibraryListBinding;
 import it.davidepalladino.lumenio.util.LibraryListAdapter;
 import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
@@ -47,7 +50,18 @@ public class LibraryListFragment extends Fragment {
         binding.listProfiles.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.listProfiles.setAdapter(adapter);
 
-        libraryViewModel.getAll().observe(requireActivity(), adapter::submitList);
+        libraryViewModel.getAll().observe(requireActivity(), (List<Profile> list) -> {
+            if (binding != null) {
+                if (list.isEmpty()) {
+                    binding.listProfiles.setVisibility(View.GONE);
+                    binding.emptyListMessage.setVisibility(View.VISIBLE);
+                } else {
+                    binding.listProfiles.setVisibility(View.VISIBLE);
+                    binding.emptyListMessage.setVisibility(View.GONE);
+                    adapter.submitList(list);
+                }
+            }
+        });
 
         return binding.getRoot();
     }

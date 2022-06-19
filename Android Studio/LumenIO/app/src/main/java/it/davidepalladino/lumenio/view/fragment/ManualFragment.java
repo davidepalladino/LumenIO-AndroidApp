@@ -5,10 +5,8 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextWatcher;
 import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,49 +52,6 @@ public class ManualFragment extends Fragment {
         binding.setManualViewModel(manualViewModel);
         binding.setManualFragment(this);
 
-        binding.name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (start == 0 && before > 0 && count == 0) {
-                    binding.messageName.setText(getString(R.string.empty_field));
-                    binding.messageName.setVisibility(View.VISIBLE);
-                } else if (start == 0 && before == 0 && count > 0) {
-                    binding.messageName.setText("");
-                    binding.messageName.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) { }
-        });
-
-        binding.fabAdd.setOnClickListener(view -> {
-            if (binding.name.getText().length() > 0) {
-                new Thread(() -> {
-                    String snackbarMessage = "";
-
-                    try {
-                        long id = manualViewModel.insert();
-                        SharedPreferences.Editor profileSelectedPreference = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
-                        profileSelectedPreference.putLong(getString(R.string.latest_profile_selected), id);
-                        profileSelectedPreference.apply();
-
-                        snackbarMessage = manualViewModel.getSelectedName().getValue() + " " + getString(R.string.profile_saved);
-                    } catch (SQLiteConstraintException e) {
-                        snackbarMessage = manualViewModel.getSelectedName().getValue() + " " + getString(R.string.profile_not_saved_for_name);
-                    }
-
-                    SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
-                    spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, manualViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                    Snackbar.make(binding.getRoot(), spannableSnackbarMessage, 5000).setAnchorView(binding.fabAdd).show();
-                }).start();
-            }
-        });
-
         return binding.getRoot();
     }
 
@@ -126,6 +81,47 @@ public class ManualFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkName(CharSequence s, int start, int before, int count) {
+        if (s.toString().matches(getString(R.string.sentence_incorrect_only_white_space))) {
+            binding.messageName.setText(getString(R.string.empty_field));
+            binding.messageName.setVisibility(View.VISIBLE);
+            binding.fabAdd.setClickable(false);
+        } else if (s.toString().matches(getString(R.string.sentence_incorrect_white_space_start_end))) {
+            binding.messageName.setText(R.string.incorrect_start_end_field);
+            binding.messageName.setVisibility(View.VISIBLE);
+            binding.fabAdd.setClickable(false);
+        } else if (s.toString().matches(getString(R.string.sentence_correct))) {
+            binding.messageName.setText("");
+            binding.messageName.setVisibility(View.GONE);
+            binding.fabAdd.setClickable(true);
+        }
+    }
+
+    public void saveToTheLibrary() {
+        if (binding.name.getText().length() > 0) {
+            new Thread(() -> {
+                String snackbarMessage = "";
+
+                try {
+                    SharedPreferences.Editor profileSelectedPreference = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+                    profileSelectedPreference.putLong(getString(R.string.latest_profile_selected), manualViewModel.insert());
+                    profileSelectedPreference.apply();
+
+                    manualViewModel.reload();
+
+                    snackbarMessage = manualViewModel.getSelectedName().getValue() + " " + getString(R.string.profile_saved);
+                } catch (SQLiteConstraintException e) {
+                    snackbarMessage = manualViewModel.getSelectedName().getValue() + " " + getString(R.string.profile_not_saved_for_name);
+                }
+
+                SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
+                spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, manualViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                Snackbar.make(binding.getRoot(), spannableSnackbarMessage, 5000).setAnchorView(binding.fabAdd).show();
+            }).start();
+        }
     }
 
     public void updateDevice() {

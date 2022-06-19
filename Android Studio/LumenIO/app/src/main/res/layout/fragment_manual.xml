@@ -29,6 +29,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/card_margin_top"
                         android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                        android:layout_marginBottom="@dimen/card_margin_bottom"
                         app:cardCornerRadius="@dimen/card_corner_radius" >
 
                         <LinearLayout
@@ -97,6 +98,7 @@
                                         android:maxLength="20"
                                         android:maxLines="1"
                                         android:text="@={manualViewModel.selectedName}"
+                                        android:onTextChanged="@{(s, start, before, count) -> manualFragment.checkName(s, start, before, count)}"
                                         app:layout_constraintStart_toStartOf="parent"
                                         app:layout_constraintTop_toTopOf="parent"
                                         tools:text="Name" />
@@ -188,7 +190,6 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/card_margin_top"
                         android:layout_marginHorizontal="@dimen/card_margin_horizontal"
                         android:layout_marginBottom="@dimen/card_margin_bottom"
                         app:cardCornerRadius="@dimen/card_corner_radius" >
@@ -275,7 +276,6 @@
                                     android:orientation="vertical">
 
                                     <SeekBar
-                                        android:id="@+id/seekBarBrightness"
                                         android:layout_width="match_parent"
                                         android:layout_height="@dimen/seek_bar_height"
                                         android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
@@ -284,7 +284,6 @@
                                         android:progress="@={manualViewModel.selectedBrightness}" />
 
                                     <SeekBar
-                                        android:id="@+id/seekBarRed"
                                         android:layout_width="match_parent"
                                         android:layout_height="@dimen/seek_bar_height"
                                         android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
@@ -293,7 +292,6 @@
                                         android:progress="@={manualViewModel.selectedRed}" />
 
                                     <SeekBar
-                                        android:id="@+id/seekBarGreen"
                                         android:layout_width="match_parent"
                                         android:layout_height="@dimen/seek_bar_height"
                                         android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
@@ -302,7 +300,6 @@
                                         android:progress="@={manualViewModel.selectedGreen}" />
 
                                     <SeekBar
-                                        android:id="@+id/seekBarBlue"
                                         android:layout_width="match_parent"
                                         android:layout_height="@dimen/seek_bar_height"
                                         android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
@@ -328,7 +325,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:srcCompat="@drawable/ic_round_add_fab"
-                    tools:visibility="visible" />
+                    tools:visibility="visible"
+                    android:onClick="@{() -> manualFragment.saveToTheLibrary()}"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
 </layout>

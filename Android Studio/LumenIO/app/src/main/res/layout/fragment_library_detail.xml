@@ -8,10 +8,9 @@
     <data>
         <variable name="libraryViewModel" type="it.davidepalladino.lumenio.view.viewModel.LibraryViewModel" />
         <variable name="libraryDetailFragment" type="it.davidepalladino.lumenio.view.fragment.LibraryDetailFragment" />
+        <variable name="buttonsHandler" type="it.davidepalladino.lumenio.view.fragment.LibraryDetailFragment.ButtonsHandler" />
         <import type="android.graphics.Color" />
         <import type="android.view.View" />
-        <import type="java.util.Date" />
-        <import type="java.text.SimpleDateFormat" />
     </data>
 
     <FrameLayout
@@ -33,6 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/card_margin_top"
                     android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                    android:layout_marginBottom="@dimen/card_margin_bottom"
                     app:cardCornerRadius="@dimen/card_corner_radius" >
 
                     <LinearLayout
@@ -62,7 +62,6 @@
                                 android:textSize="@dimen/text_header_card_size"
                                 android:textColor="@color/primary_color"
                                 android:text="@string/preview" />
-
                         </LinearLayout>
 
                         <LinearLayout
@@ -101,6 +100,7 @@
                                     android:maxLength="20"
                                     android:maxLines="1"
                                     android:text="@={libraryViewModel.selectedName}"
+                                    android:onTextChanged="@{(s, start, before, count) -> libraryDetailFragment.checkName(s, start, before, count)}"
                                     android:visibility="gone"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
@@ -203,6 +203,150 @@
                                 </LinearLayout>
                             </androidx.constraintlayout.widget.ConstraintLayout>
                         </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/body_card_padding" >
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/control_it"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="5dp"
+                                android:gravity="center"
+                                android:text="@string/control_it"
+                                android:textSize="12sp"
+                                android:onClick="@{(v) -> buttonsHandler.controlIt(v)}"
+                                app:cornerRadius="@dimen/body_card_padding"
+                                app:iconGravity="textStart"
+                                app:iconSize="18dp"
+                                app:icon="@drawable/ic_round_manual_tab" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/set_as_scene"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="5dp"
+                                android:gravity="center"
+                                android:text="@string/set_as_scene"
+                                android:textSize="12sp"
+                                app:cornerRadius="@dimen/body_card_padding"
+                                app:iconGravity="textStart"
+                                app:iconSize="18dp"
+                                app:icon="@drawable/ic_round_scene_tab" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                    android:layout_marginBottom="@dimen/card_margin_bottom"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
+                    android:visibility="visible" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/header_card_padding"
+                            android:layout_marginTop="@dimen/header_card_margin_top"
+                            android:layout_marginStart="@dimen/header_card_margin_start" >
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_round_date_card"
+                                android:layout_marginEnd="@dimen/icon_header_card_margin_end" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/text_header_card_size"
+                                android:textColor="@color/primary_color"
+                                android:text="@string/date" />
+                        </LinearLayout>
+
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:padding="@dimen/body_card_padding" >
+
+                            <TableRow>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:text="@string/created_at"
+                                    android:textAllCaps="true"
+                                    android:layout_column="0"
+                                    android:layout_weight="1"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{libraryViewModel.selectedCreatedAt}"
+                                    android:textAlignment="textEnd"
+                                    android:layout_column="1"
+                                    android:layout_weight="1"
+                                    tools:text="2022/06/12 11:30:00" />
+                            </TableRow>
+
+                            <TableRow
+                                android:visibility='@{libraryViewModel.selectedUpdatedAt == "" ? View.GONE : View.VISIBLE}' >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:text="@string/updated_at"
+                                    android:textAllCaps="true"
+                                    android:layout_column="0"
+                                    android:layout_weight="1"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{libraryViewModel.selectedUpdatedAt}"
+                                    android:textAlignment="textEnd"
+                                    android:layout_column="1"
+                                    android:layout_weight="1"
+                                    tools:text="2022/06/12 11:30:00" />
+                            </TableRow>
+
+                            <TableRow
+                                android:visibility='@{libraryViewModel.selectedUsedAt == "" ? View.GONE : View.VISIBLE}' >                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:text="@string/used_at"
+                                    android:textAllCaps="true"
+                                    android:layout_column="0"
+                                    android:layout_weight="1"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{libraryViewModel.selectedUsedAt}"
+                                    android:textAlignment="textEnd"
+                                    android:layout_column="1"
+                                    android:layout_weight="1"
+                                    tools:text="2022/06/12 11:30:00" />
+                            </TableRow>
+                        </TableLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -210,8 +354,8 @@
                     android:id="@+id/control_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/card_margin_top"
                     android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                    android:layout_marginBottom="@dimen/card_margin_bottom"
                     android:visibility="gone"
                     app:cardCornerRadius="@dimen/card_corner_radius"
                     tools:visibility="visible" >
@@ -298,7 +442,6 @@
                                 android:orientation="vertical">
 
                                 <SeekBar
-                                    android:id="@+id/seekBarBrightness"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/seek_bar_height"
                                     android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
@@ -307,7 +450,6 @@
                                     android:progress="@={libraryViewModel.selectedBrightness}" />
 
                                 <SeekBar
-                                    android:id="@+id/seekBarRed"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/seek_bar_height"
                                     android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
@@ -316,7 +458,6 @@
                                     android:progress="@={libraryViewModel.selectedRed}" />
 
                                 <SeekBar
-                                    android:id="@+id/seekBarGreen"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/seek_bar_height"
                                     android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
@@ -325,7 +466,6 @@
                                     android:progress="@={libraryViewModel.selectedGreen}" />
 
                                 <SeekBar
-                                    android:id="@+id/seekBarBlue"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/seek_bar_height"
                                     android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
@@ -334,114 +474,6 @@
                                     android:progress="@={libraryViewModel.selectedBlue}" />
                             </LinearLayout>
                         </TableRow>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/card_margin_top"
-                    android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-                    android:layout_marginBottom="@dimen/card_margin_bottom"
-                    app:cardCornerRadius="@dimen/card_corner_radius"
-                    android:visibility="visible" >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/header_card_padding"
-                            android:layout_marginTop="@dimen/header_card_margin_top"
-                            android:layout_marginStart="@dimen/header_card_margin_start" >
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_round_date_card"
-                                android:layout_marginEnd="@dimen/icon_header_card_margin_end" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:textStyle="bold"
-                                android:textSize="@dimen/text_header_card_size"
-                                android:textColor="@color/primary_color"
-                                android:text="Date" />
-                        </LinearLayout>
-
-                        <TableLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:padding="@dimen/body_card_padding" >
-
-                            <TableRow>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="5dp"
-                                    android:text="Created at"
-                                    android:textAllCaps="true"
-                                    android:layout_column="0"
-                                    android:layout_weight="1"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@{libraryViewModel.selectedCreatedAt}"
-                                    android:textAlignment="textEnd"
-                                    android:layout_column="1"
-                                    android:layout_weight="1"
-                                    tools:text="2022/06/12 11:30:00" />
-                            </TableRow>
-
-                            <TableRow
-                                android:visibility='@{libraryViewModel.selectedUpdatedAt == "" ? View.GONE : View.VISIBLE}' >
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="5dp"
-                                    android:text="Updated at"
-                                    android:textAllCaps="true"
-                                    android:layout_column="0"
-                                    android:layout_weight="1"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@{libraryViewModel.selectedUpdatedAt}"
-                                    android:textAlignment="textEnd"
-                                    android:layout_column="1"
-                                    android:layout_weight="1"
-                                    tools:text="2022/06/12 11:30:00" />
-                            </TableRow>
-
-                            <TableRow
-                                android:visibility='@{libraryViewModel.selectedUsedAt == "" ? View.GONE : View.VISIBLE}' >                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="5dp"
-                                    android:text="Used at"
-                                    android:textAllCaps="true"
-                                    android:layout_column="0"
-                                    android:layout_weight="1"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@{libraryViewModel.selectedUsedAt}"
-                                    android:textAlignment="textEnd"
-                                    android:layout_column="1"
-                                    android:layout_weight="1"
-                                    tools:text="2022/06/12 11:30:00" />
-                            </TableRow>
-                        </TableLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>

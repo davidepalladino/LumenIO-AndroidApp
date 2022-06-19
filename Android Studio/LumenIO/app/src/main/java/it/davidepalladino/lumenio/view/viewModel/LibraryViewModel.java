@@ -16,7 +16,9 @@ import it.davidepalladino.lumenio.data.ProfileRepository;
 
 public class LibraryViewModel extends AndroidViewModel {
     private final ProfileRepository profileRepository;
+
     private LiveData<List<Profile>> allProfiles;
+    private Profile selectedProfile;
 
     private final MutableLiveData<Long> selectedID = new MutableLiveData<>((long) 0);
     private final MutableLiveData<String> selectedName = new MutableLiveData<>("");
@@ -30,77 +32,73 @@ public class LibraryViewModel extends AndroidViewModel {
 
     public LibraryViewModel(Application application) {
         super(application);
-        this.profileRepository = new ProfileRepository(application);
+        profileRepository = new ProfileRepository(application);
 
-        this.allProfiles = profileRepository.getAll();
+        allProfiles = profileRepository.getAll();
     }
 
-    public LiveData<Long> getSelectedID() { return this.selectedID; }
+    public LiveData<Long> getSelectedID() { return selectedID; }
 
     public void setSelectedName(String selectedName) { this.selectedName.setValue(selectedName); }
 
-    public MutableLiveData<String> getSelectedName() { return this.selectedName; }
+    public MutableLiveData<String> getSelectedName() { return selectedName; }
 
     public void setSelectedBrightness(int selectedBrightness) { this.selectedBrightness.setValue(selectedBrightness); }
 
-    public MutableLiveData<Integer> getSelectedBrightness() { return this.selectedBrightness; }
+    public MutableLiveData<Integer> getSelectedBrightness() { return selectedBrightness; }
 
     public void setSelectedRed(int selectedRed) { this.selectedRed.setValue(selectedRed); }
 
-    public MutableLiveData<Integer> getSelectedRed() { return this.selectedRed; }
+    public MutableLiveData<Integer> getSelectedRed() { return selectedRed; }
 
     public void setSelectedGreen(int selectedGreen) { this.selectedGreen.setValue(selectedGreen); }
 
-    public MutableLiveData<Integer> getSelectedGreen() { return this.selectedGreen; }
+    public MutableLiveData<Integer> getSelectedGreen() { return selectedGreen; }
 
     public void setSelectedBlue(int selectedBlue) { this.selectedBlue.setValue(selectedBlue); }
 
-    public MutableLiveData<Integer> getSelectedBlue() { return this.selectedBlue; }
+    public MutableLiveData<Integer> getSelectedBlue() { return selectedBlue; }
 
-    public LiveData<String> getSelectedCreatedAt() { return this.selectedCreatedAt; }
+    public LiveData<String> getSelectedCreatedAt() { return selectedCreatedAt; }
 
-    public LiveData<String> getSelectedUpdatedAt() { return this.selectedUpdatedAt; }
+    public LiveData<String> getSelectedUpdatedAt() { return selectedUpdatedAt; }
 
-    public LiveData<String> getSelectedUsedAt() { return this.selectedUsedAt; }
+    public LiveData<String> getSelectedUsedAt() { return selectedUsedAt; }
 
-    public Profile getOneByID(long id) {
-        return this.profileRepository.getOneById(id);
-    }
-
-    public Profile getOneByName(String name) {
-        return this.profileRepository.getOneByName(name);
-    }
+    public Profile getOneByID(long id) { return profileRepository.getOneById(id); }
 
     public LiveData<List<Profile>> getAll() {
-        return this.allProfiles;
+        return allProfiles;
     }
 
-    public int update() {
-        Profile profileToUpdate = getOneByID(this.selectedID.getValue());
-        profileToUpdate.setEditableValues(this.selectedName.getValue(), this.selectedBrightness.getValue(), this.selectedRed.getValue(), this.selectedGreen.getValue(), this.selectedBlue.getValue());
-        return profileRepository.update(profileToUpdate);
+    public int updateValues() {
+        selectedProfile.setValues(selectedName.getValue(), selectedBrightness.getValue(), selectedRed.getValue(), selectedGreen.getValue(), selectedBlue.getValue());
+        return profileRepository.updateValues(selectedProfile);
+    }
+
+    public int updateUse() {
+        return profileRepository.updateUse(selectedProfile);
     }
 
     public void delete() {
-        Profile profileToDelete = getOneByID(this.selectedID.getValue());
-        profileRepository.delete(profileToDelete);
+        profileRepository.delete(selectedProfile);
     }
 
     public void loadByID(long id) {
-        Profile selectedProfile = this.getOneByID(id);
+        selectedProfile = getOneByID(id);
 
-        this.selectedID.postValue(selectedProfile.id);
-        this.selectedName.postValue(selectedProfile.name);
-        this.selectedBrightness.postValue(selectedProfile.brightness);
-        this.selectedRed.postValue(selectedProfile.red);
-        this.selectedGreen.postValue(selectedProfile.green);
-        this.selectedBlue.postValue(selectedProfile.blue);
-        this.selectedCreatedAt.postValue(selectedProfile.createdAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(selectedProfile.createdAt * 1000)) : "");
-        this.selectedUpdatedAt.postValue(selectedProfile.updatedAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(selectedProfile.updatedAt * 1000)) : "");
-        this.selectedUsedAt.postValue(selectedProfile.usedAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(selectedProfile.usedAt * 1000)) : "");
+        selectedID.postValue(selectedProfile.id);
+        selectedName.postValue(selectedProfile.name);
+        selectedBrightness.postValue(selectedProfile.brightness);
+        selectedRed.postValue(selectedProfile.red);
+        selectedGreen.postValue(selectedProfile.green);
+        selectedBlue.postValue(selectedProfile.blue);
+        selectedCreatedAt.postValue(selectedProfile.createdAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(selectedProfile.createdAt * 1000)) : "");
+        selectedUpdatedAt.postValue(selectedProfile.updatedAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(selectedProfile.updatedAt * 1000)) : "");
+        selectedUsedAt.postValue(selectedProfile.usedAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(selectedProfile.usedAt * 1000)) : "");
     }
 
     public void reload() {
-        this.loadByID(this.selectedID.getValue().longValue());
+        loadByID(selectedProfile.id);
     }
 }

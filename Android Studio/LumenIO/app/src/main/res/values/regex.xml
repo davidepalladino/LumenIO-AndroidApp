@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sentence_correct" translatable="false">^([\\S]+[\\s]{0,}[\\S]+)+$</string>
+    <string name="sentence_incorrect_white_space_start_end" translatable="false">^([\\s]+[\\d\\w]+[\\s]{0,}[\\d\\w]+)+$|^([\\d\\w]+[\\s]{0,}[\\d\\w]+)+[\\s]+$|^([\\s]+[\\d\\w]+[\\s]{0,}[\\d\\w]+)+[\\s]+$</string>
+    <string name="sentence_incorrect_only_white_space" translatable="false">^[\\s]*$</string>
+</resources>

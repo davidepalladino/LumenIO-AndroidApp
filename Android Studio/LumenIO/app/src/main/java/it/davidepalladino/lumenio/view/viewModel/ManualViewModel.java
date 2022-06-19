@@ -11,6 +11,7 @@ import it.davidepalladino.lumenio.data.ProfileRepository;
 
 public class ManualViewModel extends AndroidViewModel {
     private final ProfileRepository profileRepository;
+    private Profile selectedProfile;
 
     private final MutableLiveData<Long> selectedID = new MutableLiveData<>((long) 0);
     private final MutableLiveData<String> selectedName = new MutableLiveData<>("");
@@ -21,57 +22,58 @@ public class ManualViewModel extends AndroidViewModel {
 
     public ManualViewModel(Application application) {
         super(application);
-        this.profileRepository = new ProfileRepository(application);
+        profileRepository = new ProfileRepository(application);
     }
 
-    public LiveData<Long> getSelectedID() { return this.selectedID; }
+    public LiveData<Long> getSelectedID() { return selectedID; }
 
     public void setSelectedName(String selectedName) { this.selectedName.setValue(selectedName); }
 
-    public MutableLiveData<String> getSelectedName() { return this.selectedName; }
+    public MutableLiveData<String> getSelectedName() { return selectedName; }
 
     public void setSelectedBrightness(int selectedBrightness) { this.selectedBrightness.setValue(selectedBrightness); }
 
-    public MutableLiveData<Integer> getSelectedBrightness() { return this.selectedBrightness; }
+    public MutableLiveData<Integer> getSelectedBrightness() { return selectedBrightness; }
 
     public void setSelectedRed(int selectedRed) { this.selectedRed.setValue(selectedRed); }
 
-    public MutableLiveData<Integer> getSelectedRed() { return this.selectedRed; }
+    public MutableLiveData<Integer> getSelectedRed() { return selectedRed; }
 
     public void setSelectedGreen(int selectedGreen) { this.selectedGreen.setValue(selectedGreen); }
 
-    public MutableLiveData<Integer> getSelectedGreen() { return this.selectedGreen; }
+    public MutableLiveData<Integer> getSelectedGreen() { return selectedGreen; }
 
     public void setSelectedBlue(int selectedBlue) { this.selectedBlue.setValue(selectedBlue); }
 
-    public MutableLiveData<Integer> getSelectedBlue() { return this.selectedBlue; }
+    public MutableLiveData<Integer> getSelectedBlue() { return selectedBlue; }
 
     public Profile getOneByID(long id) {
-        return this.profileRepository.getOneById(id);
-    }
-
-    public Profile getOneByName(String name) {
-        return this.profileRepository.getOneByName(name);
+        return profileRepository.getOneById(id);
     }
 
     public long insert() {
-        return profileRepository.insert(new Profile(this.selectedName.getValue(), this.selectedBrightness.getValue(), this.selectedRed.getValue(), this.selectedGreen.getValue(), this.selectedBlue.getValue()));
+        selectedProfile = new Profile(selectedName.getValue(), selectedBrightness.getValue(), selectedRed.getValue(), selectedGreen.getValue(), selectedBlue.getValue());
+        selectedProfile.id = profileRepository.insert(selectedProfile);
+        selectedID.postValue(selectedProfile.id);
+        return selectedProfile.id;
     }
 
     public void loadByID(long id) {
-        Profile selectedProfile = this.getOneByID(id);
+        selectedProfile = getOneByID(id);
 
         if (selectedProfile == null) {
             selectedProfile = new Profile("", 0, 0, 0, 0);
         }
 
-        this.selectedID.postValue(selectedProfile.id);
-        this.selectedName.postValue(selectedProfile.name);
-        this.selectedBrightness.postValue(selectedProfile.brightness);
-        this.selectedRed.postValue(selectedProfile.red);
-        this.selectedGreen.postValue(selectedProfile.green);
-        this.selectedBlue.postValue(selectedProfile.blue);
+        selectedID.postValue(selectedProfile.id);
+        selectedName.postValue(selectedProfile.name);
+        selectedBrightness.postValue(selectedProfile.brightness);
+        selectedRed.postValue(selectedProfile.red);
+        selectedGreen.postValue(selectedProfile.green);
+        selectedBlue.postValue(selectedProfile.blue);
     }
 
-    public void reload() { this.loadByID(this.selectedID.getValue().longValue()); }
+    public void reload() {
+        loadByID(selectedProfile.id);
+    }
 }
