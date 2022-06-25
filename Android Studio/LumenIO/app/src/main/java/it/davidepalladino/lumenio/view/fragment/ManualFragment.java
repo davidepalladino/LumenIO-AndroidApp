@@ -31,6 +31,8 @@ public class ManualFragment extends Fragment {
     private FragmentManualBinding binding;
     private ManualViewModel manualViewModel;
 
+    private boolean errorFieldName = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,14 +87,20 @@ public class ManualFragment extends Fragment {
 
     public void checkName(CharSequence s, int start, int before, int count) {
         if (s.toString().matches(getString(R.string.sentence_incorrect_only_white_space))) {
+            errorFieldName = true;
+
             binding.messageName.setText(getString(R.string.empty_field));
             binding.messageName.setVisibility(View.VISIBLE);
             binding.fabAdd.setClickable(false);
         } else if (s.toString().matches(getString(R.string.sentence_incorrect_white_space_start_end))) {
+            errorFieldName = true;
+
             binding.messageName.setText(R.string.incorrect_start_end_field);
             binding.messageName.setVisibility(View.VISIBLE);
             binding.fabAdd.setClickable(false);
         } else if (s.toString().matches(getString(R.string.sentence_correct))) {
+            errorFieldName = false;
+
             binding.messageName.setText("");
             binding.messageName.setVisibility(View.GONE);
             binding.fabAdd.setClickable(true);
@@ -100,7 +108,7 @@ public class ManualFragment extends Fragment {
     }
 
     public void saveToTheLibrary() {
-        if (binding.name.getText().length() > 0) {
+        if (binding.name.getText().length() > 0 && !errorFieldName) {
             new Thread(() -> {
                 String snackbarMessage = "";
 
@@ -121,6 +129,10 @@ public class ManualFragment extends Fragment {
 
                 Snackbar.make(binding.getRoot(), spannableSnackbarMessage, 5000).setAnchorView(binding.fabAdd).show();
             }).start();
+        } else if (binding.name.getText().length() == 0 && !errorFieldName) {
+            binding.messageName.setText(getString(R.string.empty_field));
+            binding.messageName.setVisibility(View.VISIBLE);
+            binding.fabAdd.setClickable(false);
         }
     }
 

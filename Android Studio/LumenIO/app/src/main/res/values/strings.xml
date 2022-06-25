@@ -36,4 +36,5 @@
     <string name="profile_loaded">This profile has been loaded in Manual tab.</string>
     <string name="empty_library_list">No profiles yet!</string>
     <string name="empty_library_list_description">You can save a profile to the library by the Manual tab</string>
+    <string name="scene">Scene</string>
 </resources>

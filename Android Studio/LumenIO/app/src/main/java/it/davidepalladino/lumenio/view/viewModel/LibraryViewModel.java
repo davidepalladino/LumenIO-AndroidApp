@@ -13,9 +13,12 @@ import java.util.List;
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.data.ProfileRepository;
+import it.davidepalladino.lumenio.data.Scene;
+import it.davidepalladino.lumenio.data.SceneRepository;
 
 public class LibraryViewModel extends AndroidViewModel {
     private final ProfileRepository profileRepository;
+    private final SceneRepository sceneRepository;
 
     private LiveData<List<Profile>> allProfiles;
     private Profile selectedProfile;
@@ -33,6 +36,7 @@ public class LibraryViewModel extends AndroidViewModel {
     public LibraryViewModel(Application application) {
         super(application);
         profileRepository = new ProfileRepository(application);
+        sceneRepository = new SceneRepository(application);
 
         allProfiles = profileRepository.getAll();
     }
@@ -100,5 +104,9 @@ public class LibraryViewModel extends AndroidViewModel {
 
     public void reload() {
         loadByID(selectedProfile.id);
+    }
+
+    public void updateScene(Scene scene) {
+        sceneRepository.update(scene);
     }
 }

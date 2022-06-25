@@ -16,7 +16,7 @@ public class ProfileRepository {
         this.allProfiles = profileDao.getAll();
     }
 
-    public LiveData<List<Profile>> getAll() { return this.allProfiles; }
+    public LiveData<List<Profile>> getAll() { return this.profileDao.getAll(); }
 
     public Profile getOneById(long id) {
         return this.profileDao.getOneById(id);
@@ -53,7 +53,6 @@ public class ProfileRepository {
         this.profileDao.delete(profile);
     }
 
-    //^[^\s][\d\D]*[^\s]$
     private void cleanName(Profile profile) {
         if (profile.name.charAt(0) == ' ') {
             profile.name = profile.name.substring(1);

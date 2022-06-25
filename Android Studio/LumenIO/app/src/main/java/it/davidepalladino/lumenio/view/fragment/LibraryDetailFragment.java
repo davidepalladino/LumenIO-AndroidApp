@@ -30,6 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 
 import it.davidepalladino.lumenio.R;
+import it.davidepalladino.lumenio.data.Scene;
 import it.davidepalladino.lumenio.databinding.FragmentLibraryDetailBinding;
 import it.davidepalladino.lumenio.view.viewModel.ManualViewModel;
 import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
@@ -267,6 +268,13 @@ public class LibraryDetailFragment extends Fragment {
                 manualViewModel.loadByID(libraryViewModel.getSelectedID().getValue());
 
                 Snackbar.make(binding.getRoot(), getString(R.string.profile_loaded), 5000).show();
+            }).start();
+        }
+
+        public void setAsScene(View v) {
+            new Thread(() -> {
+                Scene scene = new Scene(1, libraryViewModel.getSelectedID().getValue());
+                libraryViewModel.updateScene(scene);
             }).start();
         }
     }

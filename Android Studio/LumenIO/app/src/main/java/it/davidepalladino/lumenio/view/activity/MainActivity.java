@@ -15,6 +15,7 @@ import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.databinding.ActivityMainBinding;
 import it.davidepalladino.lumenio.view.fragment.ManualFragment;
 import it.davidepalladino.lumenio.view.fragment.LibraryFragment;
+import it.davidepalladino.lumenio.view.fragment.SceneFragment;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -37,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
                     tab.setText(getString(R.string.manual));
                     tab.setIcon(R.drawable.ic_round_manual_tab);
                     break;
-//                    case 1:
-//                        tab.setIcon(R.drawable.ic_round_scene);
-//                        tab.setText("Scene");
-//                        break;
-                case 1: // TODO: Replace with 2 during the implementation of Scene.
-                    tab.setIcon(R.drawable.ic_round_library_tab);
+                case 1:
+                    tab.setText(getString(R.string.scene));
+                    tab.setIcon(R.drawable.ic_round_scene_tab);
+                    break;
+                case 2:
                     tab.setText(getString(R.string.library));
+                    tab.setIcon(R.drawable.ic_round_library_tab);
                     break;
             }
         }).attach();
@@ -55,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
             case 0:
                 super.onBackPressed();
                 break;
-//            case 1:
-//                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
-//                break;
-            case 1: // TODO: Replace with 2 during the implementation of Scene.
+            case 1:
+                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
+                break;
+            case 2:
                 /* Checking if in this Tab the current destination is an Home or not, to execute the right command. */
                 if (Navigation.findNavController(this, R.id.nav_host_fragment_content_library).getCurrentDestination().getId() != R.id.LibraryListFragment) {
                     super.onBackPressed();
@@ -81,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     return new ManualFragment();
-//                case 1:
-//                    return new SceneFragment();
-                case 1: // TODO: Replace with 2 during the implementation of Scene.
+                case 1:
+                    return new SceneFragment();
+                case 2:
                     return new LibraryFragment();
             }
             return null;
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 2;   // TODO: Replace with 3 during the implementation of Scene.
+            return 3;   // TODO: Replace with 3 during the implementation of Scene.
         }
     }
 }

@@ -13,21 +13,17 @@ import androidx.room.*;
     }
 )
 public class Profile {
-    @PrimaryKey(autoGenerate = true)
-    public long id;
+    @PrimaryKey(autoGenerate = true) public long id;
 
-    @NonNull
-    public String name;
+    @NonNull public String name;
     public int brightness;
     public int red;
     public int green;
     public int blue;
 
-    @NonNull
-    public long createdAt;
+    @NonNull public long createdAt;
 
-    @NonNull
-    public long updatedAt;
+    @NonNull public long updatedAt;
     public long usedAt;
 
     public Profile(@NonNull String name, int brightness, int red, int green, int blue) {

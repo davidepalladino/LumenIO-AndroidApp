@@ -234,6 +234,7 @@
                                 android:gravity="center"
                                 android:text="@string/set_as_scene"
                                 android:textSize="12sp"
+                                android:onClick="@{(v) -> buttonsHandler.setAsScene(v)}"
                                 app:cornerRadius="@dimen/body_card_padding"
                                 app:iconGravity="textStart"
                                 app:iconSize="18dp"

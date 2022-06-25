@@ -15,12 +15,12 @@ public interface ProfileDao {
     @Update
     int update(Profile profile);
 
-    @Query("SELECT * FROM profiles ORDER BY name ASC")
+    @Query("SELECT * FROM `profiles` ORDER BY `name` ASC")
     LiveData<List<Profile>> getAll();
 
-    @Query("SELECT * FROM profiles WHERE id = :id")
+    @Query("SELECT * FROM `profiles` WHERE `id` = :id")
     Profile getOneById(long id);
 
-    @Query("SELECT * FROM profiles WHERE name = :name")
+    @Query("SELECT * FROM `profiles` WHERE `name` = :name")
     Profile getOneByName(String name);
 }
