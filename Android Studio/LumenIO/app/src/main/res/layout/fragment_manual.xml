@@ -98,7 +98,7 @@
                                         android:maxLength="20"
                                         android:maxLines="1"
                                         android:text="@={manualViewModel.selectedName}"
-                                        android:onTextChanged="@{(s, start, before, count) -> manualFragment.checkName(s, start, before, count)}"
+                                        android:onTextChanged="@{(s, start, before, count) -> manualFragment.checkSyntaxName(s, start, before, count)}"
                                         app:layout_constraintStart_toStartOf="parent"
                                         app:layout_constraintTop_toTopOf="parent"
                                         tools:text="Name" />

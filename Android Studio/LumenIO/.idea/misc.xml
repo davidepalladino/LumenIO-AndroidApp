@@ -8,6 +8,8 @@
         <entry key="app/src/main/res/drawable/ic_baseline_add.xml" value="0.3735" />
         <entry key="app/src/main/res/drawable/ic_round_accept_menu.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/ic_round_add.xml" value="0.327" />
+        <entry key="app/src/main/res/drawable/ic_round_add_fab.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable/ic_round_bluetooth_menu.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/ic_round_blutooth_menu.xml" value="0.331" />
         <entry key="app/src/main/res/drawable/ic_round_close_menu.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/ic_round_control.xml" value="0.294" />
@@ -22,19 +24,28 @@
         <entry key="app/src/main/res/drawable/ic_round_library_tab.xml" value="0.2545" />
         <entry key="app/src/main/res/drawable/ic_round_manual_tab.xml" value="0.2335" />
         <entry key="app/src/main/res/drawable/ic_round_preview_card.xml" value="0.327" />
+        <entry key="app/src/main/res/drawable/ic_round_refuse_menu.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/ic_round_scene.xml" value="0.327" />
         <entry key="app/src/main/res/drawable/ic_round_scene_tab.xml" value="0.2545" />
         <entry key="app/src/main/res/drawable/ic_round_selected.xml" value="0.327" />
+        <entry key="app/src/main/res/drawable/ic_undraw_empty.xml" value="0.2625" />
         <entry key="app/src/main/res/drawable/preview_shape.xml" value="0.327" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29010416666666666" />
+        <entry key="app/src/main/res/layout/activity_searchable.xml" value="0.3234375" />
         <entry key="app/src/main/res/layout/content_library.xml" value="0.5244791666666667" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.5197916666666667" />
+        <entry key="app/src/main/res/layout/dialog_search_profile.xml" value="0.5119791666666667" />
+        <entry key="app/src/main/res/layout/dialog_search_profile_scene.xml" value="0.5041025641025642" />
+        <entry key="app/src/main/res/layout/dialog_search_profiles.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_control.xml" value="1.0" />
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.5197916666666667" />
-        <entry key="app/src/main/res/layout/fragment_library_detail.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_library_detail.xml" value="0.5195530726256983" />
+        <entry key="app/src/main/res/layout/fragment_library_list.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_manual.xml" value="0.47770219198790626" />
-        <entry key="app/src/main/res/layout/fragment_scene.xml" value="0.125" />
-        <entry key="app/src/main/res/layout/recycle_view_library.xml" value="0.32916666666666666" />
+        <entry key="app/src/main/res/layout/fragment_scene.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/no_found.xml" value="0.5119791666666667" />
+        <entry key="app/src/main/res/layout/no_profiles_yet.xml" value="0.5109375" />
+        <entry key="app/src/main/res/layout/recycle_view_library.xml" value="0.5820029027576198" />
         <entry key="app/src/main/res/menu/menu_control.xml" value="0.5271794871794871" />
         <entry key="app/src/main/res/menu/menu_library_detail.xml" value="0.32916666666666666" />
         <entry key="app/src/main/res/menu/menu_library_detail_edit.xml" value="0.1" />
@@ -43,6 +54,7 @@
         <entry key="app/src/main/res/menu/menu_library_listl.xml" value="0.5354166666666667" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.16354166666666667" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.294" />
+        <entry key="app/src/main/res/xml/searchable.xml" value="0.32447916666666665" />
       </map>
     </option>
   </component>

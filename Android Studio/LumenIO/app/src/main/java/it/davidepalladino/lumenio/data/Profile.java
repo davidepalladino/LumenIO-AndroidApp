@@ -21,9 +21,9 @@ public class Profile {
     public int green;
     public int blue;
 
-    @NonNull public long createdAt;
+    public long createdAt;
 
-    @NonNull public long updatedAt;
+    public long updatedAt;
     public long usedAt;
 
     public Profile(@NonNull String name, int brightness, int red, int green, int blue) {
@@ -40,5 +40,10 @@ public class Profile {
         this.red = red;
         this.green = green;
         this.blue = blue;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

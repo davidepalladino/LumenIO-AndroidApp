@@ -2,6 +2,8 @@ package it.davidepalladino.lumenio.data;
 
 import android.app.Application;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.List;
 
 import it.davidepalladino.lumenio.util.AppDatabase;
@@ -11,11 +13,10 @@ public class SceneRepository {
 
     public SceneRepository(Application application) {
         AppDatabase database = AppDatabase.getDatabase(application);
-
-        this.sceneDao = database.sceneDao();
+        sceneDao = database.sceneDao();
     }
 
-    public List<Scene> getProfilesAndScenes() { return this.sceneDao.getProfilesAndScenes(); }
+    public LiveData<List<Scene>> getAll() { return sceneDao.getAll(); }
 
     public void update(Scene scene) {
         if (sceneDao.getOneById(scene.id) == null) {
@@ -24,4 +25,6 @@ public class SceneRepository {
             sceneDao.update(scene);
         }
     }
+
+    public void delete(Scene scene) { sceneDao.delete(scene); }
 }

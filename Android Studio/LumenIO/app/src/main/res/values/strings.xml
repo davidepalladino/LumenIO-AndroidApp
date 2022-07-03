@@ -14,7 +14,10 @@
     <string name="profile_not_saved_for_name">has not been saved because this name already exists.</string>
     <string name="profile_not_updated_for_name">has not been updated because this name already exists.</string>
     <string name="empty_field">This field cannot be empty</string>
-    <string name="incorrect_start_end_field">This field starts/ends with white character</string>
+<!--    <string name="incorrect_start_end_field">This field starts/ends with white character</string>-->
+    <string name="incorrect_start_field">This field cannot start with white character</string>
+    <string name="scene_saved">has been saved for the scene</string>
+    <string name="scene_not_saved_for_name">has not been saved for this scene because is already set on another.</string>
     <string name="accept">Accept</string>
     <string name="discard">Discard</string>
     <string name="edit">Edit</string>
@@ -37,4 +40,7 @@
     <string name="empty_library_list">No profiles yet!</string>
     <string name="empty_library_list_description">You can save a profile to the library by the Manual tab</string>
     <string name="scene">Scene</string>
+    <string name="not_set">Not set</string>
+    <string name="not_found">Not found!</string>
+    <string name="no_found_description">The searched element doesn\'t exist</string>
 </resources>

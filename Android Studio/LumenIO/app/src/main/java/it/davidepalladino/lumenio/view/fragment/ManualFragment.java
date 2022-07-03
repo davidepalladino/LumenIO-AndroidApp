@@ -28,10 +28,10 @@ import it.davidepalladino.lumenio.databinding.FragmentManualBinding;
 import it.davidepalladino.lumenio.view.viewModel.ManualViewModel;
 
 public class ManualFragment extends Fragment {
-    private FragmentManualBinding binding;
+    private FragmentManualBinding fragmentManualBinding;
     private ManualViewModel manualViewModel;
 
-    private boolean errorFieldName = false;
+    private boolean errorSyntaxFieldName = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,13 +48,13 @@ public class ManualFragment extends Fragment {
             manualViewModel.loadByID(profileSelected.getLong(getString(R.string.latest_profile_selected), 0));
         }).start();
 
-        binding = FragmentManualBinding.inflate(inflater, container, false);
-        binding.setLifecycleOwner(this);
+        fragmentManualBinding = FragmentManualBinding.inflate(inflater, container, false);
+        fragmentManualBinding.setLifecycleOwner(this);
 
-        binding.setManualViewModel(manualViewModel);
-        binding.setManualFragment(this);
+        fragmentManualBinding.setManualViewModel(manualViewModel);
+        fragmentManualBinding.setManualFragment(this);
 
-        return binding.getRoot();
+        return fragmentManualBinding.getRoot();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ManualFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        fragmentManualBinding = null;
     }
 
     @Override
@@ -85,32 +85,32 @@ public class ManualFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void checkName(CharSequence s, int start, int before, int count) {
+    public void checkSyntaxName(CharSequence s, int start, int before, int count) {
         if (s.toString().matches(getString(R.string.sentence_incorrect_only_white_space))) {
-            errorFieldName = true;
+            errorSyntaxFieldName = true;
 
-            binding.messageName.setText(getString(R.string.empty_field));
-            binding.messageName.setVisibility(View.VISIBLE);
-            binding.fabAdd.setClickable(false);
-        } else if (s.toString().matches(getString(R.string.sentence_incorrect_white_space_start_end))) {
-            errorFieldName = true;
+            fragmentManualBinding.messageName.setText(getString(R.string.empty_field));
+            fragmentManualBinding.messageName.setVisibility(View.VISIBLE);
+            fragmentManualBinding.fabAdd.setClickable(false);
+        } else if (s.toString().matches(getString(R.string.sentence_incorrect_white_space_start))) {
+            errorSyntaxFieldName = true;
 
-            binding.messageName.setText(R.string.incorrect_start_end_field);
-            binding.messageName.setVisibility(View.VISIBLE);
-            binding.fabAdd.setClickable(false);
+            fragmentManualBinding.messageName.setText(R.string.incorrect_start_field);
+            fragmentManualBinding.messageName.setVisibility(View.VISIBLE);
+            fragmentManualBinding.fabAdd.setClickable(false);
         } else if (s.toString().matches(getString(R.string.sentence_correct))) {
-            errorFieldName = false;
+            errorSyntaxFieldName = false;
 
-            binding.messageName.setText("");
-            binding.messageName.setVisibility(View.GONE);
-            binding.fabAdd.setClickable(true);
+            fragmentManualBinding.messageName.setText("");
+            fragmentManualBinding.messageName.setVisibility(View.GONE);
+            fragmentManualBinding.fabAdd.setClickable(true);
         }
     }
 
     public void saveToTheLibrary() {
-        if (binding.name.getText().length() > 0 && !errorFieldName) {
+        if (fragmentManualBinding.name.getText().length() > 0 && !errorSyntaxFieldName) {
             new Thread(() -> {
-                String snackbarMessage = "";
+                String snackbarMessage =  manualViewModel.getSelectedName().getValue();
 
                 try {
                     SharedPreferences.Editor profileSelectedPreference = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
@@ -119,20 +119,20 @@ public class ManualFragment extends Fragment {
 
                     manualViewModel.reload();
 
-                    snackbarMessage = manualViewModel.getSelectedName().getValue() + " " + getString(R.string.profile_saved);
+                    snackbarMessage += " " + getString(R.string.profile_saved);
                 } catch (SQLiteConstraintException e) {
-                    snackbarMessage = manualViewModel.getSelectedName().getValue() + " " + getString(R.string.profile_not_saved_for_name);
+                    snackbarMessage += " " + getString(R.string.profile_not_saved_for_name);
                 }
 
                 SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
                 spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, manualViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                Snackbar.make(binding.getRoot(), spannableSnackbarMessage, 5000).setAnchorView(binding.fabAdd).show();
+                Snackbar.make(fragmentManualBinding.getRoot(), spannableSnackbarMessage, 5000).setAnchorView(fragmentManualBinding.fabAdd).show();
             }).start();
-        } else if (binding.name.getText().length() == 0 && !errorFieldName) {
-            binding.messageName.setText(getString(R.string.empty_field));
-            binding.messageName.setVisibility(View.VISIBLE);
-            binding.fabAdd.setClickable(false);
+        } else if (fragmentManualBinding.name.getText().length() == 0 && !errorSyntaxFieldName) {
+            fragmentManualBinding.messageName.setText(getString(R.string.empty_field));
+            fragmentManualBinding.messageName.setVisibility(View.VISIBLE);
+            fragmentManualBinding.fabAdd.setClickable(false);
         }
     }
 

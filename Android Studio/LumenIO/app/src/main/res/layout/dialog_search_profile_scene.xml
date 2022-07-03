@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_dialog_search_profile_scene"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"/>
+
+        <ListView
+            android:id="@+id/list_profiles_dialog_search_profile_scene"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:paddingHorizontal="15dp" />
+    </LinearLayout>
+</layout>

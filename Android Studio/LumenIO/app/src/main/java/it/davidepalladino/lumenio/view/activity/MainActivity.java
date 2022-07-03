@@ -11,6 +11,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import android.os.Bundle;
 
+import java.util.Objects;
+
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.databinding.ActivityMainBinding;
 import it.davidepalladino.lumenio.view.fragment.ManualFragment;
@@ -18,21 +20,21 @@ import it.davidepalladino.lumenio.view.fragment.LibraryFragment;
 import it.davidepalladino.lumenio.view.fragment.SceneFragment;
 
 public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
+    private ActivityMainBinding activityMainBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(activityMainBinding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(activityMainBinding.toolbar);
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(MainActivity.this);
-        binding.viewPager.setAdapter(viewPagerAdapter);
+        activityMainBinding.viewPager.setAdapter(viewPagerAdapter);
 
-        new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
+        new TabLayoutMediator(activityMainBinding.tabLayout, activityMainBinding.viewPager, (tab, position) -> {
             switch (position) {
                 case 0:
                     tab.setText(getString(R.string.manual));
@@ -52,19 +54,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        switch (binding.tabLayout.getSelectedTabPosition()) {
+        switch (activityMainBinding.tabLayout.getSelectedTabPosition()) {
             case 0:
                 super.onBackPressed();
                 break;
             case 1:
-                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
+                activityMainBinding.tabLayout.selectTab(activityMainBinding.tabLayout.getTabAt(0));
                 break;
             case 2:
                 /* Checking if in this Tab the current destination is an Home or not, to execute the right command. */
-                if (Navigation.findNavController(this, R.id.nav_host_fragment_content_library).getCurrentDestination().getId() != R.id.LibraryListFragment) {
+                if (Objects.requireNonNull(Navigation.findNavController(this, R.id.nav_host_fragment_content_library).getCurrentDestination()).getId() != R.id.LibraryListFragment) {
                     super.onBackPressed();
                 } else {
-                    binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
+                    activityMainBinding.tabLayout.selectTab(activityMainBinding.tabLayout.getTabAt(0));
                 }
                 break;
             default:
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 3;   // TODO: Replace with 3 during the implementation of Scene.
+            return 3;
         }
     }
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="scenes_array">
+        <item>Scene 1</item>
+        <item>Scene 2</item>
+        <item>Scene 3</item>
+    </array>
+</resources>

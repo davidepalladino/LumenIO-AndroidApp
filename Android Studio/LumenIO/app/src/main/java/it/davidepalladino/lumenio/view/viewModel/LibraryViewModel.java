@@ -9,19 +9,17 @@ import androidx.lifecycle.MutableLiveData;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.data.ProfileRepository;
-import it.davidepalladino.lumenio.data.Scene;
-import it.davidepalladino.lumenio.data.SceneRepository;
 
 public class LibraryViewModel extends AndroidViewModel {
     private final ProfileRepository profileRepository;
-    private final SceneRepository sceneRepository;
 
-    private LiveData<List<Profile>> allProfiles;
-    private Profile selectedProfile;
+    private final LiveData<List<Profile>> profilesAll;
+    private Profile profileSelected;
 
     private final MutableLiveData<Long> selectedID = new MutableLiveData<>((long) 0);
     private final MutableLiveData<String> selectedName = new MutableLiveData<>("");
@@ -35,10 +33,9 @@ public class LibraryViewModel extends AndroidViewModel {
 
     public LibraryViewModel(Application application) {
         super(application);
-        profileRepository = new ProfileRepository(application);
-        sceneRepository = new SceneRepository(application);
 
-        allProfiles = profileRepository.getAll();
+        profileRepository = new ProfileRepository(application);
+        profilesAll = profileRepository.getAll();
     }
 
     public LiveData<Long> getSelectedID() { return selectedID; }
@@ -72,41 +69,46 @@ public class LibraryViewModel extends AndroidViewModel {
     public Profile getOneByID(long id) { return profileRepository.getOneById(id); }
 
     public LiveData<List<Profile>> getAll() {
-        return allProfiles;
+        return profilesAll;
     }
 
-    public int updateValues() {
-        selectedProfile.setValues(selectedName.getValue(), selectedBrightness.getValue(), selectedRed.getValue(), selectedGreen.getValue(), selectedBlue.getValue());
-        return profileRepository.updateValues(selectedProfile);
+    public LiveData<List<Profile>> getAllByName(String name) {
+        return profileRepository.getAllByName(name);
     }
 
-    public int updateUse() {
-        return profileRepository.updateUse(selectedProfile);
+    public void updateValues() {
+        profileSelected.setValues(
+                selectedName.getValue(),
+                selectedBrightness.getValue(),
+                selectedRed.getValue(),
+                selectedGreen.getValue(),
+                selectedBlue.getValue());
+        profileRepository.updateValues(profileSelected);
+    }
+
+    public void updateUse() {
+        profileRepository.updateUse(profileSelected);
     }
 
     public void delete() {
-        profileRepository.delete(selectedProfile);
+        profileRepository.delete(profileSelected);
     }
 
     public void loadByID(long id) {
-        selectedProfile = getOneByID(id);
+        profileSelected = getOneByID(id);
 
-        selectedID.postValue(selectedProfile.id);
-        selectedName.postValue(selectedProfile.name);
-        selectedBrightness.postValue(selectedProfile.brightness);
-        selectedRed.postValue(selectedProfile.red);
-        selectedGreen.postValue(selectedProfile.green);
-        selectedBlue.postValue(selectedProfile.blue);
-        selectedCreatedAt.postValue(selectedProfile.createdAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(selectedProfile.createdAt * 1000)) : "");
-        selectedUpdatedAt.postValue(selectedProfile.updatedAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(selectedProfile.updatedAt * 1000)) : "");
-        selectedUsedAt.postValue(selectedProfile.usedAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(selectedProfile.usedAt * 1000)) : "");
+        selectedID.postValue(profileSelected.id);
+        selectedName.postValue(profileSelected.name);
+        selectedBrightness.postValue(profileSelected.brightness);
+        selectedRed.postValue(profileSelected.red);
+        selectedGreen.postValue(profileSelected.green);
+        selectedBlue.postValue(profileSelected.blue);
+        selectedCreatedAt.postValue(profileSelected.createdAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(profileSelected.createdAt * 1000)) : "");
+        selectedUpdatedAt.postValue(profileSelected.updatedAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(profileSelected.updatedAt * 1000)) : "");
+        selectedUsedAt.postValue(profileSelected.usedAt != 0 ? new SimpleDateFormat(getApplication().getString(R.string.datetime_format)).format(new Date(profileSelected.usedAt * 1000)) : "");
     }
 
     public void reload() {
-        loadByID(selectedProfile.id);
-    }
-
-    public void updateScene(Scene scene) {
-        sceneRepository.update(scene);
+        loadByID(profileSelected.id);
     }
 }

@@ -27,19 +27,23 @@ import androidx.transition.TransitionInflater;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.data.Scene;
 import it.davidepalladino.lumenio.databinding.FragmentLibraryDetailBinding;
 import it.davidepalladino.lumenio.view.viewModel.ManualViewModel;
 import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
+import it.davidepalladino.lumenio.view.viewModel.SceneViewModel;
 
 public class LibraryDetailFragment extends Fragment {
     public static final String BUNDLE_PROFILE_ID = "PROFILE_ID";
 
-    private FragmentLibraryDetailBinding binding;
+    private FragmentLibraryDetailBinding fragmentLibraryDetailBinding;
     private LibraryViewModel libraryViewModel;
+    private SceneViewModel sceneViewModel;
     private ManualViewModel manualViewModel;
 
     private Menu menu;
@@ -59,16 +63,17 @@ public class LibraryDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         libraryViewModel = new ViewModelProvider(requireActivity()).get(LibraryViewModel.class);
+        sceneViewModel = new ViewModelProvider(requireActivity()).get(SceneViewModel.class);
         manualViewModel = new ViewModelProvider(requireActivity()).get(ManualViewModel.class);
 
-        binding = FragmentLibraryDetailBinding.inflate(inflater, container, false);
-        binding.setLifecycleOwner(this);
-        binding.setLibraryViewModel(libraryViewModel);
-        binding.setButtonsHandler(new ButtonsHandler());
+        fragmentLibraryDetailBinding = FragmentLibraryDetailBinding.inflate(inflater, container, false);
+        fragmentLibraryDetailBinding.setLifecycleOwner(this);
+        fragmentLibraryDetailBinding.setLibraryViewModel(libraryViewModel);
+        fragmentLibraryDetailBinding.setButtonsHandler(new ButtonsHandler());
 
         new Thread(() -> libraryViewModel.loadByID(getArguments().getLong(BUNDLE_PROFILE_ID))).start();
 
-        return binding.getRoot();
+        return fragmentLibraryDetailBinding.getRoot();
     }
 
     @Override
@@ -83,7 +88,6 @@ public class LibraryDetailFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
         NavHostFragment.findNavController(this).navigateUp();
 
 //        disableEditMode();
@@ -99,7 +103,7 @@ public class LibraryDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        fragmentLibraryDetailBinding = null;
     }
 
     @Override
@@ -152,29 +156,27 @@ public class LibraryDetailFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void checkName(CharSequence s, int start, int before, int count) {
+    public void checkSyntaxName(CharSequence s, int start, int before, int count) {
         if (s.toString().matches(getString(R.string.sentence_incorrect_only_white_space))) {
-            binding.messageName.setText(getString(R.string.empty_field));
-            binding.messageName.setVisibility(View.VISIBLE);
-        } else if (s.toString().matches(getString(R.string.sentence_incorrect_white_space_start_end))) {
-            binding.messageName.setText(R.string.incorrect_start_end_field);
-            binding.messageName.setVisibility(View.VISIBLE);
+            fragmentLibraryDetailBinding.messageName.setText(getString(R.string.empty_field));
+            fragmentLibraryDetailBinding.messageName.setVisibility(View.VISIBLE);
+        } else if (s.toString().matches(getString(R.string.sentence_incorrect_white_space_start))) {
+            fragmentLibraryDetailBinding.messageName.setText(R.string.incorrect_start_field);
+            fragmentLibraryDetailBinding.messageName.setVisibility(View.VISIBLE);
         } else if (s.toString().matches(getString(R.string.sentence_correct))) {
-            binding.messageName.setText("");
-            binding.messageName.setVisibility(View.GONE);
+            fragmentLibraryDetailBinding.messageName.setText("");
+            fragmentLibraryDetailBinding.messageName.setVisibility(View.GONE);
         }
     }
 
     private void showRemoveDialog() {
-        String dialogMessage = getString(R.string.questionRemoveProfilePre) + " " + binding.nameTextView.getText().toString() + " " + getString(R.string.questionRemoveProfilePost);
-
+        String dialogMessage = getString(R.string.questionRemoveProfilePre) + " " + fragmentLibraryDetailBinding.nameTextView.getText().toString() + " " + getString(R.string.questionRemoveProfilePost);
         SpannableString spannableDialogMessage = new SpannableString(dialogMessage);
         spannableDialogMessage.setSpan(
                 new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)),
                 getString(R.string.questionRemoveProfilePre).length() + 1,
-                getString(R.string.questionRemoveProfilePre).length() + 1 + binding.nameTextView.getText().toString().length(),
+                getString(R.string.questionRemoveProfilePre).length() + 1 + fragmentLibraryDetailBinding.nameTextView.getText().toString().length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(requireActivity());
         alertDialog
@@ -212,8 +214,7 @@ public class LibraryDetailFragment extends Fragment {
 
             SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
             spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, libraryViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            Snackbar.make(binding.getRoot(), spannableSnackbarMessage, 5000).show();
+            Snackbar.make(fragmentLibraryDetailBinding.getRoot(), spannableSnackbarMessage, 5000).show();
         }).start();
     }
 
@@ -227,27 +228,36 @@ public class LibraryDetailFragment extends Fragment {
                     manualViewModel.loadByID(0);
                 }
 
+                /* Checking if this profile is used for some scene. If so, the scene will be removed. */
+                Iterator iteratorScenesAll = sceneViewModel.getScenesAll().getValue().iterator();
+                while (iteratorScenesAll.hasNext()) {
+                    Scene scene = (Scene) iteratorScenesAll.next();
+                    if (scene.profileId == libraryViewModel.getSelectedID().getValue()) {
+                        sceneViewModel.deleteScene(scene);
+                        break;
+                    }
+                }
+
                 snackbarMessage = libraryViewModel.getSelectedName().getValue() + " " + getString(R.string.profile_removed);
                 SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
                 spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, libraryViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                Snackbar.make(binding.getRoot(), spannableSnackbarMessage, 5000).show();
+                Snackbar.make(fragmentLibraryDetailBinding.getRoot(), spannableSnackbarMessage, 5000).show();
             } catch (SQLiteConstraintException ignored) { }
         }).start();
     }
 
     private void enableEditMode() {
-        binding.controlCard.setVisibility(View.VISIBLE);
-        binding.nameEditText.setVisibility(View.VISIBLE);
-        binding.nameTextView.setVisibility(View.GONE);
-        binding.messageName.setVisibility(View.VISIBLE);
+        fragmentLibraryDetailBinding.controlCard.setVisibility(View.VISIBLE);
+        fragmentLibraryDetailBinding.nameEditText.setVisibility(View.VISIBLE);
+        fragmentLibraryDetailBinding.nameTextView.setVisibility(View.GONE);
+        fragmentLibraryDetailBinding.messageName.setVisibility(View.VISIBLE);
     }
 
     public void disableEditMode() {
-        binding.controlCard.setVisibility(View.GONE);
-        binding.nameEditText.setVisibility(View.GONE);
-        binding.nameTextView.setVisibility(View.VISIBLE);
-        binding.messageName.setVisibility(View.GONE);
+        fragmentLibraryDetailBinding.controlCard.setVisibility(View.GONE);
+        fragmentLibraryDetailBinding.nameEditText.setVisibility(View.GONE);
+        fragmentLibraryDetailBinding.nameTextView.setVisibility(View.VISIBLE);
+        fragmentLibraryDetailBinding.messageName.setVisibility(View.GONE);
 
         /* Disabling the keyboard. */
         InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -267,15 +277,36 @@ public class LibraryDetailFragment extends Fragment {
                 libraryViewModel.reload();
                 manualViewModel.loadByID(libraryViewModel.getSelectedID().getValue());
 
-                Snackbar.make(binding.getRoot(), getString(R.string.profile_loaded), 5000).show();
+                Snackbar.make(fragmentLibraryDetailBinding.getRoot(), getString(R.string.profile_loaded), 5000).show();
             }).start();
         }
 
         public void setAsScene(View v) {
-            new Thread(() -> {
-                Scene scene = new Scene(1, libraryViewModel.getSelectedID().getValue());
-                libraryViewModel.updateScene(scene);
-            }).start();
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(requireActivity());
+            alertDialog
+                .setTitle("Select a scene slot")
+                .setItems(R.array.scenes_array, (dialog, which) -> {
+                    AtomicReference<String> snackbarMessage = new AtomicReference<>("");
+
+                    new Thread(() -> {
+                        snackbarMessage.set(libraryViewModel.getSelectedName().getValue() + " ");
+
+                        try {
+                            Scene scene = new Scene(which + 1, libraryViewModel.getSelectedID().getValue());
+                            sceneViewModel.updateScene(scene);
+
+                            snackbarMessage.set(snackbarMessage.get() + getString(R.string.scene_saved) + " " + scene.id + ".");
+                        } catch (Exception e) {
+                            snackbarMessage.set(snackbarMessage.get() + getString(R.string.scene_not_saved_for_name));
+                        }
+
+                        SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage.toString());
+                        spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, libraryViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Snackbar.make(fragmentLibraryDetailBinding.getRoot(), spannableSnackbarMessage, 5000).show();
+                    }).start();
+                })
+                .create()
+                .show();
         }
     }
 }

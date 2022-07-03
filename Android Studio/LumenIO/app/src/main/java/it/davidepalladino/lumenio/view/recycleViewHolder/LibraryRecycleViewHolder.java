@@ -14,19 +14,23 @@ import it.davidepalladino.lumenio.databinding.RecycleViewLibraryBinding;
 import it.davidepalladino.lumenio.view.fragment.LibraryDetailFragment;
 
 public class LibraryRecycleViewHolder extends RecyclerView.ViewHolder {
-    private RecycleViewLibraryBinding binding;
+    private RecycleViewLibraryBinding recycleViewLibraryBinding;
 
     public LibraryRecycleViewHolder(RecycleViewLibraryBinding itemBinding) {
         super(itemBinding.getRoot());
-        this.binding = itemBinding;
+        this.recycleViewLibraryBinding = itemBinding;
     }
 
     public void bind(Profile profile) {
-        binding.name.setText(profile.name);
-        binding.name.setTransitionName(profile.name);     // Setting this and commenting that in `setOnClickListener`, is possible to see the animation.
-        binding.preview.setBackground(new ColorDrawable(Color.argb(profile.brightness, profile.red, profile.green, profile.blue)));
-        binding.item.setOnClickListener(view -> {
-
+        recycleViewLibraryBinding.name.setText(profile.name);
+        recycleViewLibraryBinding.values.setText(
+                String.format("%03d", profile.brightness) + " " +
+                String.format("%03d", profile.red) + " " +
+                String.format("%03d", profile.green) + " " +
+                String.format("%03d", profile.blue)
+        );
+        recycleViewLibraryBinding.preview.setBackground(new ColorDrawable(Color.argb(profile.brightness, profile.red, profile.green, profile.blue)));
+        recycleViewLibraryBinding.item.setOnClickListener(view -> {
             NavController navController =  Navigation.findNavController(view);
 
             Bundle bundle = new Bundle();

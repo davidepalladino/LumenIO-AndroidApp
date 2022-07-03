@@ -1,52 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.fragment.ManualFragment" >
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.recycleViewHolder.LibraryRecycleViewHolder" >
 
     <data>
+        <variable name="sceneViewModel" type="it.davidepalladino.lumenio.view.viewModel.SceneViewModel" />
         <variable name="sceneFragment" type="it.davidepalladino.lumenio.view.fragment.SceneFragment" />
     </data>
-        <LinearLayout
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/background" >
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/background"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            card_view:cardCornerRadius="@dimen/item_list_view_corner_radius" >
 
-            <androidx.cardview.widget.CardView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/card_margin_top"
-                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-                android:layout_marginBottom="@dimen/card_margin_bottom"
-                app:cardCornerRadius="@dimen/card_corner_radius" >
+                android:layout_height="match_parent" >
 
-                <TextView
+                <View
+                    android:id="@+id/preview_one"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    android:backgroundTint="#000000"
+                    android:backgroundTintMode="add"
+                    android:elevation="5dp"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toTopOf="parent"
+                    card_view:layout_constraintEnd_toStartOf="@id/container_one"/>
+
+                <LinearLayout
+                    android:id="@+id/container_one"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Profile 1"
-                    android:padding="@dimen/body_card_padding" />
-            </androidx.cardview.widget.CardView>
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="10dp"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintStart_toEndOf="@+id/preview_one"
+                    card_view:layout_constraintTop_toTopOf="parent"
+                    android:orientation="vertical" >
 
-            <androidx.cardview.widget.CardView
+                    <TextView
+                        android:id="@+id/name_one"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textSize="16sp"
+                        tools:text="Name" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:id="@+id/values_one"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textSize="10sp"
+                            tools:text="255 255 100 065" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:src="@drawable/ic_round_scene_one"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            card_view:cardCornerRadius="@dimen/item_list_view_corner_radius" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-                android:layout_marginBottom="@dimen/card_margin_bottom"
-                app:cardCornerRadius="@dimen/card_corner_radius" >
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
 
+                <View
+                    android:id="@+id/preview_two"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    android:backgroundTint="#000000"
+                    android:backgroundTintMode="add"
+                    android:elevation="5dp"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toTopOf="parent"
+                    card_view:layout_constraintEnd_toStartOf="@id/container_two"/>
 
-            </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:id="@+id/container_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="10dp"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintStart_toEndOf="@+id/preview_two"
+                    card_view:layout_constraintTop_toTopOf="parent"
+                    android:orientation="vertical" >
 
-            <androidx.cardview.widget.CardView
+                    <TextView
+                        android:id="@+id/name_two"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textSize="16sp"
+                        tools:text="Name" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:id="@+id/values_two"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textSize="10sp"
+                            tools:text="255 255 100 065" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:src="@drawable/ic_round_scene_two"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            card_view:cardCornerRadius="@dimen/item_list_view_corner_radius" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-                android:layout_marginBottom="@dimen/card_margin_bottom"
-                app:cardCornerRadius="@dimen/card_corner_radius" >
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
 
+                <View
+                    android:id="@+id/preview_three"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    android:backgroundTint="#000000"
+                    android:backgroundTintMode="add"
+                    android:elevation="5dp"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toTopOf="parent"
+                    card_view:layout_constraintEnd_toStartOf="@id/name_three"/>
 
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/container_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="10dp"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintStart_toEndOf="@+id/preview_three"
+                    card_view:layout_constraintTop_toTopOf="parent"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/name_three"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textSize="16sp"
+                        tools:text="Name" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:id="@+id/values_three"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textSize="10sp"
+                            tools:text="255 255 100 065" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:src="@drawable/ic_round_scene_three"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 </layout>

@@ -100,7 +100,7 @@
                                     android:maxLength="20"
                                     android:maxLines="1"
                                     android:text="@={libraryViewModel.selectedName}"
-                                    android:onTextChanged="@{(s, start, before, count) -> libraryDetailFragment.checkName(s, start, before, count)}"
+                                    android:onTextChanged="@{(s, start, before, count) -> libraryDetailFragment.checkSyntaxName(s, start, before, count)}"
                                     android:visibility="gone"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"

@@ -31,14 +31,14 @@ public class LibraryListAdapter extends ListAdapter<Profile, LibraryRecycleViewH
     public static class ProfileDiff extends DiffUtil.ItemCallback<Profile> {
         @Override
         public boolean areItemsTheSame(@NonNull Profile oldItem, @NonNull Profile newItem) {
-//            return oldItem == newItem;
-            return false;
+            return oldItem == newItem;
+//            return false;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Profile oldItem, @NonNull Profile newItem) {
-//            return oldItem.id == newItem.id;
-            return false;
+            return oldItem.id == newItem.id;
+//            return false;
         }
     }
 }

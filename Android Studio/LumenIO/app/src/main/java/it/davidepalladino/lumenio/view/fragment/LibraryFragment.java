@@ -13,16 +13,15 @@ import it.davidepalladino.lumenio.databinding.FragmentLibraryBinding;
 import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
 
 public class LibraryFragment extends Fragment {
-    private FragmentLibraryBinding binding;
+    private FragmentLibraryBinding fragmentLibraryBinding;
     private LibraryViewModel libraryViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentLibraryBinding.inflate(inflater, container, false);
-
+        fragmentLibraryBinding = FragmentLibraryBinding.inflate(inflater, container, false);
         libraryViewModel = new ViewModelProvider(requireActivity()).get(LibraryViewModel.class);
 
-        return binding.getRoot();
+        return fragmentLibraryBinding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -40,6 +39,6 @@ public class LibraryFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        fragmentLibraryBinding = null;
     }
 }

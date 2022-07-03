@@ -11,7 +11,8 @@ import it.davidepalladino.lumenio.data.ProfileRepository;
 
 public class ManualViewModel extends AndroidViewModel {
     private final ProfileRepository profileRepository;
-    private Profile selectedProfile;
+
+    private Profile profileSelected;
 
     private final MutableLiveData<Long> selectedID = new MutableLiveData<>((long) 0);
     private final MutableLiveData<String> selectedName = new MutableLiveData<>("");
@@ -52,28 +53,34 @@ public class ManualViewModel extends AndroidViewModel {
     }
 
     public long insert() {
-        selectedProfile = new Profile(selectedName.getValue(), selectedBrightness.getValue(), selectedRed.getValue(), selectedGreen.getValue(), selectedBlue.getValue());
-        selectedProfile.id = profileRepository.insert(selectedProfile);
-        selectedID.postValue(selectedProfile.id);
-        return selectedProfile.id;
+        profileSelected = new Profile(
+                selectedName.getValue(),
+                selectedBrightness.getValue(),
+                selectedRed.getValue(),
+                selectedGreen.getValue(),
+                selectedBlue.getValue());
+        profileSelected.id = profileRepository.insert(profileSelected);
+        selectedID.postValue(profileSelected.id);
+
+        return profileSelected.id;
     }
 
     public void loadByID(long id) {
-        selectedProfile = getOneByID(id);
+        profileSelected = getOneByID(id);
 
-        if (selectedProfile == null) {
-            selectedProfile = new Profile("", 0, 0, 0, 0);
+        if (profileSelected == null) {
+            profileSelected = new Profile("", 0, 0, 0, 0);
         }
 
-        selectedID.postValue(selectedProfile.id);
-        selectedName.postValue(selectedProfile.name);
-        selectedBrightness.postValue(selectedProfile.brightness);
-        selectedRed.postValue(selectedProfile.red);
-        selectedGreen.postValue(selectedProfile.green);
-        selectedBlue.postValue(selectedProfile.blue);
+        selectedID.postValue(profileSelected.id);
+        selectedName.postValue(profileSelected.name);
+        selectedBrightness.postValue(profileSelected.brightness);
+        selectedRed.postValue(profileSelected.red);
+        selectedGreen.postValue(profileSelected.green);
+        selectedBlue.postValue(profileSelected.blue);
     }
 
     public void reload() {
-        loadByID(selectedProfile.id);
+        loadByID(profileSelected.id);
     }
 }

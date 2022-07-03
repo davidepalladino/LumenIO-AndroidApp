@@ -9,18 +9,21 @@ public interface ProfileDao {
     @Insert
     long insert(Profile profile);
 
+    @Update
+    void update(Profile profile);
+
     @Delete
     void delete(Profile profile);
-
-    @Update
-    int update(Profile profile);
 
     @Query("SELECT * FROM `profiles` ORDER BY `name` ASC")
     LiveData<List<Profile>> getAll();
 
+    @Query("SELECT * FROM `profiles` WHERE `name` LIKE :name ORDER BY `name` ASC")
+    LiveData<List<Profile>> getAllByName(String name);
+
     @Query("SELECT * FROM `profiles` WHERE `id` = :id")
     Profile getOneById(long id);
 
-    @Query("SELECT * FROM `profiles` WHERE `name` = :name")
-    Profile getOneByName(String name);
+    @Query("SELECT * FROM `profiles` WHERE `id` = :id")
+    LiveData<Profile> getOneByIdLive(long id);
 }
