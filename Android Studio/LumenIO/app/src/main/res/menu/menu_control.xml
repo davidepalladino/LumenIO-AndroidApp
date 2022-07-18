@@ -7,7 +7,7 @@
     <item
         android:id="@+id/bluetooth"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_round_bluetooth_menu"
+        android:icon="@drawable/ic_round_bluetooth_disconnected"
         android:title="@string/bluetooth"
         app:showAsAction="always" />
 </menu>

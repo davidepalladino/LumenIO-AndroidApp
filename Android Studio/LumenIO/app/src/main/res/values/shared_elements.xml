@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="latest_profile_selected" translatable="false">LATEST_PROFILE_SELECTED</string>
+    <string name="device_selected" translatable="false">DEVICE_SELECTED</string>
 </resources>

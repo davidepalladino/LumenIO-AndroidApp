@@ -51,6 +51,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_round_preview_card"
                                 android:layout_marginEnd="@dimen/icon_header_card_margin_end" />
 
@@ -81,7 +82,7 @@
                                 android:layout_marginEnd="5dp"
                                 android:layout_marginBottom="10dp"
                                 android:elevation="5dp"
-                                tools:background="#FFFFFF"/>
+                                tools:background="@color/primary_color" />
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
@@ -268,6 +269,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_round_date_card"
                                 android:layout_marginEnd="@dimen/icon_header_card_margin_end" />
 
@@ -377,6 +379,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_round_control_card"
                                 android:layout_marginEnd="@dimen/icon_header_card_margin_end" />
 
@@ -443,35 +446,39 @@
                                 android:orientation="vertical">
 
                                 <SeekBar
+                                    android:id="@+id/seekbar_brightness"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/seek_bar_height"
                                     android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
                                     android:max="255"
-                                    android:onProgressChanged="@{() -> libraryDetailFragment.updateDevice()}"
+                                    android:onStopTrackingTouch="@{() -> libraryDetailFragment.updateDevice()}"
                                     android:progress="@={libraryViewModel.selectedBrightness}" />
 
                                 <SeekBar
+                                    android:id="@+id/seekbar_red"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/seek_bar_height"
                                     android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
                                     android:max="255"
-                                    android:onProgressChanged="@{() -> libraryDetailFragment.updateDevice()}"
+                                    android:onStopTrackingTouch="@{() -> libraryDetailFragment.updateDevice()}"
                                     android:progress="@={libraryViewModel.selectedRed}" />
 
                                 <SeekBar
+                                    android:id="@+id/seekbar_green"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/seek_bar_height"
                                     android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
                                     android:max="255"
-                                    android:onProgressChanged="@{() -> libraryDetailFragment.updateDevice()}"
+                                    android:onStopTrackingTouch="@{() -> libraryDetailFragment.updateDevice()}"
                                     android:progress="@={libraryViewModel.selectedGreen}" />
 
                                 <SeekBar
+                                    android:id="@+id/seekbar_blue"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/seek_bar_height"
                                     android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
                                     android:max="255"
-                                    android:onProgressChanged="@{() -> libraryDetailFragment.updateDevice()}"
+                                    android:onStopTrackingTouch="@{() -> libraryDetailFragment.updateDevice()}"
                                     android:progress="@={libraryViewModel.selectedBlue}" />
                             </LinearLayout>
                         </TableRow>

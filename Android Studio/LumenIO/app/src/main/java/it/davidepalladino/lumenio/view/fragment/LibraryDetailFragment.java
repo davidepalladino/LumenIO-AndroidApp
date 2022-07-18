@@ -27,6 +27,9 @@ import androidx.transition.TransitionInflater;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
@@ -34,6 +37,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.data.Scene;
 import it.davidepalladino.lumenio.databinding.FragmentLibraryDetailBinding;
+import it.davidepalladino.lumenio.util.BluetoothService;
 import it.davidepalladino.lumenio.view.viewModel.ManualViewModel;
 import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
 import it.davidepalladino.lumenio.view.viewModel.SceneViewModel;
@@ -46,6 +50,8 @@ public class LibraryDetailFragment extends Fragment {
     private SceneViewModel sceneViewModel;
     private ManualViewModel manualViewModel;
 
+    private BluetoothService bluetoothService;
+
     private Menu menu;
     private MenuInflater inflater;
 
@@ -54,6 +60,9 @@ public class LibraryDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+
+        bluetoothService = BluetoothService.getInstance();
+//        bluetoothService.(requireActivity());
 
         TransitionInflater inflater = TransitionInflater.from(requireContext());
         setEnterTransition(inflater.inflateTransition(R.transition.slide_right));
@@ -192,7 +201,24 @@ public class LibraryDetailFragment extends Fragment {
     }
 
     public void updateDevice() {
-        // TODO: Updating the BT device.
+        if (bluetoothService.isConnected()) {
+            String json = "";
+            try {
+                json = new JSONObject()
+                        .put("Request", 1)
+                        .put("Values", new JSONObject()
+                                .put("Brightness", fragmentLibraryDetailBinding.seekbarBrightness.getProgress())
+                                .put("Red", fragmentLibraryDetailBinding.seekbarRed.getProgress())
+                                .put("Green", fragmentLibraryDetailBinding.seekbarGreen.getProgress())
+                                .put("Blue", fragmentLibraryDetailBinding.seekbarBlue.getProgress())
+                        )
+                        .toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            bluetoothService.writeData(requireContext(), json);
+        }
     }
 
     private void updateProfile() {
@@ -269,13 +295,15 @@ public class LibraryDetailFragment extends Fragment {
     public class ButtonsHandler {
         public void controlIt(View v) {
             new Thread(() -> {
-                SharedPreferences.Editor profileSelectedPreference = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
-                profileSelectedPreference.putLong(getString(R.string.latest_profile_selected), libraryViewModel.getSelectedID().getValue());
-                profileSelectedPreference.apply();
+                SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+                sharedPreferencesEditor.putLong(getString(R.string.latest_profile_selected), libraryViewModel.getSelectedID().getValue());
+                sharedPreferencesEditor.apply();
 
                 libraryViewModel.updateUse();
                 libraryViewModel.reload();
                 manualViewModel.loadByID(libraryViewModel.getSelectedID().getValue());
+
+                updateDevice();
 
                 Snackbar.make(fragmentLibraryDetailBinding.getRoot(), getString(R.string.profile_loaded), 5000).show();
             }).start();

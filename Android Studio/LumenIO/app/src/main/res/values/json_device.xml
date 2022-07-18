@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="request" translatable="false">Request</string>
+    <string name="values" translatable="false">Values</string>
+    <string name="brightness" translatable="false">Brightness</string>
+    <string name="red" translatable="false">Red</string>
+    <string name="green" translatable="false">Green</string>
+    <string name="blue" translatable="false">Blue</string>
+</resources>

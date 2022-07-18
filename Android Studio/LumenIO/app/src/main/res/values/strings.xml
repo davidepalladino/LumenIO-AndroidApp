@@ -37,10 +37,15 @@
     <string name="questionRemoveProfilePre">Are you sure to remove the</string>
     <string name="questionRemoveProfilePost">profile?</string>
     <string name="profile_loaded">This profile has been loaded in Manual tab.</string>
-    <string name="empty_library_list">No profiles yet!</string>
+    <string name="empty_library_list">No profile yet!</string>
     <string name="empty_library_list_description">You can save a profile to the library by the Manual tab</string>
     <string name="scene">Scene</string>
     <string name="not_set">Not set</string>
     <string name="not_found">Not found!</string>
     <string name="no_found_description">The searched element doesn\'t exist</string>
+    <string name="select_device">Select a device</string>
+    <string name="no_device">No device!</string>
+    <string name="device_connected">Connected to device.</string>
+    <string name="device_disconnected">Disconnected from device.</string>
+    <string name="device_error">There is some error with communication.</string>
 </resources>

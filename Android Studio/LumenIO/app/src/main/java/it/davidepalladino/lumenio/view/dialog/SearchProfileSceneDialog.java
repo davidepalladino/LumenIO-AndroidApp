@@ -49,7 +49,7 @@ public class SearchProfileSceneDialog extends DialogFragment {
         AlertDialog dialog = builder.create();
 
         SearchView searchView = view.findViewById(R.id.search_dialog_search_profile_scene);
-        ListView listView = view.findViewById(R.id.list_profiles_dialog_search_profile_scene);
+        ListView listView = view.findViewById(R.id.list_dialog_search_profile_scene);
 
         profileGetAllObserver = profiles -> {
             ArrayAdapter<Profile> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, profiles);
