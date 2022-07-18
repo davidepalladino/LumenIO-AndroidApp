@@ -48,4 +48,7 @@
     <string name="device_connected">Connected to device.</string>
     <string name="device_disconnected">Disconnected from device.</string>
     <string name="device_error">There is some error with communication.</string>
+    <string name="scene_one">Scene 1</string>
+    <string name="scene_two">Scene 2</string>
+    <string name="scene_three">Scene 3</string>
 </resources>
