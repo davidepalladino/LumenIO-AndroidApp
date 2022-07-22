@@ -20,5 +20,5 @@ public interface SceneDao {
     LiveData<List<Scene>> getAll();
 
     @Query("SELECT * FROM `scenes` WHERE `id` = :id")
-    Scene getOneById(long id);
+    LiveData<Scene> getOneById(long id);
 }

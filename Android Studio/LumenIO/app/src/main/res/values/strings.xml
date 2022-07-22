@@ -51,4 +51,5 @@
     <string name="scene_one">Scene 1</string>
     <string name="scene_two">Scene 2</string>
     <string name="scene_three">Scene 3</string>
+    <string name="request_connection_execute_action">You must to be connected to device for executing this operation.</string>
 </resources>

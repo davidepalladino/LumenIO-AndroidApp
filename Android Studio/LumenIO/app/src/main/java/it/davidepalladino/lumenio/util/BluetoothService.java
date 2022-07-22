@@ -23,6 +23,7 @@ public class BluetoothService {
 
     private static BluetoothService bluetoothService = null;
 
+    private static BluetoothAdapter bluetoothAdapter;
     private static BluetoothDevice bluetoothDevice;
     private static BluetoothSocket bluetoothSocket;
 
@@ -31,15 +32,20 @@ public class BluetoothService {
 
     private BluetoothService() {}
 
-    public static BluetoothService getInstance() {
+    public static BluetoothService getInstance(BluetoothAdapter bluetoothAdapterFrom) {
         if (bluetoothService == null) {
             bluetoothService = new BluetoothService();
+            bluetoothAdapter = bluetoothAdapterFrom;
         }
 
         return bluetoothService;
     }
 
-    public ArrayList<BluetoothDevice> getList(BluetoothAdapter bluetoothAdapter, String filterDeviceName) {
+    public BluetoothAdapter getBluetoothAdapter() {
+        return bluetoothAdapter;
+    }
+
+    public ArrayList<BluetoothDevice> getList(String filterDeviceName) {
         Set<BluetoothDevice> bluetoothDevicesFullList = bluetoothAdapter.getBondedDevices();
 
         if (filterDeviceName != null) {
@@ -59,7 +65,7 @@ public class BluetoothService {
         }
     }
 
-    public boolean pair(BluetoothAdapter bluetoothAdapter, String macAddress) {
+    public boolean pair(String macAddress) {
         try {
             bluetoothDevice = bluetoothAdapter.getRemoteDevice(macAddress);
             bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(bluetoothDevice.getUuids()[0].getUuid());

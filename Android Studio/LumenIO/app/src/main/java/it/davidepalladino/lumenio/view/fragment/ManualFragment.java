@@ -61,7 +61,6 @@ public class ManualFragment extends Fragment {
 
     private boolean errorSyntaxFieldName = false;
 
-    private BluetoothAdapter bluetoothAdapter;
     private BluetoothService bluetoothService;
     private DeviceArrayAdapter deviceArrayAdapter = null;
 
@@ -95,9 +94,7 @@ public class ManualFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        bluetoothAdapter = requireActivity().getSystemService(BluetoothManager.class).getAdapter();
-        bluetoothService = BluetoothService.getInstance();
-
+        bluetoothService = BluetoothService.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter());
     }
 
     @Override
@@ -123,12 +120,10 @@ public class ManualFragment extends Fragment {
         super.onResume();
 
         requireActivity().registerReceiver(broadcastReceiver, new IntentFilter("BLUETOOTH_CONNECTION"));
-        Log.i("LC", "resume");
-
 
         /* Verify if the dialog for device selection is open, to update the list of devices. */
         if (dialogSelectDevice != null && dialogSelectDevice.isShowing()) {
-            ArrayList<BluetoothDevice> bluetoothDevices = bluetoothService.getList(bluetoothAdapter, getString(R.string.app_name));
+            ArrayList<BluetoothDevice> bluetoothDevices = bluetoothService.getList(getString(R.string.app_name));
             deviceArrayAdapter.clear();
             deviceArrayAdapter.addAll(bluetoothDevices);
             deviceArrayAdapter.notifyDataSetChanged();
@@ -140,7 +135,6 @@ public class ManualFragment extends Fragment {
                 dialogSelectDevice.findViewById(R.id.no_device_dialog_search_device).setVisibility(View.VISIBLE);
                 dialogSelectDevice.findViewById(R.id.list_dialog_search_device).setVisibility(View.GONE);
             }
-
         }
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -152,18 +146,12 @@ public class ManualFragment extends Fragment {
     public void onPause() {
         super.onPause();
         requireActivity().unregisterReceiver(broadcastReceiver);
-        Log.i("LC", "pause");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         fragmentManualBinding = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -181,7 +169,6 @@ public class ManualFragment extends Fragment {
         } else {
             menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
         }
-
     }
 
     @Override
@@ -190,7 +177,7 @@ public class ManualFragment extends Fragment {
         switch (id) {
             case R.id.bluetooth:
                 if (!bluetoothService.isConnected()) {
-                    if (!bluetoothAdapter.isEnabled()) {
+                    if (!bluetoothService.getBluetoothAdapter().isEnabled()) {
                         Intent intentRequestEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(intentRequestEnable, REQUIRE_ENABLE_BLUETOOTH);
                     } else {
@@ -262,8 +249,8 @@ public class ManualFragment extends Fragment {
         String deviceSelected = sharedPreferences.getString(getString(R.string.device_selected), "");
 
         /* If the device is never been set, or the actual device is now not bonded, will be an AlertDialog for a selection. */
-        if (deviceSelected.isEmpty() || (!deviceSelected.isEmpty() && bluetoothAdapter.getRemoteDevice(deviceSelected).getBondState() == 10)) {
-            ArrayList<BluetoothDevice> bluetoothDevices = bluetoothService.getList(bluetoothAdapter, getString(R.string.app_name));
+        if (deviceSelected.isEmpty() || (!deviceSelected.isEmpty() && bluetoothService.getBluetoothAdapter().getRemoteDevice(deviceSelected).getBondState() == 10)) {
+            ArrayList<BluetoothDevice> bluetoothDevices = bluetoothService.getList(getString(R.string.app_name));
             deviceArrayAdapter = new DeviceArrayAdapter(requireContext(), bluetoothDevices);
 
             View view = requireActivity().getLayoutInflater().inflate(R.layout.dialog_search_device, null);
@@ -286,7 +273,7 @@ public class ManualFragment extends Fragment {
                 sharedPreferencesEditor.putString(getString(R.string.device_selected), selection);
                 sharedPreferencesEditor.apply();
 
-                if (bluetoothService.pair(bluetoothAdapter, selection)) {
+                if (bluetoothService.pair(selection)) {
                     bluetoothService.connect(requireContext());
                 }
 
@@ -305,12 +292,13 @@ public class ManualFragment extends Fragment {
 
             dialogSelectDevice.show();
         } else {
-            if (bluetoothService.pair(bluetoothAdapter, deviceSelected)) {
+            if (bluetoothService.pair(deviceSelected)) {
                 bluetoothService.connect(requireContext());
             }
         }
     }
 
+    // FIXME: Implement the process.
     public void updateDevice() {
         if (bluetoothService.isConnected()) {
             String json = "";

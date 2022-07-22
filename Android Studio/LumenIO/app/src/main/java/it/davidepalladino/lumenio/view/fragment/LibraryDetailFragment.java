@@ -1,6 +1,7 @@
 package it.davidepalladino.lumenio.view.fragment;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteConstraintException;
@@ -21,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.transition.TransitionInflater;
@@ -31,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -61,8 +64,7 @@ public class LibraryDetailFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        bluetoothService = BluetoothService.getInstance();
-//        bluetoothService.(requireActivity());
+        bluetoothService = BluetoothService.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter());
 
         TransitionInflater inflater = TransitionInflater.from(requireContext());
         setEnterTransition(inflater.inflateTransition(R.transition.slide_right));
@@ -246,22 +248,12 @@ public class LibraryDetailFragment extends Fragment {
 
     private void deleteProfile() {
         new Thread(() -> {
-            String snackbarMessage = "";
-
             try {
+                String snackbarMessage = "";
+
                 libraryViewModel.delete();
                 if (libraryViewModel.getSelectedID().getValue() == (manualViewModel.getSelectedID().getValue())) {
                     manualViewModel.loadByID(0);
-                }
-
-                /* Checking if this profile is used for some scene. If so, the scene will be removed. */
-                Iterator iteratorScenesAll = sceneViewModel.getScenesAll().getValue().iterator();
-                while (iteratorScenesAll.hasNext()) {
-                    Scene scene = (Scene) iteratorScenesAll.next();
-                    if (scene.profileId == libraryViewModel.getSelectedID().getValue()) {
-                        sceneViewModel.deleteScene(scene);
-                        break;
-                    }
                 }
 
                 snackbarMessage = libraryViewModel.getSelectedName().getValue() + " " + getString(R.string.profile_removed);
@@ -270,6 +262,20 @@ public class LibraryDetailFragment extends Fragment {
                 Snackbar.make(fragmentLibraryDetailBinding.getRoot(), spannableSnackbarMessage, 5000).show();
             } catch (SQLiteConstraintException ignored) { }
         }).start();
+
+        /* Checking if this profile is used for some scene. If so, the scene will be removed. */
+        sceneViewModel.getScenesAll().observe(requireActivity(), scenes -> {
+            Iterator iteratorScenesAll = scenes.iterator();
+            while (iteratorScenesAll.hasNext()) {
+                Scene scene = (Scene) iteratorScenesAll.next();
+                if (scene.profileId == libraryViewModel.getSelectedID().getValue()) {
+                    new Thread(() -> {
+                        sceneViewModel.deleteScene(scene);
+                    }).start();
+                    break;
+                }
+            }
+        });
     }
 
     private void enableEditMode() {
@@ -289,8 +295,6 @@ public class LibraryDetailFragment extends Fragment {
         InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0);
     }
-
-
 
     public class ButtonsHandler {
         public void controlIt(View v) {

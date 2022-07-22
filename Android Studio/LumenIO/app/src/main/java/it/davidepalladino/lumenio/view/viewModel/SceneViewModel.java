@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class SceneViewModel extends AndroidViewModel {
     private final SceneRepository sceneRepository;
     private final ProfileRepository profileRepository;
 
-    public LiveData<List<Scene>> scenesAll;
-    public LiveData<List<Profile>> profilesAll;
+    private LiveData<List<Scene>> scenesAll;
+    private LiveData<List<Profile>> profilesAll;
 
     public SceneViewModel(Application application) {
         super(application);
@@ -28,6 +29,8 @@ public class SceneViewModel extends AndroidViewModel {
         scenesAll = sceneRepository.getAll();
         profilesAll = profileRepository.getAll();
     }
+
+    public LiveData<Scene> getSceneById(long id) { return sceneRepository.getOneById(id); }
 
     public LiveData<List<Scene>> getScenesAll() { return scenesAll; }
 
