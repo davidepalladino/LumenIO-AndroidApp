@@ -47,4 +47,3 @@ public class Profile {
         return name;
     }
 }
-
