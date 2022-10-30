@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="it.davidepalladino.lumenio.view.activity.MainActivity">
+
+    <item
+        android:id="@+id/manual"
+        android:icon="@drawable/ic_round_manual_tab"
+        android:title="@string/manual" />
+
+    <item
+        android:id="@+id/scene"
+        android:icon="@drawable/ic_round_scene_tab"
+        android:title="@string/scene" />
+
+    <item
+        android:id="@+id/library"
+        android:icon="@drawable/ic_round_library_tab"
+        android:title="@string/library" />
+</menu>

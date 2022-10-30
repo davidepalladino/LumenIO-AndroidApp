@@ -36,7 +36,8 @@ public class LibraryRecycleViewHolder extends RecyclerView.ViewHolder {
             Bundle bundle = new Bundle();
             bundle.putLong(LibraryDetailFragment.BUNDLE_PROFILE_ID, profile.id);
 
-            navController.navigate(R.id.action_ListLibraryFragment_to_DetailLibraryFragment, bundle, null);
+            // FIXME:
+//            navController.navigate(R.id.action_ListLibraryFragment_to_DetailLibraryFragment, bundle, null);
         });
     }
 }

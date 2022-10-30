@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.skydoves.colorpickerview.listeners.ColorListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,6 +114,47 @@ public class ManualFragment extends Fragment {
         fragmentManualBinding.setManualViewModel(manualViewModel);
         fragmentManualBinding.setManualFragment(this);
 
+        fragmentManualBinding.colorPickerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                motionEvent.getAction();
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        fragmentManualBinding.scrollView.setIsScrollable(false);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        fragmentManualBinding.scrollView.setIsScrollable(true);
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+        fragmentManualBinding.colorPickerView.setColorListener(new ColorListener() {
+            @Override
+            public void onColorSelected(int color, boolean fromUser) {
+                fragmentManualBinding.preview.setBackgroundColor(color);
+            }
+        });
+
+        fragmentManualBinding.brightnessSlide.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                motionEvent.getAction();
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        fragmentManualBinding.scrollView.setIsScrollable(false);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        fragmentManualBinding.scrollView.setIsScrollable(true);
+                        break;
+                }
+
+                return false;
+            }
+        });
+
         return fragmentManualBinding.getRoot();
     }
 
@@ -138,8 +181,11 @@ public class ManualFragment extends Fragment {
         }
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        appCompatActivity.setSupportActionBar(fragmentManualBinding.toolbar);
         appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         appCompatActivity.getSupportActionBar().setTitle(R.string.app_name);
+
+        fragmentManualBinding.colorPickerView.attachBrightnessSlider(fragmentManualBinding.brightnessSlide);
     }
 
     @Override
@@ -301,22 +347,23 @@ public class ManualFragment extends Fragment {
     // FIXME: Implement the process.
     public void updateDevice() {
         if (bluetoothService.isConnected()) {
-            String json = "";
-            try {
-                json = new JSONObject()
-                        .put(getString(R.string.request), 1)
-                        .put(getString(R.string.values), new JSONObject()
-                                .put(getString(R.string.brightness), fragmentManualBinding.seekbarBrightness.getProgress())
-                                .put(getString(R.string.red), fragmentManualBinding.seekbarRed.getProgress())
-                                .put(getString(R.string.green), fragmentManualBinding.seekbarGreen.getProgress())
-                                .put(getString(R.string.blue), fragmentManualBinding.seekbarBlue.getProgress())
-                        )
-                        .toString();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            bluetoothService.writeData(requireContext(), json);
+            //FIXME
+//            String json = "";
+//            try {
+//                json = new JSONObject()
+//                        .put(getString(R.string.request), 1)
+//                        .put(getString(R.string.values), new JSONObject()
+//                                .put(getString(R.string.brightness), fragmentManualBinding.seekbarBrightness.getProgress())
+//                                .put(getString(R.string.red), fragmentManualBinding.seekbarRed.getProgress())
+//                                .put(getString(R.string.green), fragmentManualBinding.seekbarGreen.getProgress())
+//                                .put(getString(R.string.blue), fragmentManualBinding.seekbarBlue.getProgress())
+//                        )
+//                        .toString();
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            bluetoothService.writeData(requireContext(), json);
         }
     }
 
