@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.fragment.ManualFragment" >
+
+    <data>
+        <variable name="manualViewModel" type="it.davidepalladino.lumenio.view.viewModel.ManualViewModel" />
+        <variable name="manualFragment" type="it.davidepalladino.lumenio.view.fragment.ManualFragment" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:text="@={manualViewModel.selectedName}"
+            android:onTextChanged="@{(s, start, before, count) -> manualFragment.checkSyntaxDialogSaveProfile(s, start, before, count)}"
+            tools:text="Name" />
+
+        <TextView
+            android:id="@+id/message_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:textSize="@dimen/message_text_view_size"
+            android:textColor="@color/error"
+            android:visibility="invisible"
+            tools:text="Message"
+            tools:visibility="visible"/>
+    </LinearLayout>
+</layout>

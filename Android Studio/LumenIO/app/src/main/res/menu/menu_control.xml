@@ -10,4 +10,11 @@
         android:icon="@drawable/ic_round_bluetooth_disconnected"
         android:title="@string/bluetooth"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/add"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_round_add"
+        android:title="@string/add"
+        app:showAsAction="always" />
 </menu>

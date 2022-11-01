@@ -12,12 +12,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteConstraintException;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TypefaceSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,126 +33,137 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.skydoves.colorpickerview.listeners.ColorListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 
 import java.util.ArrayList;
 
 import it.davidepalladino.lumenio.R;
+import it.davidepalladino.lumenio.databinding.DialogSaveProfileBinding;
 import it.davidepalladino.lumenio.databinding.FragmentManualBinding;
 import it.davidepalladino.lumenio.util.BluetoothService;
 import it.davidepalladino.lumenio.util.DeviceArrayAdapter;
 import it.davidepalladino.lumenio.view.viewModel.ManualViewModel;
 
 public class ManualFragment extends Fragment {
-    public static int REQUIRE_ENABLE_BLUETOOTH = 1;
+    public static final int REQUIRE_ENABLE_BLUETOOTH = 1;
 
     private FragmentManualBinding fragmentManualBinding;
+    private DialogSaveProfileBinding dialogSaveProfileBinding;
+
     private ManualViewModel manualViewModel;
 
     private Menu menu;
     private MenuInflater inflater;
 
     private AlertDialog dialogSelectDevice = null;
-
-    private boolean errorSyntaxFieldName = false;
+    private AlertDialog dialogSaveProfile = null;
 
     private BluetoothService bluetoothService;
+
     private DeviceArrayAdapter deviceArrayAdapter = null;
+
+    private boolean selectedByUser = false;
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String snackbarMessage = "";
+            if (menu != null) {
+                String snackbarMessage = "";
 
-            final String state = intent.getStringExtra(BluetoothService.STATUS);
-            switch (state) {
-                case BluetoothService.STATUS_CONNECTED:
-                    menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
-                    snackbarMessage = getString(R.string.device_connected);
-                    break;
-                case BluetoothService.STATUS_DISCONNECTED:
-                    snackbarMessage = getString(R.string.device_disconnected);
-                    menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
-                    break;
-                case BluetoothService.STATUS_ERROR:
-                    snackbarMessage = getString(R.string.device_error);
-                    menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
-                    break;
+                final String state = intent.getStringExtra(BluetoothService.STATUS);
+                switch (state) {
+                    case BluetoothService.STATUS_CONNECTED:
+                        updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
+
+                        menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
+                        snackbarMessage = getString(R.string.device_connected);
+                        break;
+                    case BluetoothService.STATUS_DISCONNECTED:
+                        snackbarMessage = getString(R.string.device_disconnected);
+                        menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+                        break;
+                    case BluetoothService.STATUS_ERROR:
+                        snackbarMessage = getString(R.string.device_error);
+                        menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+                        break;
+                }
+
+                Snackbar.make(fragmentManualBinding.getRoot(), snackbarMessage, 5000).show();
             }
-
-            Snackbar.make(fragmentManualBinding.getRoot(), snackbarMessage, 5000).show();
         }
     };
+
+    public static ManualFragment newInstance() {
+        return new ManualFragment();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        bluetoothService = BluetoothService.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         manualViewModel = new ViewModelProvider(requireActivity()).get(ManualViewModel.class);
+
+        bluetoothService = BluetoothService.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter());
 
         new Thread(() -> {
             SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
             manualViewModel.loadByID(sharedPreferences.getLong(getString(R.string.latest_profile_selected), 0));
         }).start();
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentManualBinding = FragmentManualBinding.inflate(inflater, container, false);
         fragmentManualBinding.setLifecycleOwner(this);
 
         fragmentManualBinding.setManualViewModel(manualViewModel);
         fragmentManualBinding.setManualFragment(this);
 
-        fragmentManualBinding.colorPickerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                motionEvent.getAction();
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        fragmentManualBinding.scrollView.setIsScrollable(false);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        fragmentManualBinding.scrollView.setIsScrollable(true);
-                        break;
-                }
+        fragmentManualBinding.colorPickerView.attachBrightnessSlider(fragmentManualBinding.brightnessSlide);
+        fragmentManualBinding.colorPickerView.setOnTouchListener((view, motionEvent) -> {
+            motionEvent.getAction();
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    fragmentManualBinding.scrollView.setIsScrollable(false);
+                    selectedByUser = true;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    fragmentManualBinding.scrollView.setIsScrollable(true);
+                    selectedByUser = false;
+                    break;
+            }
 
-                return false;
+            return false;
+        });
+        fragmentManualBinding.colorPickerView.setColorListener((ColorEnvelopeListener) (envelope, fromUser) -> {
+            if (fromUser) {
+                manualViewModel.setSelectedHex(envelope.getHexCode().substring(2, 8));
+                manualViewModel.setSelectedRed(envelope.getArgb()[1]);
+                manualViewModel.setSelectedGreen(envelope.getArgb()[2]);
+                manualViewModel.setSelectedBlue(envelope.getArgb()[3]);
             }
         });
 
-        fragmentManualBinding.colorPickerView.setColorListener(new ColorListener() {
-            @Override
-            public void onColorSelected(int color, boolean fromUser) {
-                fragmentManualBinding.preview.setBackgroundColor(color);
+        fragmentManualBinding.brightnessSlide.setOnTouchListener((view, motionEvent) -> {
+            motionEvent.getAction();
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    fragmentManualBinding.scrollView.setIsScrollable(false);
+                    selectedByUser = true;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    fragmentManualBinding.scrollView.setIsScrollable(true);
+                    selectedByUser = false;
+                    break;
             }
-        });
 
-        fragmentManualBinding.brightnessSlide.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                motionEvent.getAction();
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        fragmentManualBinding.scrollView.setIsScrollable(false);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        fragmentManualBinding.scrollView.setIsScrollable(true);
-                        break;
-                }
-
-                return false;
-            }
+            return false;
         });
 
         return fragmentManualBinding.getRoot();
@@ -180,23 +191,62 @@ public class ManualFragment extends Fragment {
             }
         }
 
+        manualViewModel.getSelectedRed().observe(requireActivity(), integer -> {
+            if (selectedByUser) {
+                try {
+                    fragmentManualBinding.colorPickerView.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                } catch (IllegalAccessException e) { e.printStackTrace(); }
+            } else {
+                fragmentManualBinding.colorPickerView.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+            }
+
+            updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
+        });
+
+        manualViewModel.getSelectedGreen().observe(requireActivity(), integer -> {
+            if (selectedByUser) {
+                try {
+                    fragmentManualBinding.colorPickerView.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                } catch (IllegalAccessException e) { e.printStackTrace(); }
+            } else {
+                fragmentManualBinding.colorPickerView.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+            }
+
+            updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
+        });
+
+        manualViewModel.getSelectedBlue().observe(requireActivity(), integer -> {
+            if (selectedByUser) {
+                try {
+                    fragmentManualBinding.colorPickerView.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                } catch (IllegalAccessException e) { e.printStackTrace(); }
+            } else {
+                fragmentManualBinding.colorPickerView.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+            }
+
+            updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
+        });
+
+
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-        appCompatActivity.setSupportActionBar(fragmentManualBinding.toolbar);
         appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         appCompatActivity.getSupportActionBar().setTitle(R.string.app_name);
-
-        fragmentManualBinding.colorPickerView.attachBrightnessSlider(fragmentManualBinding.brightnessSlide);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
         requireActivity().unregisterReceiver(broadcastReceiver);
+
+        manualViewModel.getSelectedRed().removeObservers(requireActivity());
+        manualViewModel.getSelectedGreen().removeObservers(requireActivity());
+        manualViewModel.getSelectedBlue().removeObservers(requireActivity());
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         fragmentManualBinding = null;
     }
 
@@ -234,60 +284,75 @@ public class ManualFragment extends Fragment {
                 }
 
                 break;
+            case R.id.add:
+                dialogSaveProfileBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_save_profile, null, false);
+                dialogSaveProfileBinding.setManualFragment(this);
+                dialogSaveProfileBinding.setManualViewModel(manualViewModel);
+
+                dialogSaveProfile = new AlertDialog.Builder(requireActivity())
+                        .setTitle(getString(R.string.save))
+                        .setView(dialogSaveProfileBinding.getRoot())
+                        .setPositiveButton(R.string.save, (dialogInterface, i) -> saveIntoLibrary())
+                        .setNegativeButton(R.string.discard, (dialogInterface, i) -> dialogInterface.dismiss())
+                        .create();
+
+                dialogSaveProfile.setOnShowListener(dialogInterface -> {
+                    if (dialogSaveProfileBinding.name.length() == 0) {
+                        dialogSaveProfileBinding.messageName.setText(getString(R.string.field_empty));
+                        dialogSaveProfileBinding.messageName.setVisibility(View.VISIBLE);
+
+                        dialogSaveProfile.getButton(AlertDialog.BUTTON_POSITIVE).setVisibility(View.GONE);
+                    }
+                });
+
+                dialogSaveProfile.show();
+
+                break;
         }
 
         return true;
     }
 
-    public void checkSyntaxName(CharSequence s, int start, int before, int count) {
+    public void checkSyntaxDialogSaveProfile(CharSequence s, int start, int before, int count) {
         if (s.toString().matches(getString(R.string.sentence_incorrect_only_white_space))) {
-            errorSyntaxFieldName = true;
+            dialogSaveProfileBinding.messageName.setText(getString(R.string.field_empty));
+            dialogSaveProfileBinding.messageName.setVisibility(View.VISIBLE);
 
-            fragmentManualBinding.messageName.setText(getString(R.string.empty_field));
-            fragmentManualBinding.messageName.setVisibility(View.VISIBLE);
-            fragmentManualBinding.fabAdd.setClickable(false);
+            dialogSaveProfile.getButton(AlertDialog.BUTTON_POSITIVE).setVisibility(View.GONE);
         } else if (s.toString().matches(getString(R.string.sentence_incorrect_white_space_start))) {
-            errorSyntaxFieldName = true;
+            dialogSaveProfileBinding.messageName.setText(R.string.field_incorrect_start);
+            dialogSaveProfileBinding.messageName.setVisibility(View.VISIBLE);
 
-            fragmentManualBinding.messageName.setText(R.string.incorrect_start_field);
-            fragmentManualBinding.messageName.setVisibility(View.VISIBLE);
-            fragmentManualBinding.fabAdd.setClickable(false);
+            dialogSaveProfile.getButton(AlertDialog.BUTTON_POSITIVE).setVisibility(View.GONE);
         } else if (s.toString().matches(getString(R.string.sentence_correct))) {
-            errorSyntaxFieldName = false;
+            dialogSaveProfileBinding.messageName.setText("");
+            dialogSaveProfileBinding.messageName.setVisibility(View.INVISIBLE);
 
-            fragmentManualBinding.messageName.setText("");
-            fragmentManualBinding.messageName.setVisibility(View.GONE);
-            fragmentManualBinding.fabAdd.setClickable(true);
+            dialogSaveProfile.getButton(AlertDialog.BUTTON_POSITIVE).setVisibility(View.VISIBLE);
         }
     }
 
     public void saveIntoLibrary() {
-        if (fragmentManualBinding.name.getText().length() > 0 && !errorSyntaxFieldName) {
-            new Thread(() -> {
-                String snackbarMessage = manualViewModel.getSelectedName().getValue();
+        new Thread(() -> {
+            String snackbarMessage = manualViewModel.getSelectedName().getValue();
 
-                try {
-                    SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
-                    sharedPreferencesEditor.putLong(getString(R.string.latest_profile_selected), manualViewModel.insert());
-                    sharedPreferencesEditor.apply();
+            try {
+                SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+                sharedPreferencesEditor.putLong(getString(R.string.latest_profile_selected), manualViewModel.insert());
+                sharedPreferencesEditor.apply();
 
-                    manualViewModel.reload();
+                manualViewModel.reload();
 
-                    snackbarMessage += " " + getString(R.string.profile_saved);
-                } catch (SQLiteConstraintException e) {
-                    snackbarMessage += " " + getString(R.string.profile_not_saved_for_name);
-                }
+                snackbarMessage += " " + getString(R.string.profile_saved);
+            } catch (SQLiteConstraintException e) {
+                snackbarMessage += " " + getString(R.string.profile_not_saved_for_name);
+            }
 
-                SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
-                spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, manualViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
+            spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, manualViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                Snackbar.make(fragmentManualBinding.getRoot(), spannableSnackbarMessage, 5000).setAnchorView(fragmentManualBinding.fabAdd).show();
-            }).start();
-        } else if (fragmentManualBinding.name.getText().length() == 0 && !errorSyntaxFieldName) {
-            fragmentManualBinding.messageName.setText(getString(R.string.empty_field));
-            fragmentManualBinding.messageName.setVisibility(View.VISIBLE);
-            fragmentManualBinding.fabAdd.setClickable(false);
-        }
+            Snackbar.make(fragmentManualBinding.getRoot(), spannableSnackbarMessage, 5000).show();
+        }).start();
     }
 
     private void pairAndConnectDevice() {
@@ -344,26 +409,9 @@ public class ManualFragment extends Fragment {
         }
     }
 
-    // FIXME: Implement the process.
-    public void updateDevice() {
+    public void updateDevice(byte red, byte green, byte blue) {
         if (bluetoothService.isConnected()) {
-            //FIXME
-//            String json = "";
-//            try {
-//                json = new JSONObject()
-//                        .put(getString(R.string.request), 1)
-//                        .put(getString(R.string.values), new JSONObject()
-//                                .put(getString(R.string.brightness), fragmentManualBinding.seekbarBrightness.getProgress())
-//                                .put(getString(R.string.red), fragmentManualBinding.seekbarRed.getProgress())
-//                                .put(getString(R.string.green), fragmentManualBinding.seekbarGreen.getProgress())
-//                                .put(getString(R.string.blue), fragmentManualBinding.seekbarBlue.getProgress())
-//                        )
-//                        .toString();
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//            bluetoothService.writeData(requireContext(), json);
+            bluetoothService.writeData(requireContext(), new byte[]{red, green, blue});
         }
     }
 

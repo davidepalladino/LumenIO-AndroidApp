@@ -19,12 +19,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textStyle="bold"
-        android:text="@string/empty_library_list" />
+        android:text="@string/library_list_empty" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25dp"
         android:textAlignment="center"
-        android:text="@string/empty_library_list_description" />
+        android:text="@string/library_list_empty_description" />
 </LinearLayout>

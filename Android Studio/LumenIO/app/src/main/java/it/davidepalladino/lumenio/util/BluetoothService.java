@@ -128,6 +128,32 @@ public class BluetoothService {
         return bluetoothSocket != null && bluetoothSocket.isConnected();
     }
 
+    /**
+     * Send an array of bytes with the values sorted by RED, GREEN and BLUE. Is the fasted way for
+     *  the device because it must not allocate a String object for every packet received.
+     * @param context Where this method is called.
+     * @param data Array of bytes to send.
+     */
+    public void writeData(Context context, byte[] data) {
+        if (bluetoothSocket != null) {
+            new Thread(() -> {
+                try {
+                    OutputStream outputStream = bluetoothSocket.getOutputStream();
+                    outputStream.write(data);
+                    Log.i(BluetoothService.class.getSimpleName(), "Data send");
+                } catch (IOException e) {
+                    disconnect(context);
+                    Log.e(BluetoothService.class.getSimpleName(), "Error during transfer with this reason " + e);
+                }
+            }).start();
+        }
+    }
+
+    /**
+     * Send a string in JSON format to the device.
+     * @param context Where this method is called.
+     * @param data String to write.
+     */
     public void writeData(Context context, String data) {
         if (bluetoothSocket != null) {
             new Thread(() -> {

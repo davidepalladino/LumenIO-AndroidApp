@@ -16,6 +16,10 @@ public class LibraryFragment extends Fragment {
     private FragmentLibraryBinding fragmentLibraryBinding;
     private LibraryViewModel libraryViewModel;
 
+    public static LibraryFragment newInstance() {
+        return new LibraryFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentLibraryBinding = FragmentLibraryBinding.inflate(inflater, container, false);

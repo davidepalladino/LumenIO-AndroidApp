@@ -6,17 +6,17 @@
     tools:context="it.davidepalladino.lumenio.view.activity.MainActivity">
 
     <item
-        android:id="@+id/manual"
+        android:id="@+id/bottom_navigation_manual"
         android:icon="@drawable/ic_round_manual_tab"
         android:title="@string/manual" />
 
     <item
-        android:id="@+id/scene"
+        android:id="@+id/bottom_navigation_scene"
         android:icon="@drawable/ic_round_scene_tab"
         android:title="@string/scene" />
 
     <item
-        android:id="@+id/library"
+        android:id="@+id/bottom_navigation_library"
         android:icon="@drawable/ic_round_library_tab"
         android:title="@string/library" />
 </menu>

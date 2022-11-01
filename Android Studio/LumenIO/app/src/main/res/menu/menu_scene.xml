@@ -10,18 +10,4 @@
         android:icon="@drawable/ic_round_bluetooth_disconnected"
         android:title="@string/bluetooth"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/edit"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_round_edit_menu"
-        android:title="@string/edit"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/remove"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_round_delete_menu"
-        android:title="@string/remove"
-        app:showAsAction="never" />
 </menu>

@@ -16,7 +16,6 @@ public class Profile {
     @PrimaryKey(autoGenerate = true) public long id;
 
     @NonNull public String name;
-    public int brightness;
     public int red;
     public int green;
     public int blue;
@@ -26,17 +25,15 @@ public class Profile {
     public long updatedAt;
     public long usedAt;
 
-    public Profile(@NonNull String name, int brightness, int red, int green, int blue) {
+    public Profile(@NonNull String name, int red, int green, int blue) {
         this.name = name;
-        this.brightness = brightness;
         this.red = red;
         this.green = green;
         this.blue = blue;
     }
 
-    public void setValues(@NonNull String name, int brightness, int red, int green, int blue) {
+    public void setValues(@NonNull String name, int red, int green, int blue) {
         this.name = name;
-        this.brightness = brightness;
         this.red = red;
         this.green = green;
         this.blue = blue;

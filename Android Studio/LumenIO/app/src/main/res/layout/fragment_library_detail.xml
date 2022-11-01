@@ -13,12 +13,14 @@
         <import type="android.view.View" />
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:background="@color/background" >
 
-        <ScrollView
+        <it.davidepalladino.lumenio.util.ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
@@ -31,6 +33,140 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/card_margin_top"
+                    android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                    android:layout_marginBottom="@dimen/card_margin_bottom"
+                    app:cardCornerRadius="@dimen/card_corner_radius" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="@dimen/body_card_padding" >
+
+                            <EditText
+                                android:id="@+id/name_edit_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"
+                                android:maxLength="20"
+                                android:maxLines="1"
+                                android:text="@={libraryViewModel.selectedName}"
+                                android:onTextChanged="@{(s, start, before, count) -> libraryDetailFragment.checkSyntaxName(s, start, before, count)}"
+                                android:visibility="gone"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="Name"
+                                tools:visibility="visible"/>
+
+                            <TextView
+                                android:id="@+id/message_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="4dp"
+                                android:textSize="@dimen/message_text_view_size"
+                                android:textColor="@color/error"
+                                android:visibility="gone"
+                                app:layout_constraintTop_toBottomOf="@+id/name_edit_text"
+                                tools:text="Message"
+                                tools:visibility="visible"/>
+
+                            <TextView
+                                android:id="@+id/name_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:paddingLeft="4dp"
+                                android:paddingTop="10dp"
+                                android:maxLength="20"
+                                android:maxLines="1"
+                                android:textSize="18sp"
+                                android:text="@{libraryViewModel.selectedName}"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="Name" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/control_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                    android:layout_marginBottom="@dimen/card_margin_bottom"
+                    android:visibility="gone"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
+                    tools:visibility="visible" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/header_card_padding"
+                            android:layout_marginTop="@dimen/header_card_margin_top"
+                            android:layout_marginStart="@dimen/header_card_margin_start" >
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_round_control_card"
+                                android:layout_marginEnd="@dimen/icon_header_card_margin_end" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/text_header_card_size"
+                                android:textColor="@color/primary_color"
+                                android:text="@string/controls" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="@dimen/body_card_padding" >
+
+                            <com.skydoves.colorpickerview.ColorPickerView
+                                android:id="@+id/colorPickerView"
+                                android:layout_width="250dp"
+                                android:layout_height="250dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="10dp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginEnd="15dp"
+                                android:layout_marginBottom="10dp"
+                                android:layout_gravity="center"
+                                app:cardCornerRadius="50dp"
+                                android:elevation="5dp">
+
+                                <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
+                                    android:id="@+id/brightnessSlide"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:borderColor_BrightnessSlider="@android:color/darker_gray"
+                                    app:borderSize_BrightnessSlider="1"
+                                    app:selector_BrightnessSlider="@drawable/wheel" />
+                            </androidx.cardview.widget.CardView>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/card_margin_horizontal"
                     android:layout_marginBottom="@dimen/card_margin_bottom"
                     app:cardCornerRadius="@dimen/card_corner_radius" >
@@ -63,6 +199,7 @@
                                 android:textSize="@dimen/text_header_card_size"
                                 android:textColor="@color/primary_color"
                                 android:text="@string/preview" />
+
                         </LinearLayout>
 
                         <LinearLayout
@@ -72,9 +209,9 @@
                             android:padding="@dimen/body_card_padding" >
 
                             <View
-                                android:layout_width="150dp"
-                                android:layout_height="150dp"
-                                android:background="@{Color.argb(libraryViewModel.selectedBrightness, libraryViewModel.selectedRed, libraryViewModel.selectedGreen, libraryViewModel.selectedBlue)}"
+                                android:layout_width="50dp"
+                                android:layout_height="40dp"
+                                android:background="@{Color.rgb(libraryViewModel.selectedRed, libraryViewModel.selectedGreen, libraryViewModel.selectedBlue)}"
                                 android:backgroundTint="#000000"
                                 android:backgroundTintMode="add"
                                 android:layout_marginTop="5dp"
@@ -86,161 +223,99 @@
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="150dp"
+                                android:layout_height="50dp"
                                 android:orientation="vertical"
                                 android:layout_marginTop="5dp"
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="5dp"
                                 android:layout_marginBottom="10dp" >
 
-                                <EditText
-                                    android:id="@+id/name_edit_text"
+                                <TableLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:inputType="text"
-                                    android:maxLength="20"
-                                    android:maxLines="1"
-                                    android:text="@={libraryViewModel.selectedName}"
-                                    android:onTextChanged="@{(s, start, before, count) -> libraryDetailFragment.checkSyntaxName(s, start, before, count)}"
-                                    android:visibility="gone"
-                                    app:layout_constraintStart_toStartOf="parent"
+                                    android:gravity="center"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    tools:text="Name"
-                                    tools:visibility="visible"/>
+                                    tools:layout_editor_absoluteX="3dp">
 
-                                <TextView
-                                    android:id="@+id/message_name"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingLeft="4dp"
-                                    android:textSize="@dimen/message_text_view_size"
-                                    android:textColor="@color/error"
-                                    android:visibility="gone"
-                                    app:layout_constraintTop_toBottomOf="@+id/name_edit_text"
-                                    tools:text="Message"
-                                    tools:visibility="visible"/>
-
-                                <TextView
-                                    android:id="@+id/name_text_view"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="40dp"
-                                    android:paddingLeft="4dp"
-                                    android:paddingTop="10dp"
-                                    android:maxLength="20"
-                                    android:maxLines="1"
-                                    android:textSize="18sp"
-                                    android:text="@{libraryViewModel.selectedName}"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    tools:text="Name" />
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="bottom"
-                                    android:orientation="horizontal"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent">
-
-                                    <LinearLayout
+                                    <TableRow
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="3dp"
-                                        android:layout_marginEnd="15dp"
-                                        android:gravity="start"
-                                        android:orientation="vertical">
+                                        android:layout_height="match_parent">
 
                                         <TextView
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="25dp"
                                             android:layout_height="wrap_content"
-                                            android:text="@string/brightness_label" />
+                                            android:layout_column="1"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:text="@string/hex_label" />
 
                                         <TextView
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="25dp"
                                             android:layout_height="wrap_content"
+                                            android:layout_column="2"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
                                             android:text="@string/red_label" />
 
                                         <TextView
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="25dp"
                                             android:layout_height="wrap_content"
+                                            android:layout_column="3"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
                                             android:text="@string/green_label" />
 
-
                                         <TextView
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="25dp"
                                             android:layout_height="wrap_content"
+                                            android:layout_column="4"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
                                             android:text="@string/blue_label" />
-                                    </LinearLayout>
+                                    </TableRow>
 
-                                    <LinearLayout
+                                    <TableRow
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="vertical">
+                                        android:layout_height="match_parent">
 
                                         <TextView
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="25dp"
                                             android:layout_height="wrap_content"
-                                            android:text='@{String.format("%03d", libraryViewModel.selectedBrightness)}'
+                                            android:layout_column="1"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:text='@{String.format("#%s", libraryViewModel.selectedHex)}'
                                             tools:text="0" />
 
                                         <TextView
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="25dp"
                                             android:layout_height="wrap_content"
+                                            android:layout_column="2"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
                                             android:text='@{String.format("%03d", libraryViewModel.selectedRed)}'
                                             tools:text="0" />
 
                                         <TextView
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="25dp"
                                             android:layout_height="wrap_content"
+                                            android:layout_column="3"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
                                             android:text='@{String.format("%03d", libraryViewModel.selectedGreen)}'
                                             tools:text="0" />
 
                                         <TextView
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="25dp"
                                             android:layout_height="wrap_content"
+                                            android:layout_column="4"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
                                             android:text='@{String.format("%03d", libraryViewModel.selectedBlue)}'
                                             tools:text="0" />
-                                    </LinearLayout>
-                                </LinearLayout>
+                                    </TableRow>
+                                </TableLayout>
                             </androidx.constraintlayout.widget.ConstraintLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/body_card_padding" >
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/control_it"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="5dp"
-                                android:gravity="center"
-                                android:text="@string/control_it"
-                                android:textSize="12sp"
-                                android:onClick="@{(v) -> buttonsHandler.controlIt(v)}"
-                                app:cornerRadius="@dimen/body_card_padding"
-                                app:iconGravity="textStart"
-                                app:iconSize="18dp"
-                                app:icon="@drawable/ic_round_manual_tab" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/set_as_scene"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginStart="5dp"
-                                android:gravity="center"
-                                android:text="@string/set_as_scene"
-                                android:textSize="12sp"
-                                android:onClick="@{(v) -> buttonsHandler.setAsScene(v)}"
-                                app:cornerRadius="@dimen/body_card_padding"
-                                app:iconGravity="textStart"
-                                app:iconSize="18dp"
-                                app:icon="@drawable/ic_round_scene_tab" />
-
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -353,138 +428,43 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/control_card"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-                    android:layout_marginBottom="@dimen/card_margin_bottom"
-                    android:visibility="gone"
-                    app:cardCornerRadius="@dimen/card_corner_radius"
-                    tools:visibility="visible" >
+                    android:orientation="horizontal"
+                    android:padding="@dimen/body_card_padding" >
 
-                    <LinearLayout
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/control_it"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="5dp"
+                        android:gravity="center"
+                        android:text="@string/control_it"
+                        android:textSize="12sp"
+                        android:onClick="@{(v) -> buttonsHandler.controlIt(v)}"
+                        app:cornerRadius="@dimen/body_card_padding"
+                        app:iconGravity="textStart"
+                        app:iconSize="18dp"
+                        app:icon="@drawable/ic_round_manual_tab" />
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/header_card_padding"
-                            android:layout_marginTop="@dimen/header_card_margin_top"
-                            android:layout_marginStart="@dimen/header_card_margin_start" >
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:src="@drawable/ic_round_control_card"
-                                android:layout_marginEnd="@dimen/icon_header_card_margin_end" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:textStyle="bold"
-                                android:textSize="@dimen/text_header_card_size"
-                                android:textColor="@color/primary_color"
-                                android:text="@string/controls" />
-                        </LinearLayout>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="@dimen/body_card_padding" >
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_column="0"
-                                android:layout_weight="6"
-                                android:gravity="end"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/seek_bar_height"
-                                    android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
-                                    android:gravity="center_vertical"
-                                    android:text="@string/brightness_label" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/seek_bar_height"
-                                    android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
-                                    android:gravity="center_vertical"
-                                    android:text="@string/red_label" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/seek_bar_height"
-                                    android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
-                                    android:gravity="center_vertical"
-                                    android:text="@string/green_label" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/seek_bar_height"
-                                    android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
-                                    android:gravity="center_vertical"
-
-                                    android:text="@string/blue_label" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_column="1"
-                                android:layout_weight="1"
-                                android:gravity="start"
-                                android:orientation="vertical">
-
-                                <SeekBar
-                                    android:id="@+id/seekbar_brightness"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/seek_bar_height"
-                                    android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
-                                    android:max="255"
-                                    android:onStopTrackingTouch="@{() -> libraryDetailFragment.updateDevice()}"
-                                    android:progress="@={libraryViewModel.selectedBrightness}" />
-
-                                <SeekBar
-                                    android:id="@+id/seekbar_red"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/seek_bar_height"
-                                    android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
-                                    android:max="255"
-                                    android:onStopTrackingTouch="@{() -> libraryDetailFragment.updateDevice()}"
-                                    android:progress="@={libraryViewModel.selectedRed}" />
-
-                                <SeekBar
-                                    android:id="@+id/seekbar_green"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/seek_bar_height"
-                                    android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
-                                    android:max="255"
-                                    android:onStopTrackingTouch="@{() -> libraryDetailFragment.updateDevice()}"
-                                    android:progress="@={libraryViewModel.selectedGreen}" />
-
-                                <SeekBar
-                                    android:id="@+id/seekbar_blue"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/seek_bar_height"
-                                    android:layout_marginVertical="@dimen/seek_bar_margin_vertical"
-                                    android:max="255"
-                                    android:onStopTrackingTouch="@{() -> libraryDetailFragment.updateDevice()}"
-                                    android:progress="@={libraryViewModel.selectedBlue}" />
-                            </LinearLayout>
-                        </TableRow>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/set_as_scene"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="5dp"
+                        android:gravity="center"
+                        android:text="@string/scene_set"
+                        android:textSize="12sp"
+                        android:onClick="@{(v) -> buttonsHandler.setAsScene(v)}"
+                        app:cornerRadius="@dimen/body_card_padding"
+                        app:iconGravity="textStart"
+                        app:iconSize="18dp"
+                        app:icon="@drawable/ic_round_scene_tab" />
+                </LinearLayout>
             </LinearLayout>
-        </ScrollView>
-    </FrameLayout>
+        </it.davidepalladino.lumenio.util.ScrollView>
+    </LinearLayout>
 </layout>

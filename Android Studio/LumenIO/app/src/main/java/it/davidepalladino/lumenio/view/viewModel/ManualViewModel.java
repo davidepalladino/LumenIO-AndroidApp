@@ -16,10 +16,10 @@ public class ManualViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Long> selectedID = new MutableLiveData<>((long) 0);
     private final MutableLiveData<String> selectedName = new MutableLiveData<>("");
-    private final MutableLiveData<Integer> selectedBrightness = new MutableLiveData<>(0);
-    private final MutableLiveData<Integer> selectedRed = new MutableLiveData<>(0);
-    private final MutableLiveData<Integer> selectedGreen = new MutableLiveData<>(0);
-    private final MutableLiveData<Integer> selectedBlue = new MutableLiveData<>(0);
+    private final MutableLiveData<String> selectedHex = new MutableLiveData<>("FFFFFF");
+    private final MutableLiveData<Integer> selectedRed = new MutableLiveData<>(255);
+    private final MutableLiveData<Integer> selectedGreen = new MutableLiveData<>(255);
+    private final MutableLiveData<Integer> selectedBlue = new MutableLiveData<>(255);
 
     public ManualViewModel(Application application) {
         super(application);
@@ -32,9 +32,9 @@ public class ManualViewModel extends AndroidViewModel {
 
     public MutableLiveData<String> getSelectedName() { return selectedName; }
 
-    public void setSelectedBrightness(int selectedBrightness) { this.selectedBrightness.setValue(selectedBrightness); }
+    public void setSelectedHex(String selectedHex) { this.selectedHex.setValue(selectedHex); }
 
-    public MutableLiveData<Integer> getSelectedBrightness() { return selectedBrightness; }
+    public MutableLiveData<String> getSelectedHex() { return selectedHex; }
 
     public void setSelectedRed(int selectedRed) { this.selectedRed.setValue(selectedRed); }
 
@@ -55,10 +55,10 @@ public class ManualViewModel extends AndroidViewModel {
     public long insert() {
         profileSelected = new Profile(
                 selectedName.getValue(),
-                selectedBrightness.getValue(),
                 selectedRed.getValue(),
                 selectedGreen.getValue(),
-                selectedBlue.getValue());
+                selectedBlue.getValue()
+        );
         profileSelected.id = profileRepository.insert(profileSelected);
         selectedID.postValue(profileSelected.id);
 
@@ -69,12 +69,25 @@ public class ManualViewModel extends AndroidViewModel {
         profileSelected = getOneByID(id);
 
         if (profileSelected == null) {
-            profileSelected = new Profile("", 0, 0, 0, 0);
+            profileSelected = new Profile("", 255, 255, 255);
         }
 
         selectedID.postValue(profileSelected.id);
         selectedName.postValue(profileSelected.name);
-        selectedBrightness.postValue(profileSelected.brightness);
+
+        String selectedRedHex = Integer.toHexString(profileSelected.red);
+        selectedRedHex = selectedRedHex.length() == 1 ? "0" + selectedRedHex : selectedRedHex;
+        String selectedGreenHex = Integer.toHexString(profileSelected.green);
+        selectedGreenHex = selectedGreenHex.length() == 1 ? "0" + selectedGreenHex : selectedGreenHex;
+        String selectedBlueHex = Integer.toHexString(profileSelected.blue);
+        selectedBlueHex = selectedBlueHex.length() == 1 ? "0" + selectedBlueHex : selectedBlueHex;
+
+        selectedHex.postValue(
+                selectedRedHex.toUpperCase() +
+                selectedGreenHex.toUpperCase() +
+                selectedBlueHex.toUpperCase()
+        );
+
         selectedRed.postValue(profileSelected.red);
         selectedGreen.postValue(profileSelected.green);
         selectedBlue.postValue(profileSelected.blue);

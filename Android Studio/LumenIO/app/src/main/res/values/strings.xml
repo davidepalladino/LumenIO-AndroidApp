@@ -3,7 +3,7 @@
 
     <string name="preview">Preview</string>
     <string name="controls">Controls</string>
-    <string name="brightness_label">BRT</string>
+    <string name="hex_label">HEX</string>
     <string name="red_label">RED</string>
     <string name="green_label">GREEN</string>
     <string name="blue_label">BLUE</string>
@@ -11,13 +11,29 @@
     <string name="profile_saved">has been saved.</string>
     <string name="profile_updated">has been updated.</string>
     <string name="profile_removed">has been removed.</string>
+    <string name="profile_loaded">This profile has been loaded in Manual tab.</string>
     <string name="profile_not_saved_for_name">has not been saved because this name already exists.</string>
     <string name="profile_not_updated_for_name">has not been updated because this name already exists.</string>
-    <string name="empty_field">This field cannot be empty</string>
-<!--    <string name="incorrect_start_end_field">This field starts/ends with white character</string>-->
-    <string name="incorrect_start_field">This field cannot start with white character</string>
+    <string name="profile_question_pre">Are you sure to remove the</string>
+    <string name="profile_question_post">profile?</string>
+
+    <string name="scene">Scene</string>
+    <string name="scene_set">Set as scene</string>
     <string name="scene_saved">has been saved for the scene</string>
     <string name="scene_not_saved_for_name">has not been saved for this scene because is already set on another.</string>
+    <string name="scene_one">Scene 1</string>
+    <string name="scene_two">Scene 2</string>
+    <string name="scene_three">Scene 3</string>
+
+    <string name="field_empty">This field cannot be empty</string>
+    <string name="field_incorrect_start">This field cannot start with white character</string>
+
+    <string name="library">Library</string>
+    <string name="library_list_empty">No profile yet!</string>
+    <string name="library_list_empty_description">You can save a profile to the library by the Manual tab</string>
+
+    <string name="add">Add</string>
+    <string name="save">Save</string>
     <string name="accept">Accept</string>
     <string name="discard">Discard</string>
     <string name="edit">Edit</string>
@@ -26,30 +42,21 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="detail">Detail</string>
     <string name="manual">Manual</string>
-    <string name="library">Library</string>
     <string name="list">List</string>
     <string name="control_it">Control it</string>
-    <string name="set_as_scene">Set as scene</string>
     <string name="date">Date</string>
     <string name="created_at">Created at</string>
     <string name="updated_at">Updated at</string>
     <string name="used_at">Used at</string>
-    <string name="questionRemoveProfilePre">Are you sure to remove the</string>
-    <string name="questionRemoveProfilePost">profile?</string>
-    <string name="profile_loaded">This profile has been loaded in Manual tab.</string>
-    <string name="empty_library_list">No profile yet!</string>
-    <string name="empty_library_list_description">You can save a profile to the library by the Manual tab</string>
-    <string name="scene">Scene</string>
     <string name="not_set">Not set</string>
     <string name="not_found">Not found!</string>
     <string name="no_found_description">The searched element doesn\'t exist</string>
-    <string name="select_device">Select a device</string>
-    <string name="no_device">No device!</string>
+
     <string name="device_connected">Connected to device.</string>
     <string name="device_disconnected">Disconnected from device.</string>
     <string name="device_error">There is some error with communication.</string>
-    <string name="scene_one">Scene 1</string>
-    <string name="scene_two">Scene 2</string>
-    <string name="scene_three">Scene 3</string>
+    <string name="device_select">Select a device</string>
+    <string name="no_device">No device!</string>
+
     <string name="request_connection_execute_action">You must to be connected to device for executing this operation.</string>
 </resources>

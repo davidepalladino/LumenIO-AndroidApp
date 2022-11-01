@@ -18,7 +18,7 @@ public class SceneRepository {
 
     public LiveData<List<Scene>> getAll() { return sceneDao.getAll(); }
 
-    public LiveData<Scene> getOneById(long id) { return sceneDao.getOneById(id); }
+    public LiveData<Scene> getOneById(long id) { return sceneDao.getOneByIdLive(id); }
 
     public void update(Scene scene) {
         if (sceneDao.getOneById(scene.id) == null) {

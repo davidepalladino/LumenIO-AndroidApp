@@ -24,20 +24,18 @@ public class LibraryRecycleViewHolder extends RecyclerView.ViewHolder {
     public void bind(Profile profile) {
         recycleViewLibraryBinding.name.setText(profile.name);
         recycleViewLibraryBinding.values.setText(
-                String.format("%03d", profile.brightness) + " " +
                 String.format("%03d", profile.red) + " " +
                 String.format("%03d", profile.green) + " " +
                 String.format("%03d", profile.blue)
         );
-        recycleViewLibraryBinding.preview.setBackground(new ColorDrawable(Color.argb(profile.brightness, profile.red, profile.green, profile.blue)));
+        recycleViewLibraryBinding.preview.setBackground(new ColorDrawable(Color.rgb(profile.red, profile.green, profile.blue)));
         recycleViewLibraryBinding.item.setOnClickListener(view -> {
             NavController navController =  Navigation.findNavController(view);
 
             Bundle bundle = new Bundle();
             bundle.putLong(LibraryDetailFragment.BUNDLE_PROFILE_ID, profile.id);
 
-            // FIXME:
-//            navController.navigate(R.id.action_ListLibraryFragment_to_DetailLibraryFragment, bundle, null);
+            navController.navigate(R.id.action_LibraryListFragment_to_LibraryDetailFragment, bundle, null);
         });
     }
 }

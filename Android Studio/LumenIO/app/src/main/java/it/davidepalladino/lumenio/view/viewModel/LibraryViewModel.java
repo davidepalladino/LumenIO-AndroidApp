@@ -23,6 +23,7 @@ public class LibraryViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Long> selectedID = new MutableLiveData<>((long) 0);
     private final MutableLiveData<String> selectedName = new MutableLiveData<>("");
+    private final MutableLiveData<String> selectedHex = new MutableLiveData<>("FFFFFF");
     private final MutableLiveData<Integer> selectedBrightness = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> selectedRed = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> selectedGreen = new MutableLiveData<>(0);
@@ -43,6 +44,10 @@ public class LibraryViewModel extends AndroidViewModel {
     public void setSelectedName(String selectedName) { this.selectedName.setValue(selectedName); }
 
     public MutableLiveData<String> getSelectedName() { return selectedName; }
+
+    public void setSelectedHex(String selectedHex) { this.selectedHex.setValue(selectedHex); }
+
+    public MutableLiveData<String> getSelectedHex() { return selectedHex; }
 
     public void setSelectedBrightness(int selectedBrightness) { this.selectedBrightness.setValue(selectedBrightness); }
 
@@ -79,7 +84,6 @@ public class LibraryViewModel extends AndroidViewModel {
     public void updateValues() {
         profileSelected.setValues(
                 selectedName.getValue(),
-                selectedBrightness.getValue(),
                 selectedRed.getValue(),
                 selectedGreen.getValue(),
                 selectedBlue.getValue());
@@ -99,7 +103,20 @@ public class LibraryViewModel extends AndroidViewModel {
 
         selectedID.postValue(profileSelected.id);
         selectedName.postValue(profileSelected.name);
-        selectedBrightness.postValue(profileSelected.brightness);
+
+        String selectedRedHex = Integer.toHexString(profileSelected.red);
+        selectedRedHex = selectedRedHex.length() == 1 ? "0" + selectedRedHex : selectedRedHex;
+        String selectedGreenHex = Integer.toHexString(profileSelected.green);
+        selectedGreenHex = selectedGreenHex.length() == 1 ? "0" + selectedGreenHex : selectedGreenHex;
+        String selectedBlueHex = Integer.toHexString(profileSelected.blue);
+        selectedBlueHex = selectedBlueHex.length() == 1 ? "0" + selectedBlueHex : selectedBlueHex;
+
+        selectedHex.postValue(
+                selectedRedHex.toUpperCase() +
+                        selectedGreenHex.toUpperCase() +
+                        selectedBlueHex.toUpperCase()
+        );
+
         selectedRed.postValue(profileSelected.red);
         selectedGreen.postValue(profileSelected.green);
         selectedBlue.postValue(profileSelected.blue);
