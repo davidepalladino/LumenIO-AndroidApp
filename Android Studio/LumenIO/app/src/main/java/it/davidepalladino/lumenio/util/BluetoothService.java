@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 
 import java.io.IOException;
@@ -19,8 +20,12 @@ public class BluetoothService {
     public static final String STATUS = "STATUS";
     public static final String STATUS_CONNECTED = "CONNECTED";
     public static final String STATUS_DISCONNECTED = "DISCONNECTED";
+    public static final String STATUS_LOST = "LOST";
     public static final String STATUS_ERROR = "ERROR";
     public static final int REQUIRE_ENABLE_BLUETOOTH = 1;
+    public static final int UPTIME_MILLIS_CHECK_STATUS_CONNECTION = 5000;
+
+    private static Context context = null;
 
     private static BluetoothService bluetoothService = null;
 
@@ -28,15 +33,34 @@ public class BluetoothService {
     private static BluetoothDevice bluetoothDevice;
     private static BluetoothSocket bluetoothSocket;
 
-    private static Handler handlerCheckConnection = new Handler();
-    private static Runnable runnableCheckConnection = null;
+    private static HandlerThread handlerThread = null;
+    private static Handler handler = null;
+    private static Runnable runnableCheckStatus = () -> {
+        if (!bluetoothService.isConnected()) {
+            Intent intent = new Intent(INTENT_ACTION);
+            intent.putExtra(STATUS, STATUS_DISCONNECTED);
+        } else {
+            handler.postAtTime(BluetoothService.runnableCheckStatus, UPTIME_MILLIS_CHECK_STATUS_CONNECTION);
+        }
+    };
 
-    private BluetoothService() {}
+    private BluetoothService() { }
 
-    public static BluetoothService getInstance(BluetoothAdapter bluetoothAdapterFrom) {
+    public static BluetoothService getInstance(BluetoothAdapter bluetoothAdapterFrom, Context contextFrom) {
+        if (contextFrom != null) {
+            context = contextFrom;
+        }
+
         if (bluetoothService == null) {
             bluetoothService = new BluetoothService();
             bluetoothAdapter = bluetoothAdapterFrom;
+        }
+
+        if ((handlerThread != null) && (handler != null)) {
+            handlerThread = new HandlerThread(BluetoothService.class.getSimpleName());
+            handlerThread.start();
+
+            handler = new Handler(handlerThread.getLooper());
         }
 
         return bluetoothService;
@@ -81,13 +105,15 @@ public class BluetoothService {
         return false;
     }
 
-    public void connect(Context context) {
+    public void connect() {
         if (bluetoothSocket != null && !bluetoothSocket.isConnected()) {
             new Thread(() -> {
                 String intentValue = null;
 
                 try {
                     bluetoothSocket.connect();
+
+                    handler.postAtTime(runnableCheckStatus, UPTIME_MILLIS_CHECK_STATUS_CONNECTION);
 
                     intentValue = STATUS_CONNECTED;
                     Log.i(BluetoothService.class.getSimpleName(), "Connected to device");
@@ -103,13 +129,15 @@ public class BluetoothService {
         }
     }
 
-    public void disconnect(Context context) {
+    public void disconnect() {
         if (bluetoothSocket != null && bluetoothSocket.isConnected()) {
             new Thread(() -> {
                 String intentValue = null;
 
                 try {
                     bluetoothSocket.close();
+
+                    handler.removeCallbacks(runnableCheckStatus);
 
                     intentValue = STATUS_DISCONNECTED;
                     Log.i(BluetoothService.class.getSimpleName(), "Disconnected from device");
@@ -125,17 +153,14 @@ public class BluetoothService {
         }
     }
 
-    public boolean isConnected() {
-        return bluetoothSocket != null && bluetoothSocket.isConnected();
-    }
+    public boolean isConnected() { return bluetoothSocket != null && bluetoothSocket.isConnected(); }
 
     /**
      * Send an array of bytes with the values sorted by RED, GREEN and BLUE. Is the fasted way for
      *  the device because it must not allocate a String object for every packet received.
-     * @param context Where this method is called.
      * @param data Array of bytes to send.
      */
-    public void writeData(Context context, byte[] data) {
+    public void writeData(byte[] data) {
         if (bluetoothSocket != null) {
             new Thread(() -> {
                 try {
@@ -143,7 +168,7 @@ public class BluetoothService {
                     outputStream.write(data);
                     Log.i(BluetoothService.class.getSimpleName(), "Data send");
                 } catch (IOException e) {
-                    disconnect(context);
+                    disconnect();
                     Log.e(BluetoothService.class.getSimpleName(), "Error during transfer with this reason " + e);
                 }
             }).start();
@@ -152,10 +177,9 @@ public class BluetoothService {
 
     /**
      * Send a string in JSON format to the device.
-     * @param context Where this method is called.
      * @param data String to write.
      */
-    public void writeData(Context context, String data) {
+    public void writeData(String data) {
         if (bluetoothSocket != null) {
             new Thread(() -> {
                 try {
@@ -163,7 +187,7 @@ public class BluetoothService {
                     outputStream.write(data.getBytes());
                     Log.i(BluetoothService.class.getSimpleName(), "Data send");
                 } catch (IOException e) {
-                    disconnect(context);
+                    disconnect();
                     Log.e(BluetoothService.class.getSimpleName(), "Error during transfer with this reason " + e);
                 }
             }).start();

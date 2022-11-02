@@ -88,6 +88,10 @@ public class ManualFragment extends Fragment {
                         snackbarMessage = getString(R.string.device_disconnected);
                         menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
                         break;
+                    case BluetoothService.STATUS_LOST:
+                        snackbarMessage = getString(R.string.device_lost);
+                        menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+                        break;
                     case BluetoothService.STATUS_ERROR:
                         snackbarMessage = getString(R.string.device_error);
                         menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
@@ -110,7 +114,7 @@ public class ManualFragment extends Fragment {
 
         manualViewModel = new ViewModelProvider(requireActivity()).get(ManualViewModel.class);
 
-        bluetoothService = BluetoothService.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter());
+        bluetoothService = BluetoothService.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter(), requireContext());
 
         new Thread(() -> {
             SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
@@ -280,7 +284,7 @@ public class ManualFragment extends Fragment {
                         pairAndConnectDevice();
                     }
                 } else {
-                    bluetoothService.disconnect(requireContext());
+                    bluetoothService.disconnect();
                 }
 
                 break;
@@ -385,7 +389,7 @@ public class ManualFragment extends Fragment {
                 sharedPreferencesEditor.apply();
 
                 if (bluetoothService.pair(selection)) {
-                    bluetoothService.connect(requireContext());
+                    bluetoothService.connect();
                 }
 
                 dialogSelectDevice.dismiss();
@@ -404,14 +408,14 @@ public class ManualFragment extends Fragment {
             dialogSelectDevice.show();
         } else {
             if (bluetoothService.pair(deviceSelected)) {
-                bluetoothService.connect(requireContext());
+                bluetoothService.connect();
             }
         }
     }
 
     public void updateDevice(byte red, byte green, byte blue) {
         if (bluetoothService.isConnected()) {
-            bluetoothService.writeData(requireContext(), new byte[]{red, green, blue});
+            bluetoothService.writeData(new byte[]{red, green, blue});
         }
     }
 
