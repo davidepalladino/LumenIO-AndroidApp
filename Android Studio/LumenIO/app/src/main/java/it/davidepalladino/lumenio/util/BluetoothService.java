@@ -20,6 +20,7 @@ public class BluetoothService {
     public static final String STATUS_CONNECTED = "CONNECTED";
     public static final String STATUS_DISCONNECTED = "DISCONNECTED";
     public static final String STATUS_ERROR = "ERROR";
+    public static final int REQUIRE_ENABLE_BLUETOOTH = 1;
 
     private static BluetoothService bluetoothService = null;
 

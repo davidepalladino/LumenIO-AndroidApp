@@ -1,5 +1,7 @@
 package it.davidepalladino.lumenio.view.fragment;
 
+import static it.davidepalladino.lumenio.util.BluetoothService.REQUIRE_ENABLE_BLUETOOTH;
+
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -57,7 +59,6 @@ import it.davidepalladino.lumenio.view.viewModel.SceneViewModel;
 
 public class LibraryDetailFragment extends Fragment {
     public static final String BUNDLE_PROFILE_ID = "PROFILE_ID";
-    public static final int REQUIRE_ENABLE_BLUETOOTH = 1;
 
     private FragmentLibraryDetailBinding fragmentLibraryDetailBinding;
 
