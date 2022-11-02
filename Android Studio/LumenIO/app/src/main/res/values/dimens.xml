@@ -1,5 +1,6 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="card_no_margin">0dp</dimen>
     <dimen name="card_corner_radius">15dp</dimen>
     <dimen name="card_margin_top">10dp</dimen>
     <dimen name="card_margin_horizontal">10dp</dimen>

@@ -46,6 +46,7 @@ import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.databinding.FragmentSceneBinding;
 import it.davidepalladino.lumenio.util.BluetoothService;
 import it.davidepalladino.lumenio.util.DeviceArrayAdapter;
+import it.davidepalladino.lumenio.view.activity.MainActivity;
 import it.davidepalladino.lumenio.view.dialog.SearchProfileSceneDialog;
 import it.davidepalladino.lumenio.view.viewModel.SceneViewModel;
 
@@ -89,7 +90,7 @@ public class SceneFragment extends Fragment {
                         break;
                 }
 
-                Snackbar.make(fragmentSceneBinding.getRoot(), snackbarMessage, 5000).show();
+                Snackbar.make(fragmentSceneBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
             }
         }
     };
@@ -371,7 +372,7 @@ public class SceneFragment extends Fragment {
         if (bluetoothService.isConnected()) {
             bluetoothService.writeData(requireContext(), new byte[]{(byte) profile.red, (byte) profile.green, (byte) profile.blue});
         } else {
-            Snackbar.make(fragmentSceneBinding.getRoot(), R.string.request_connection_execute_action, 5000).show();
+            Snackbar.make(fragmentSceneBinding.getRoot(), R.string.request_connection_execute_action, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
         }
     }
 
@@ -393,7 +394,7 @@ public class SceneFragment extends Fragment {
 
 //            bluetoothService.writeData(requireContext(), json);
         } else {
-            Snackbar.make(fragmentSceneBinding.getRoot(), R.string.request_connection_execute_action, 5000).show();
+            Snackbar.make(fragmentSceneBinding.getRoot(), R.string.request_connection_execute_action, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
         }
     }
 }

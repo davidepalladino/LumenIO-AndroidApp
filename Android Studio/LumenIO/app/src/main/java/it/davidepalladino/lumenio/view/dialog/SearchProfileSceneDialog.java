@@ -25,6 +25,7 @@ import java.util.List;
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.data.Scene;
+import it.davidepalladino.lumenio.view.activity.MainActivity;
 import it.davidepalladino.lumenio.view.viewModel.SceneViewModel;
 
 public class SearchProfileSceneDialog extends DialogFragment {
@@ -72,7 +73,7 @@ public class SearchProfileSceneDialog extends DialogFragment {
 
                 SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
                 spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, profileSelected.name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                Snackbar.make(viewHost, spannableSnackbarMessage, 5000).show();
+                Snackbar.make(viewHost, spannableSnackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
 
             }).start());
 

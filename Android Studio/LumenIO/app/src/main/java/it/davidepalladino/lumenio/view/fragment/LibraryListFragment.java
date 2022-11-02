@@ -42,6 +42,7 @@ import it.davidepalladino.lumenio.databinding.FragmentLibraryListBinding;
 import it.davidepalladino.lumenio.util.BluetoothService;
 import it.davidepalladino.lumenio.util.DeviceArrayAdapter;
 import it.davidepalladino.lumenio.util.LibraryListAdapter;
+import it.davidepalladino.lumenio.view.activity.MainActivity;
 import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
 
 public class LibraryListFragment extends Fragment {
@@ -83,7 +84,7 @@ public class LibraryListFragment extends Fragment {
                         break;
                 }
 
-                Snackbar.make(fragmentLibraryListBinding.getRoot(), snackbarMessage, 5000).show();
+                Snackbar.make(fragmentLibraryListBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
             }
         }
     };

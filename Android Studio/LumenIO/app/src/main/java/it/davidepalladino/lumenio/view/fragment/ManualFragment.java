@@ -47,6 +47,7 @@ import it.davidepalladino.lumenio.databinding.DialogSaveProfileBinding;
 import it.davidepalladino.lumenio.databinding.FragmentManualBinding;
 import it.davidepalladino.lumenio.util.BluetoothService;
 import it.davidepalladino.lumenio.util.DeviceArrayAdapter;
+import it.davidepalladino.lumenio.view.activity.MainActivity;
 import it.davidepalladino.lumenio.view.viewModel.ManualViewModel;
 
 public class ManualFragment extends Fragment {
@@ -93,7 +94,7 @@ public class ManualFragment extends Fragment {
                         break;
                 }
 
-                Snackbar.make(fragmentManualBinding.getRoot(), snackbarMessage, 5000).show();
+                Snackbar.make(fragmentManualBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
             }
         }
     };
@@ -125,8 +126,8 @@ public class ManualFragment extends Fragment {
         fragmentManualBinding.setManualViewModel(manualViewModel);
         fragmentManualBinding.setManualFragment(this);
 
-        fragmentManualBinding.colorPickerView.attachBrightnessSlider(fragmentManualBinding.brightnessSlide);
-        fragmentManualBinding.colorPickerView.setOnTouchListener((view, motionEvent) -> {
+        fragmentManualBinding.colorPicker.attachBrightnessSlider(fragmentManualBinding.brightnessSlide);
+        fragmentManualBinding.colorPicker.setOnTouchListener((view, motionEvent) -> {
             motionEvent.getAction();
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -141,7 +142,7 @@ public class ManualFragment extends Fragment {
 
             return false;
         });
-        fragmentManualBinding.colorPickerView.setColorListener((ColorEnvelopeListener) (envelope, fromUser) -> {
+        fragmentManualBinding.colorPicker.setColorListener((ColorEnvelopeListener) (envelope, fromUser) -> {
             if (fromUser) {
                 manualViewModel.setSelectedHex(envelope.getHexCode().substring(2, 8));
                 manualViewModel.setSelectedRed(envelope.getArgb()[1]);
@@ -194,10 +195,10 @@ public class ManualFragment extends Fragment {
         manualViewModel.getSelectedRed().observe(requireActivity(), integer -> {
             if (selectedByUser) {
                 try {
-                    fragmentManualBinding.colorPickerView.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                    fragmentManualBinding.colorPicker.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
-                fragmentManualBinding.colorPickerView.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
 
             updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
@@ -206,10 +207,10 @@ public class ManualFragment extends Fragment {
         manualViewModel.getSelectedGreen().observe(requireActivity(), integer -> {
             if (selectedByUser) {
                 try {
-                    fragmentManualBinding.colorPickerView.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                    fragmentManualBinding.colorPicker.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
-                fragmentManualBinding.colorPickerView.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
 
             updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
@@ -218,15 +219,14 @@ public class ManualFragment extends Fragment {
         manualViewModel.getSelectedBlue().observe(requireActivity(), integer -> {
             if (selectedByUser) {
                 try {
-                    fragmentManualBinding.colorPickerView.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                    fragmentManualBinding.colorPicker.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
-                fragmentManualBinding.colorPickerView.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
 
             updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
         });
-
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -351,7 +351,7 @@ public class ManualFragment extends Fragment {
             SpannableString spannableSnackbarMessage = new SpannableString(snackbarMessage);
             spannableSnackbarMessage.setSpan(new TypefaceSpan(Typeface.create((String) null, Typeface.BOLD_ITALIC)), 0, manualViewModel.getSelectedName().getValue().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            Snackbar.make(fragmentManualBinding.getRoot(), spannableSnackbarMessage, 5000).show();
+            Snackbar.make(fragmentManualBinding.getRoot(), spannableSnackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
         }).start();
     }
 

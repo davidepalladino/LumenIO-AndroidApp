@@ -80,6 +80,7 @@
                                 android:maxLength="20"
                                 android:maxLines="1"
                                 android:textSize="18sp"
+                                android:textStyle="bold"
                                 android:text="@{libraryViewModel.selectedName}"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -134,7 +135,7 @@
                             android:padding="@dimen/body_card_padding" >
 
                             <com.skydoves.colorpickerview.ColorPickerView
-                                android:id="@+id/colorPickerView"
+                                android:id="@+id/color_picker"
                                 android:layout_width="250dp"
                                 android:layout_height="250dp"
                                 android:layout_gravity="center"
@@ -153,7 +154,7 @@
                                 android:elevation="5dp">
 
                                 <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
-                                    android:id="@+id/brightnessSlide"
+                                    android:id="@+id/brightness_slide"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     app:borderColor_BrightnessSlider="@android:color/darker_gray"

@@ -131,8 +131,8 @@ public class LibraryDetailFragment extends Fragment {
 
         fragmentLibraryDetailBinding.setLibraryViewModel(libraryViewModel);
 
-        fragmentLibraryDetailBinding.colorPickerView.attachBrightnessSlider(fragmentLibraryDetailBinding.brightnessSlide);
-        fragmentLibraryDetailBinding.colorPickerView.setOnTouchListener((view, motionEvent) -> {
+        fragmentLibraryDetailBinding.colorPicker.attachBrightnessSlider(fragmentLibraryDetailBinding.brightnessSlide);
+        fragmentLibraryDetailBinding.colorPicker.setOnTouchListener((view, motionEvent) -> {
             motionEvent.getAction();
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -147,7 +147,7 @@ public class LibraryDetailFragment extends Fragment {
 
             return false;
         });
-        fragmentLibraryDetailBinding.colorPickerView.setColorListener((ColorEnvelopeListener) (envelope, fromUser) -> {
+        fragmentLibraryDetailBinding.colorPicker.setColorListener((ColorEnvelopeListener) (envelope, fromUser) -> {
             if (fromUser) {
                 libraryViewModel.setSelectedHex(envelope.getHexCode().substring(2, 8));
                 libraryViewModel.setSelectedRed(envelope.getArgb()[1]);
@@ -200,10 +200,10 @@ public class LibraryDetailFragment extends Fragment {
         libraryViewModel.getSelectedRed().observe(requireActivity(), integer -> {
             if (selectedByUser) {
                 try {
-                    fragmentLibraryDetailBinding.colorPickerView.selectByHsvColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
+                    fragmentLibraryDetailBinding.colorPicker.selectByHsvColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
-                fragmentLibraryDetailBinding.colorPickerView.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
+                fragmentLibraryDetailBinding.colorPicker.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
             }
 
             updateDevice(libraryViewModel.getSelectedRed().getValue().byteValue(), libraryViewModel.getSelectedGreen().getValue().byteValue(), libraryViewModel.getSelectedBlue().getValue().byteValue());
@@ -212,10 +212,10 @@ public class LibraryDetailFragment extends Fragment {
         libraryViewModel.getSelectedGreen().observe(requireActivity(), integer -> {
             if (selectedByUser) {
                 try {
-                    fragmentLibraryDetailBinding.colorPickerView.selectByHsvColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
+                    fragmentLibraryDetailBinding.colorPicker.selectByHsvColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
-                fragmentLibraryDetailBinding.colorPickerView.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
+                fragmentLibraryDetailBinding.colorPicker.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
             }
 
             updateDevice(libraryViewModel.getSelectedRed().getValue().byteValue(), libraryViewModel.getSelectedGreen().getValue().byteValue(), libraryViewModel.getSelectedBlue().getValue().byteValue());
@@ -224,10 +224,10 @@ public class LibraryDetailFragment extends Fragment {
         libraryViewModel.getSelectedBlue().observe(requireActivity(), integer -> {
             if (selectedByUser) {
                 try {
-                    fragmentLibraryDetailBinding.colorPickerView.selectByHsvColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
+                    fragmentLibraryDetailBinding.colorPicker.selectByHsvColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
-                fragmentLibraryDetailBinding.colorPickerView.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
+                fragmentLibraryDetailBinding.colorPicker.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
             }
 
             updateDevice(libraryViewModel.getSelectedRed().getValue().byteValue(), libraryViewModel.getSelectedGreen().getValue().byteValue(), libraryViewModel.getSelectedBlue().getValue().byteValue());
@@ -495,7 +495,7 @@ public class LibraryDetailFragment extends Fragment {
         fragmentLibraryDetailBinding.nameTextView.setVisibility(View.GONE);
         fragmentLibraryDetailBinding.messageName.setVisibility(View.VISIBLE);
 
-        fragmentLibraryDetailBinding.colorPickerView.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
+        fragmentLibraryDetailBinding.colorPicker.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
     }
 
     public void disableEditMode() {
