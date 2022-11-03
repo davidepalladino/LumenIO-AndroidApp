@@ -49,6 +49,7 @@ import it.davidepalladino.lumenio.databinding.DialogSaveProfileBinding;
 import it.davidepalladino.lumenio.databinding.FragmentManualBinding;
 import it.davidepalladino.lumenio.util.BluetoothService;
 import it.davidepalladino.lumenio.util.DeviceArrayAdapter;
+import it.davidepalladino.lumenio.util.DeviceStatusService;
 import it.davidepalladino.lumenio.view.activity.MainActivity;
 import it.davidepalladino.lumenio.view.viewModel.ManualViewModel;
 
@@ -74,27 +75,61 @@ public class ManualFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (menu != null) {
+                MenuItem itemStatus = menu.findItem(R.id.status_light);
+                MenuItem itemBluetooth = menu.findItem(R.id.bluetooth);
+
                 String snackbarMessage = "";
 
                 final String state = intent.getStringExtra(BluetoothService.STATUS);
                 switch (state) {
                     case BluetoothService.STATUS_CONNECTED:
+                        snackbarMessage = getString(R.string.device_connected);
+
+                        DeviceStatusService.isTurnedOn = true;
+
+                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+                        itemStatus.setTitle(R.string.status_on);
+                        itemStatus.setVisible(true);
+
+                        itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
+
                         updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
 
-                        menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
-                        snackbarMessage = getString(R.string.device_connected);
                         break;
                     case BluetoothService.STATUS_DISCONNECTED:
                         snackbarMessage = getString(R.string.device_disconnected);
-                        menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+
+                        DeviceStatusService.isTurnedOn = false;
+
+                        itemStatus.setVisible(false);
+                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+                        itemStatus.setTitle(R.string.status_off);
+
+                        itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
                         break;
                     case BluetoothService.STATUS_LOST:
                         snackbarMessage = getString(R.string.device_lost);
-                        menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+
+                        DeviceStatusService.isTurnedOn = false;
+
+                        itemStatus.setVisible(false);
+                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+                        itemStatus.setTitle(R.string.status_off);
+
+                        itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+
                         break;
                     case BluetoothService.STATUS_ERROR:
                         snackbarMessage = getString(R.string.device_error);
-                        menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+
+                        DeviceStatusService.isTurnedOn = false;
+
+                        itemStatus.setVisible(false);
+                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+                        itemStatus.setTitle(R.string.status_off);
+
+                        itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+
                         break;
                 }
 
@@ -152,6 +187,10 @@ public class ManualFragment extends Fragment {
                 manualViewModel.setSelectedRed(envelope.getArgb()[1]);
                 manualViewModel.setSelectedGreen(envelope.getArgb()[2]);
                 manualViewModel.setSelectedBlue(envelope.getArgb()[3]);
+
+                DeviceStatusService.latestRed = (byte) envelope.getArgb()[1];
+                DeviceStatusService.latestGreen = (byte) envelope.getArgb()[2];
+                DeviceStatusService.latestBlue = (byte) envelope.getArgb()[3];
             }
         });
 
@@ -200,36 +239,33 @@ public class ManualFragment extends Fragment {
             if (selectedByUser) {
                 try {
                     fragmentManualBinding.colorPicker.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                    updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
                 fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
-
-            updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
         });
 
         manualViewModel.getSelectedGreen().observe(requireActivity(), integer -> {
             if (selectedByUser) {
                 try {
                     fragmentManualBinding.colorPicker.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                    updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
                 fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
-
-            updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
         });
 
         manualViewModel.getSelectedBlue().observe(requireActivity(), integer -> {
             if (selectedByUser) {
                 try {
                     fragmentManualBinding.colorPicker.selectByHsvColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
+                    updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
                 fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
-
-            updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
         });
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -262,12 +298,24 @@ public class ManualFragment extends Fragment {
         this.inflater = inflater;
 
         this.menu.clear();
-        this.inflater.inflate(R.menu.menu_control, menu);
+        this.inflater.inflate(R.menu.menu_manual, menu);
 
+        MenuItem itemBluetooth = menu.findItem(R.id.bluetooth);
         if (bluetoothService.isConnected()) {
-            menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
+            itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
         } else {
-            menu.findItem(R.id.bluetooth).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+            itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+        }
+
+        MenuItem itemStatus = menu.findItem(R.id.status_light);
+        if (DeviceStatusService.isTurnedOn) {
+            itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+            itemStatus.setTitle(R.string.status_on);
+            itemStatus.setVisible(true);
+        } else {
+            itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_off));
+            itemStatus.setTitle(R.string.status_off);
+            itemStatus.setVisible(false);
         }
     }
 
@@ -275,6 +323,26 @@ public class ManualFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.status_light:
+                if (bluetoothService.isConnected()) {
+                    MenuItem itemStatus = menu.findItem(R.id.status_light);
+                    if (DeviceStatusService.isTurnedOn) {
+                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_off));
+                        itemStatus.setTitle(R.string.status_off);
+
+                        updateDevice((byte) 0, (byte ) 0, (byte) 0);
+
+                        DeviceStatusService.isTurnedOn = false;
+                    } else {
+                        DeviceStatusService.isTurnedOn = true;
+                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+                        itemStatus.setTitle(R.string.status_on);
+
+                        updateDevice(DeviceStatusService.latestRed, DeviceStatusService.latestGreen, DeviceStatusService.latestBlue);
+                    }
+                }
+                break;
+
             case R.id.bluetooth:
                 if (!bluetoothService.isConnected()) {
                     if (!bluetoothService.getBluetoothAdapter().isEnabled()) {
@@ -288,6 +356,7 @@ public class ManualFragment extends Fragment {
                 }
 
                 break;
+
             case R.id.add:
                 dialogSaveProfileBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_save_profile, null, false);
                 dialogSaveProfileBinding.setManualFragment(this);
@@ -414,7 +483,7 @@ public class ManualFragment extends Fragment {
     }
 
     public void updateDevice(byte red, byte green, byte blue) {
-        if (bluetoothService.isConnected()) {
+        if (bluetoothService.isConnected() && DeviceStatusService.isTurnedOn) {
             bluetoothService.writeData(new byte[]{red, green, blue});
         }
     }

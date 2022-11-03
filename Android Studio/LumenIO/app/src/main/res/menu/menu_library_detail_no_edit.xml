@@ -5,6 +5,13 @@
     tools:context="it.davidepalladino.lumenio.view.activity.MainActivity">
 
     <item
+        android:id="@+id/status_light"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_round_status_off"
+        android:title="@string/status_off"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/bluetooth"
         android:orderInCategory="100"
         android:icon="@drawable/ic_round_bluetooth_disconnected"

@@ -40,6 +40,8 @@
     <string name="remove">Remove</string>
     <string name="filter">Filter</string>
     <string name="bluetooth">Bluetooth</string>
+    <string name="status_on">Turn on</string>
+    <string name="status_off">Turn off</string>
     <string name="detail">Detail</string>
     <string name="manual">Manual</string>
     <string name="list">List</string>

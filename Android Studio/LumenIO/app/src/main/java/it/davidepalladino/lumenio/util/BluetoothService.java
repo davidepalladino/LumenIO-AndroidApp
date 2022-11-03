@@ -5,8 +5,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.util.Log;
 
 import java.io.IOException;
@@ -23,7 +21,6 @@ public class BluetoothService {
     public static final String STATUS_LOST = "LOST";
     public static final String STATUS_ERROR = "ERROR";
     public static final int REQUIRE_ENABLE_BLUETOOTH = 1;
-    public static final int UPTIME_MILLIS_CHECK_STATUS_CONNECTION = 5000;
 
     private static Context context = null;
 
@@ -33,34 +30,16 @@ public class BluetoothService {
     private static BluetoothDevice bluetoothDevice;
     private static BluetoothSocket bluetoothSocket;
 
-    private static HandlerThread handlerThread = null;
-    private static Handler handler = null;
-    private static Runnable runnableCheckStatus = () -> {
-        if (!bluetoothService.isConnected()) {
-            Intent intent = new Intent(INTENT_ACTION);
-            intent.putExtra(STATUS, STATUS_DISCONNECTED);
-        } else {
-            handler.postAtTime(BluetoothService.runnableCheckStatus, UPTIME_MILLIS_CHECK_STATUS_CONNECTION);
-        }
-    };
-
     private BluetoothService() { }
 
     public static BluetoothService getInstance(BluetoothAdapter bluetoothAdapterFrom, Context contextFrom) {
-        if (contextFrom != null) {
+        if (context == null) {
             context = contextFrom;
         }
 
         if (bluetoothService == null) {
             bluetoothService = new BluetoothService();
             bluetoothAdapter = bluetoothAdapterFrom;
-        }
-
-        if ((handlerThread != null) && (handler != null)) {
-            handlerThread = new HandlerThread(BluetoothService.class.getSimpleName());
-            handlerThread.start();
-
-            handler = new Handler(handlerThread.getLooper());
         }
 
         return bluetoothService;
@@ -113,8 +92,6 @@ public class BluetoothService {
                 try {
                     bluetoothSocket.connect();
 
-                    handler.postAtTime(runnableCheckStatus, UPTIME_MILLIS_CHECK_STATUS_CONNECTION);
-
                     intentValue = STATUS_CONNECTED;
                     Log.i(BluetoothService.class.getSimpleName(), "Connected to device");
                 } catch (IOException e){
@@ -136,8 +113,6 @@ public class BluetoothService {
 
                 try {
                     bluetoothSocket.close();
-
-                    handler.removeCallbacks(runnableCheckStatus);
 
                     intentValue = STATUS_DISCONNECTED;
                     Log.i(BluetoothService.class.getSimpleName(), "Disconnected from device");
