@@ -106,6 +106,7 @@ public class ManualFragment extends Fragment {
                         itemStatus.setTitle(R.string.status_off);
 
                         itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+
                         break;
                     case BluetoothService.STATUS_LOST:
                         snackbarMessage = getString(R.string.device_lost);
@@ -187,10 +188,6 @@ public class ManualFragment extends Fragment {
                 manualViewModel.setSelectedRed(envelope.getArgb()[1]);
                 manualViewModel.setSelectedGreen(envelope.getArgb()[2]);
                 manualViewModel.setSelectedBlue(envelope.getArgb()[3]);
-
-                DeviceStatusService.latestRed = (byte) envelope.getArgb()[1];
-                DeviceStatusService.latestGreen = (byte) envelope.getArgb()[2];
-                DeviceStatusService.latestBlue = (byte) envelope.getArgb()[3];
             }
         });
 
@@ -244,6 +241,10 @@ public class ManualFragment extends Fragment {
             } else {
                 fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
+
+            DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
+            DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
+            DeviceStatusService.latestBlue = manualViewModel.getSelectedBlue().getValue().byteValue();
         });
 
         manualViewModel.getSelectedGreen().observe(requireActivity(), integer -> {
@@ -255,6 +256,10 @@ public class ManualFragment extends Fragment {
             } else {
                 fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
+
+            DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
+            DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
+            DeviceStatusService.latestBlue = manualViewModel.getSelectedBlue().getValue().byteValue();
         });
 
         manualViewModel.getSelectedBlue().observe(requireActivity(), integer -> {
@@ -266,6 +271,10 @@ public class ManualFragment extends Fragment {
             } else {
                 fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
+
+            DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
+            DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
+            DeviceStatusService.latestBlue = manualViewModel.getSelectedBlue().getValue().byteValue();
         });
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();

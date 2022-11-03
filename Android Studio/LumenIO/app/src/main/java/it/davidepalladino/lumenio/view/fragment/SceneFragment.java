@@ -346,6 +346,7 @@ public class SceneFragment extends Fragment {
                         turnOnDevice(DeviceStatusService.latestRed, DeviceStatusService.latestGreen, DeviceStatusService.latestBlue);
                     }
                 }
+
                 break;
 
             case R.id.bluetooth:

@@ -102,6 +102,10 @@ public class LibraryDetailFragment extends Fragment {
 
                         updateDevice(libraryViewModel.getSelectedRed().getValue().byteValue(), libraryViewModel.getSelectedGreen().getValue().byteValue(), libraryViewModel.getSelectedBlue().getValue().byteValue());
 
+                        DeviceStatusService.latestRed = libraryViewModel.getSelectedRed().getValue().byteValue();
+                        DeviceStatusService.latestGreen = libraryViewModel.getSelectedGreen().getValue().byteValue();
+                        DeviceStatusService.latestBlue = libraryViewModel.getSelectedBlue().getValue().byteValue();
+
                         break;
                     case BluetoothService.STATUS_DISCONNECTED:
                         snackbarMessage = getString(R.string.device_disconnected);
@@ -193,10 +197,6 @@ public class LibraryDetailFragment extends Fragment {
                 libraryViewModel.setSelectedRed(envelope.getArgb()[1]);
                 libraryViewModel.setSelectedGreen(envelope.getArgb()[2]);
                 libraryViewModel.setSelectedBlue(envelope.getArgb()[3]);
-
-                DeviceStatusService.latestRed = (byte) envelope.getArgb()[1];
-                DeviceStatusService.latestGreen = (byte) envelope.getArgb()[2];
-                DeviceStatusService.latestBlue = (byte) envelope.getArgb()[3];
             }
         });
 
@@ -245,40 +245,48 @@ public class LibraryDetailFragment extends Fragment {
             if (selectedByUser) {
                 try {
                     fragmentLibraryDetailBinding.colorPicker.selectByHsvColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
-                    updateDevice(libraryViewModel.getSelectedRed().getValue().byteValue(), libraryViewModel.getSelectedGreen().getValue().byteValue(), libraryViewModel.getSelectedBlue().getValue().byteValue());
-
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
                 fragmentLibraryDetailBinding.colorPicker.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
             }
 
             updateDevice(libraryViewModel.getSelectedRed().getValue().byteValue(), libraryViewModel.getSelectedGreen().getValue().byteValue(), libraryViewModel.getSelectedBlue().getValue().byteValue());
+
+            DeviceStatusService.latestRed = libraryViewModel.getSelectedRed().getValue().byteValue();
+            DeviceStatusService.latestGreen = libraryViewModel.getSelectedGreen().getValue().byteValue();
+            DeviceStatusService.latestBlue = libraryViewModel.getSelectedBlue().getValue().byteValue();
         });
 
         libraryViewModel.getSelectedGreen().observe(requireActivity(), integer -> {
             if (selectedByUser) {
                 try {
                     fragmentLibraryDetailBinding.colorPicker.selectByHsvColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
-                    updateDevice(libraryViewModel.getSelectedRed().getValue().byteValue(), libraryViewModel.getSelectedGreen().getValue().byteValue(), libraryViewModel.getSelectedBlue().getValue().byteValue());
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
                 fragmentLibraryDetailBinding.colorPicker.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
             }
 
             updateDevice(libraryViewModel.getSelectedRed().getValue().byteValue(), libraryViewModel.getSelectedGreen().getValue().byteValue(), libraryViewModel.getSelectedBlue().getValue().byteValue());
+
+            DeviceStatusService.latestRed = libraryViewModel.getSelectedRed().getValue().byteValue();
+            DeviceStatusService.latestGreen = libraryViewModel.getSelectedGreen().getValue().byteValue();
+            DeviceStatusService.latestBlue = libraryViewModel.getSelectedBlue().getValue().byteValue();
         });
 
         libraryViewModel.getSelectedBlue().observe(requireActivity(), integer -> {
             if (selectedByUser) {
                 try {
                     fragmentLibraryDetailBinding.colorPicker.selectByHsvColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
-                    updateDevice(libraryViewModel.getSelectedRed().getValue().byteValue(), libraryViewModel.getSelectedGreen().getValue().byteValue(), libraryViewModel.getSelectedBlue().getValue().byteValue());
                 } catch (IllegalAccessException e) { e.printStackTrace(); }
             } else {
                 fragmentLibraryDetailBinding.colorPicker.setInitialColor(Color.rgb(libraryViewModel.getSelectedRed().getValue(), libraryViewModel.getSelectedGreen().getValue(), libraryViewModel.getSelectedBlue().getValue()));
             }
 
             updateDevice(libraryViewModel.getSelectedRed().getValue().byteValue(), libraryViewModel.getSelectedGreen().getValue().byteValue(), libraryViewModel.getSelectedBlue().getValue().byteValue());
+
+            DeviceStatusService.latestRed = libraryViewModel.getSelectedRed().getValue().byteValue();
+            DeviceStatusService.latestGreen = libraryViewModel.getSelectedGreen().getValue().byteValue();
+            DeviceStatusService.latestBlue = libraryViewModel.getSelectedBlue().getValue().byteValue();
         });
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -301,19 +309,18 @@ public class LibraryDetailFragment extends Fragment {
         disableEditMode();
 
         new Thread(() -> libraryViewModel.reload()).start();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        fragmentLibraryDetailBinding = null;
 
         updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
 
         DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
         DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
         DeviceStatusService.latestBlue = manualViewModel.getSelectedBlue().getValue().byteValue();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        fragmentLibraryDetailBinding = null;
     }
 
     @Override
@@ -371,6 +378,7 @@ public class LibraryDetailFragment extends Fragment {
                         updateDevice(DeviceStatusService.latestRed, DeviceStatusService.latestGreen, DeviceStatusService.latestBlue);
                     }
                 }
+
                 break;
 
             case R.id.bluetooth:
@@ -402,6 +410,24 @@ public class LibraryDetailFragment extends Fragment {
 
                 this.menu.clear();
                 this.inflater.inflate(R.menu.menu_library_detail_no_edit, this.menu);
+
+                MenuItem itemBluetooth = menu.findItem(R.id.bluetooth);
+                if (bluetoothService.isConnected()) {
+                    itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
+                } else {
+                    itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+                }
+
+                MenuItem itemStatus = menu.findItem(R.id.status_light);
+                if (DeviceStatusService.isTurnedOn) {
+                    itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+                    itemStatus.setTitle(R.string.status_on);
+                    itemStatus.setVisible(true);
+                } else {
+                    itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_off));
+                    itemStatus.setTitle(R.string.status_off);
+                    itemStatus.setVisible(false);
+                }
 
                 break;
 

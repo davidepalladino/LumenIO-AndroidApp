@@ -141,7 +141,7 @@ public class BluetoothService {
                 try {
                     OutputStream outputStream = bluetoothSocket.getOutputStream();
                     outputStream.write(data);
-                    Log.i(BluetoothService.class.getSimpleName(), "Data send");
+                    Log.i(BluetoothService.class.getSimpleName(), "Data send: " + "{Red: " + Byte.toUnsignedInt(data[0]) + ", Green: "  + Byte.toUnsignedInt(data[1]) + ", Blue: "  + Byte.toUnsignedInt(data[2]) + "}");
                 } catch (IOException e) {
                     disconnect();
                     Log.e(BluetoothService.class.getSimpleName(), "Error during transfer with this reason " + e);
@@ -160,7 +160,7 @@ public class BluetoothService {
                 try {
                     OutputStream outputStream = bluetoothSocket.getOutputStream();
                     outputStream.write(data.getBytes());
-                    Log.i(BluetoothService.class.getSimpleName(), "Data send");
+                    Log.i(BluetoothService.class.getSimpleName(), "Data send: " + "{" + data + "}");
                 } catch (IOException e) {
                     disconnect();
                     Log.e(BluetoothService.class.getSimpleName(), "Error during transfer with this reason " + e);
