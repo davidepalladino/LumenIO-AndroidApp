@@ -128,6 +128,37 @@ public class LibraryListFragment extends Fragment {
         }
     };
 
+    private final BroadcastReceiver broadcastReceiverState = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (menu != null) {
+                MenuItem itemStatus = menu.findItem(R.id.status_light);
+                MenuItem itemBluetooth = menu.findItem(R.id.bluetooth);
+
+                String snackbarMessage = "";
+
+                final int stateChanged = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                switch (stateChanged) {
+                    case BluetoothAdapter.STATE_DISCONNECTED:
+                        snackbarMessage = getString(R.string.device_lost);
+
+                        DeviceStatusService.isTurnedOn = false;
+
+                        itemStatus.setVisible(false);
+                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+                        itemStatus.setTitle(R.string.status_off);
+
+                        itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+
+                        break;
+
+                }
+
+                Snackbar.make(fragmentLibraryListBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
+            }
+        }
+    };
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -212,6 +243,7 @@ public class LibraryListFragment extends Fragment {
         super.onResume();
 
         requireActivity().registerReceiver(broadcastReceiver, new IntentFilter("BLUETOOTH_CONNECTION"));
+        requireActivity().registerReceiver(broadcastReceiverState, new IntentFilter("BluetoothAdapter.ACTION_STATE_CHANGED"));
 
         /* Verify if the dialog for device selection is open, to update the list of devices. */
         if (dialogSelectDevice != null && dialogSelectDevice.isShowing()) {
@@ -239,6 +271,7 @@ public class LibraryListFragment extends Fragment {
         super.onPause();
 
         requireActivity().unregisterReceiver(broadcastReceiver);
+        requireActivity().unregisterReceiver(broadcastReceiverState);
     }
 
     @Override
