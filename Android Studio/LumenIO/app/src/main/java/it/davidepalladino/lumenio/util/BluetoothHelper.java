@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-public class BluetoothService {
+public class BluetoothHelper {
     public static final String ACTION_STATUS = "STATUS";
 
     public static final String EXTRA_STATE = "STATUS";
@@ -25,13 +25,13 @@ public class BluetoothService {
 
     private static Context context = null;
 
-    private static BluetoothService bluetoothService = null;
+    private static BluetoothHelper bluetoothHelper = null;
 
     private static BluetoothAdapter bluetoothAdapter;
     private static BluetoothDevice bluetoothDevice;
     private static BluetoothSocket bluetoothSocket;
 
-    private BluetoothService() { }
+    private BluetoothHelper() { }
 
     /**
      * Get the BluetoothService. If the Context was not saved previously, will be saved; BluetoothService, too.
@@ -39,17 +39,17 @@ public class BluetoothService {
      * @param contextFrom Context of the application.
      * @return The instance of BluetoothService.
      */
-    public static BluetoothService getInstance(BluetoothAdapter bluetoothAdapterFrom, Context contextFrom) {
+    public static BluetoothHelper getInstance(BluetoothAdapter bluetoothAdapterFrom, Context contextFrom) {
         if (context == null) {
             context = contextFrom;
         }
 
-        if (bluetoothService == null) {
-            bluetoothService = new BluetoothService();
+        if (bluetoothHelper == null) {
+            bluetoothHelper = new BluetoothHelper();
             bluetoothAdapter = bluetoothAdapterFrom;
         }
 
-        return bluetoothService;
+        return bluetoothHelper;
     }
 
     /**
@@ -85,6 +85,14 @@ public class BluetoothService {
         }
     }
 
+    public String getDeviceName() {
+        if (bluetoothSocket != null && bluetoothSocket.isConnected()) {
+            return bluetoothSocket.getRemoteDevice().getName();
+        } else {
+            return "";
+        }
+    }
+
     /**
      * Pair the device via MAC Address.
      * @param macAddress MAC Address of device desired.
@@ -95,11 +103,11 @@ public class BluetoothService {
             bluetoothDevice = bluetoothAdapter.getRemoteDevice(macAddress);
             bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(bluetoothDevice.getUuids()[0].getUuid());
 
-            Log.i(BluetoothService.class.getSimpleName(), "Device paired");
+            Log.i(BluetoothHelper.class.getSimpleName(), "Device paired");
 
             return true;
         } catch (IOException e) {
-            Log.e(BluetoothService.class.getSimpleName(), "Error pairing with this reason: " + e);
+            Log.e(BluetoothHelper.class.getSimpleName(), "Error pairing with this reason: " + e);
         }
 
         return false;
@@ -117,10 +125,10 @@ public class BluetoothService {
                     bluetoothSocket.connect();
 
                     intentExtra = EXTRA_CONNECTED;
-                    Log.i(BluetoothService.class.getSimpleName(), "Connected to device");
+                    Log.i(BluetoothHelper.class.getSimpleName(), "Connected to device");
                 } catch (IOException e){
                     intentExtra = EXTRA_ERROR;
-                    Log.e(BluetoothService.class.getSimpleName(), "Error connection with this reason: " + e);
+                    Log.e(BluetoothHelper.class.getSimpleName(), "Error connection with this reason: " + e);
                 }
 
                 Intent intent = new Intent(ACTION_STATUS);
@@ -142,10 +150,10 @@ public class BluetoothService {
                     bluetoothSocket.close();
 
                     intentExtra = EXTRA_DISCONNECTED;
-                    Log.i(BluetoothService.class.getSimpleName(), "Disconnected from device");
+                    Log.i(BluetoothHelper.class.getSimpleName(), "Disconnected from device");
                 } catch (IOException e){
                     intentExtra = EXTRA_ERROR;
-                    Log.e(BluetoothService.class.getSimpleName(), "Error disconnection with this reason: " + e);
+                    Log.e(BluetoothHelper.class.getSimpleName(), "Error disconnection with this reason: " + e);
                 }
 
                 Intent intent = new Intent(ACTION_STATUS);
@@ -172,10 +180,10 @@ public class BluetoothService {
                 try {
                     OutputStream outputStream = bluetoothSocket.getOutputStream();
                     outputStream.write(data);
-                    Log.i(BluetoothService.class.getSimpleName(), "Data send: " + "{Red: " + Byte.toUnsignedInt(data[0]) + ", Green: "  + Byte.toUnsignedInt(data[1]) + ", Blue: "  + Byte.toUnsignedInt(data[2]) + "}");
+                    Log.i(BluetoothHelper.class.getSimpleName(), "Data send: " + "{Red: " + Byte.toUnsignedInt(data[0]) + ", Green: "  + Byte.toUnsignedInt(data[1]) + ", Blue: "  + Byte.toUnsignedInt(data[2]) + "}");
                 } catch (IOException e) {
                     disconnect();
-                    Log.e(BluetoothService.class.getSimpleName(), "Error during transfer with this reason " + e);
+                    Log.e(BluetoothHelper.class.getSimpleName(), "Error during transfer with this reason " + e);
                 }
             }).start();
         }
@@ -191,10 +199,10 @@ public class BluetoothService {
                 try {
                     OutputStream outputStream = bluetoothSocket.getOutputStream();
                     outputStream.write(data.getBytes());
-                    Log.i(BluetoothService.class.getSimpleName(), "Data send: " + "{" + data + "}");
+                    Log.i(BluetoothHelper.class.getSimpleName(), "Data send: " + "{" + data + "}");
                 } catch (IOException e) {
                     disconnect();
-                    Log.e(BluetoothService.class.getSimpleName(), "Error during transfer with this reason " + e);
+                    Log.e(BluetoothHelper.class.getSimpleName(), "Error during transfer with this reason " + e);
                 }
             }).start();
         }

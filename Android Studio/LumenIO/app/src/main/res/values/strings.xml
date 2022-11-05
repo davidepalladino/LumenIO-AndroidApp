@@ -8,19 +8,19 @@
     <string name="green_label">GREEN</string>
     <string name="blue_label">BLUE</string>
 
-    <string name="profile_saved">has been saved.</string>
-    <string name="profile_updated">has been updated.</string>
-    <string name="profile_removed">has been removed.</string>
-    <string name="profile_loaded">This profile has been loaded in Manual tab.</string>
-    <string name="profile_not_saved_for_name">has not been saved because this name already exists.</string>
-    <string name="profile_not_updated_for_name">has not been updated because this name already exists.</string>
+    <string name="profile_saved">has been saved</string>
+    <string name="profile_updated">has been updated</string>
+    <string name="profile_removed">has been removed</string>
+    <string name="profile_loaded">This profile has been loaded in Manual tab</string>
+    <string name="profile_not_saved_for_name">has not been saved because this name already exists</string>
+    <string name="profile_not_updated_for_name">has not been updated because this name already exists</string>
     <string name="profile_question_pre">Are you sure to remove the</string>
     <string name="profile_question_post">profile?</string>
 
     <string name="scene">Scene</string>
     <string name="scene_set">Set as scene</string>
     <string name="scene_saved">has been saved for the scene</string>
-    <string name="scene_not_saved_for_name">has not been saved for this scene because is already set on another.</string>
+    <string name="scene_not_saved_for_name">has not been saved for this scene because is already set on another</string>
     <string name="scene_one">Scene 1</string>
     <string name="scene_two">Scene 2</string>
     <string name="scene_three">Scene 3</string>
@@ -54,12 +54,17 @@
     <string name="not_found">Not found!</string>
     <string name="no_found_description">The searched element doesn\'t exist</string>
 
-    <string name="device_connected">Connected to device.</string>
-    <string name="device_disconnected">Disconnected from device.</string>
-    <string name="device_error">There is some error with connection.</string>
+    <string name="device_connected">Connected to device</string>
+    <string name="device_disconnected">Disconnected from device</string>
+    <string name="device_error">There is some error with connection</string>
     <string name="device_select">Select a device</string>
+    <string name="device_connected_name">Connected to</string>
     <string name="no_device">No device!</string>
 
-    <string name="request_connection_execute_action">You must to be connected to device for executing this operation.</string>
-    <string name="bluetooth_permission">You must to give the permission to access to Bluetooth.</string>
+    <string name="request_connection_execute_action">You must to be connected to device for executing this operation</string>
+
+    <string name="notification_channel_name_device">Bluetooth connection</string>
+    <string name="notification_channel_description_device">Current status of Bluetooth connection</string>
+    <string name="notification_click_here_return_app">Click here to return to the app</string>
+
 </resources>

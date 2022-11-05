@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.databinding.ActivityMainBinding;
+import it.davidepalladino.lumenio.util.NotificationService;
 import it.davidepalladino.lumenio.view.fragment.LibraryFragment;
 import it.davidepalladino.lumenio.view.fragment.ManualFragment;
 import it.davidepalladino.lumenio.view.fragment.SceneFragment;
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private SceneFragment sceneFragment;
     private LibraryFragment libraryFragment;
 
+    private Intent intentService = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(activityMainBinding.getRoot());
         setSupportActionBar(activityMainBinding.toolbar);
-
 
         activityMainBinding.bottomNavigation.setOnItemSelectedListener(item -> {
             int itemID = item.getItemId();
@@ -63,5 +66,19 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().add(activityMainBinding.frameLayout.getId(), libraryFragment).detach(libraryFragment).commit();
         fragmentManager.beginTransaction().add(activityMainBinding.frameLayout.getId(), sceneFragment).detach(sceneFragment).commit();
         fragmentManager.beginTransaction().add(activityMainBinding.frameLayout.getId(), manualFragment).commit();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        intentService = new Intent(this, NotificationService.class);
+        startService(intentService);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(intentService);
     }
 }

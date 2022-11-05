@@ -1,17 +1,21 @@
 package it.davidepalladino.lumenio.view.fragment;
 
-import static it.davidepalladino.lumenio.util.BluetoothService.REQUIRE_ENABLE_BLUETOOTH;
+import static android.content.Context.BIND_AUTO_CREATE;
+import static it.davidepalladino.lumenio.util.BluetoothHelper.REQUIRE_ENABLE_BLUETOOTH;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,10 +45,11 @@ import java.util.List;
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.data.Profile;
 import it.davidepalladino.lumenio.databinding.FragmentLibraryListBinding;
-import it.davidepalladino.lumenio.util.BluetoothService;
+import it.davidepalladino.lumenio.util.BluetoothHelper;
 import it.davidepalladino.lumenio.util.DeviceArrayAdapter;
 import it.davidepalladino.lumenio.util.DeviceStatusService;
 import it.davidepalladino.lumenio.util.LibraryListAdapter;
+import it.davidepalladino.lumenio.util.NotificationService;
 import it.davidepalladino.lumenio.view.activity.MainActivity;
 import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
 
@@ -58,9 +63,11 @@ public class LibraryListFragment extends Fragment {
 
     private AlertDialog dialogSelectDevice = null;
 
-    private BluetoothService bluetoothService;
+    private BluetoothHelper bluetoothHelper;
 
     private DeviceArrayAdapter deviceArrayAdapter = null;
+
+    private NotificationService notificationService;
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -73,11 +80,13 @@ public class LibraryListFragment extends Fragment {
 
                 String action = intent.getAction();
                 switch (action) {
-                    case BluetoothService.ACTION_STATUS:
-                        String extra = intent.getStringExtra(BluetoothService.EXTRA_STATE);
+                    case BluetoothHelper.ACTION_STATUS:
+                        String extra = intent.getStringExtra(BluetoothHelper.EXTRA_STATE);
                         switch (extra) {
-                            case BluetoothService.EXTRA_CONNECTED:
+                            case BluetoothHelper.EXTRA_CONNECTED:
                                 snackbarMessage = getString(R.string.device_disconnected);
+
+                                notificationService.createNotification(getString(R.string.device_connected_name) + " " + bluetoothHelper.getDeviceName(), getString(R.string.notification_click_here_return_app));
 
                                 DeviceStatusService.isTurnedOn = false;
 
@@ -89,8 +98,10 @@ public class LibraryListFragment extends Fragment {
 
                                 break;
 
-                            case BluetoothService.EXTRA_DISCONNECTED:
+                            case BluetoothHelper.EXTRA_DISCONNECTED:
                                 snackbarMessage = getString(R.string.device_disconnected);
+
+                                notificationService.destroyNotification();
 
                                 DeviceStatusService.isTurnedOn = false;
 
@@ -102,7 +113,7 @@ public class LibraryListFragment extends Fragment {
 
                                 break;
 
-                            case BluetoothService.EXTRA_ERROR:
+                            case BluetoothHelper.EXTRA_ERROR:
                                 snackbarMessage = getString(R.string.device_error);
 
                                 DeviceStatusService.isTurnedOn = false;
@@ -119,8 +130,8 @@ public class LibraryListFragment extends Fragment {
                         break;
 
                     case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-                        if (bluetoothService.isConnected()) {
-                            bluetoothService.disconnect();
+                        if (bluetoothHelper.isConnected()) {
+                            bluetoothHelper.disconnect();
                         }
 
                         break;
@@ -133,6 +144,16 @@ public class LibraryListFragment extends Fragment {
         }
     };
 
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            notificationService = ((NotificationService.LocalBinder) service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) { }
+    };
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,7 +162,7 @@ public class LibraryListFragment extends Fragment {
 
         libraryViewModel = new ViewModelProvider(requireActivity()).get(LibraryViewModel.class);
 
-        bluetoothService = BluetoothService.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter(), requireContext());
+        bluetoothHelper = BluetoothHelper.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter(), requireContext());
 
         TransitionInflater inflater = TransitionInflater.from(requireContext());
         setEnterTransition(inflater.inflateTransition(R.transition.fade));
@@ -217,13 +238,16 @@ public class LibraryListFragment extends Fragment {
         super.onResume();
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothService.ACTION_STATUS);
+        intentFilter.addAction(BluetoothHelper.ACTION_STATUS);
         intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         requireActivity().registerReceiver(broadcastReceiver, intentFilter);
 
+        Intent intentDatabaseService = new Intent(getActivity(), NotificationService.class);
+        requireActivity().bindService(intentDatabaseService, serviceConnection, BIND_AUTO_CREATE);
+
         /* Verify if the dialog for device selection is open, to update the list of devices. */
         if (dialogSelectDevice != null && dialogSelectDevice.isShowing()) {
-            ArrayList<BluetoothDevice> bluetoothDevices = bluetoothService.getList(getString(R.string.app_name));
+            ArrayList<BluetoothDevice> bluetoothDevices = bluetoothHelper.getList(getString(R.string.app_name));
             deviceArrayAdapter.clear();
             deviceArrayAdapter.addAll(bluetoothDevices);
             deviceArrayAdapter.notifyDataSetChanged();
@@ -245,6 +269,7 @@ public class LibraryListFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
         requireActivity().unregisterReceiver(broadcastReceiver);
     }
 
@@ -265,7 +290,7 @@ public class LibraryListFragment extends Fragment {
         this.inflater.inflate(R.menu.menu_library_list, menu);
 
         MenuItem itemBluetooth = menu.findItem(R.id.bluetooth);
-        if (bluetoothService.isConnected()) {
+        if (bluetoothHelper.isConnected()) {
             itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
         } else {
             itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
@@ -288,7 +313,7 @@ public class LibraryListFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.status_light:
-                if (bluetoothService.isConnected()) {
+                if (bluetoothHelper.isConnected()) {
                     MenuItem itemStatus = menu.findItem(R.id.status_light);
                     if (DeviceStatusService.isTurnedOn) {
                         itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_off));
@@ -308,15 +333,15 @@ public class LibraryListFragment extends Fragment {
                 break;
 
             case R.id.bluetooth:
-                if (!bluetoothService.isConnected()) {
-                    if (!bluetoothService.getBluetoothAdapter().isEnabled()) {
+                if (!bluetoothHelper.isConnected()) {
+                    if (!bluetoothHelper.getBluetoothAdapter().isEnabled()) {
                         Intent intentRequestEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(intentRequestEnable, REQUIRE_ENABLE_BLUETOOTH);
                     } else {
                         pairAndConnectDevice();
                     }
                 } else {
-                    bluetoothService.disconnect();
+                    bluetoothHelper.disconnect();
                 }
 
                 break;
@@ -330,8 +355,8 @@ public class LibraryListFragment extends Fragment {
         String deviceSelected = sharedPreferences.getString(getString(R.string.device_selected), "");
 
         /* If the device is never been set, or the actual device is now not bonded, will be an AlertDialog for a selection. */
-        if (deviceSelected.isEmpty() || (!deviceSelected.isEmpty() && bluetoothService.getBluetoothAdapter().getRemoteDevice(deviceSelected).getBondState() == 10)) {
-            ArrayList<BluetoothDevice> bluetoothDevices = bluetoothService.getList(getString(R.string.app_name));
+        if (deviceSelected.isEmpty() || (!deviceSelected.isEmpty() && bluetoothHelper.getBluetoothAdapter().getRemoteDevice(deviceSelected).getBondState() == 10)) {
+            ArrayList<BluetoothDevice> bluetoothDevices = bluetoothHelper.getList(getString(R.string.app_name));
             deviceArrayAdapter = new DeviceArrayAdapter(requireContext(), bluetoothDevices);
 
             View view = requireActivity().getLayoutInflater().inflate(R.layout.dialog_search_device, null);
@@ -354,8 +379,8 @@ public class LibraryListFragment extends Fragment {
                 sharedPreferencesEditor.putString(getString(R.string.device_selected), selection);
                 sharedPreferencesEditor.apply();
 
-                if (bluetoothService.pair(selection)) {
-                    bluetoothService.connect();
+                if (bluetoothHelper.pair(selection)) {
+                    bluetoothHelper.connect();
                 }
 
                 dialogSelectDevice.dismiss();
@@ -373,16 +398,16 @@ public class LibraryListFragment extends Fragment {
 
             dialogSelectDevice.show();
         } else {
-            if (bluetoothService.pair(deviceSelected)) {
-                bluetoothService.connect();
+            if (bluetoothHelper.pair(deviceSelected)) {
+                bluetoothHelper.connect();
             }
         }
     }
 
     // TODO: Change the logic.
     public void updateDevice(byte red, byte green, byte blue) {
-        if (bluetoothService.isConnected() && DeviceStatusService.isTurnedOn) {
-            bluetoothService.writeData(new byte[]{red, green, blue});
+        if (bluetoothHelper.isConnected() && DeviceStatusService.isTurnedOn) {
+            bluetoothHelper.writeData(new byte[]{red, green, blue});
         }
     }
 }
