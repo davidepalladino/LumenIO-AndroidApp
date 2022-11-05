@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="it.davidepalladino.lumenio">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="31" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="31" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-feature android:name="android.hardware.bluetooth" android:required="true" />

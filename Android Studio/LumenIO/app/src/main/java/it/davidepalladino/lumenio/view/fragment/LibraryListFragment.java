@@ -126,7 +126,9 @@ public class LibraryListFragment extends Fragment {
                         break;
                 }
 
-                Snackbar.make(fragmentLibraryListBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
+                if (!snackbarMessage.isEmpty()) {
+                    Snackbar.make(fragmentLibraryListBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
+                }
             }
         }
     };

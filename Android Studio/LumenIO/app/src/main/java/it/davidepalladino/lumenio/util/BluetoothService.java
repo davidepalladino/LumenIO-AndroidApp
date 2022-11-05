@@ -33,6 +33,12 @@ public class BluetoothService {
 
     private BluetoothService() { }
 
+    /**
+     * Get the BluetoothService. If the Context was not saved previously, will be saved; BluetoothService, too.
+     * @param bluetoothAdapterFrom BluetoothAdapter to save.
+     * @param contextFrom Context of the application.
+     * @return The instance of BluetoothService.
+     */
     public static BluetoothService getInstance(BluetoothAdapter bluetoothAdapterFrom, Context contextFrom) {
         if (context == null) {
             context = contextFrom;
@@ -46,10 +52,19 @@ public class BluetoothService {
         return bluetoothService;
     }
 
+    /**
+     * Get the BluetoothAdapter.
+     * @return The instance of BluetoothAdapter.
+     */
     public BluetoothAdapter getBluetoothAdapter() {
         return bluetoothAdapter;
     }
 
+    /**
+     * Get a list of devices, filtered by name.
+     * @param filterDeviceName The filter by name.
+     * @return An ArrayList empty or with the BluetoothDevices.
+     */
     public ArrayList<BluetoothDevice> getList(String filterDeviceName) {
         Set<BluetoothDevice> bluetoothDevicesFullList = bluetoothAdapter.getBondedDevices();
 
@@ -70,6 +85,11 @@ public class BluetoothService {
         }
     }
 
+    /**
+     * Pair the device via MAC Address.
+     * @param macAddress MAC Address of device desired.
+     * @return Value `true` if the pairing is established; else `false`.
+     */
     public boolean pair(String macAddress) {
         try {
             bluetoothDevice = bluetoothAdapter.getRemoteDevice(macAddress);
@@ -85,6 +105,9 @@ public class BluetoothService {
         return false;
     }
 
+    /**
+     * Connect to the device and send a broadcast message in success case (`EXTRA_CONNECTED`) or not (`EXTRA_ERROR`).
+     */
     public void connect() {
         if (bluetoothSocket != null && !bluetoothSocket.isConnected()) {
             new Thread(() -> {
@@ -107,6 +130,9 @@ public class BluetoothService {
         }
     }
 
+    /**
+     * Disconnect from the device and send a broadcast message in success case (`EXTRA_DISCONNECTED`) or not (`EXTRA_ERROR`).
+     */
     public void disconnect() {
         if (bluetoothSocket != null && bluetoothSocket.isConnected()) {
             new Thread(() -> {
@@ -129,6 +155,10 @@ public class BluetoothService {
         }
     }
 
+    /**
+     * Check if there is a connecvtion between the App and the device.
+     * @return Value `true` if the connection is established; else `false`.
+     */
     public boolean isConnected() { return bluetoothSocket != null && bluetoothSocket.isConnected(); }
 
     /**

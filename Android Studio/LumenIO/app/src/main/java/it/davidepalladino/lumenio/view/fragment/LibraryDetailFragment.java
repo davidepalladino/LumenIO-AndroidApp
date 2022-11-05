@@ -146,7 +146,9 @@ public class LibraryDetailFragment extends Fragment {
                         break;
                 }
 
-                Snackbar.make(fragmentLibraryDetailBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
+                if (!snackbarMessage.isEmpty()) {
+                    Snackbar.make(fragmentLibraryDetailBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
+                }
             }
         }
     };

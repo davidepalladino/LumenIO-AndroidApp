@@ -61,4 +61,5 @@
     <string name="no_device">No device!</string>
 
     <string name="request_connection_execute_action">You must to be connected to device for executing this operation.</string>
+    <string name="bluetooth_permission">You must to give the permission to access to Bluetooth.</string>
 </resources>
