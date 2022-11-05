@@ -189,6 +189,10 @@ public class ManualFragment extends Fragment {
                 manualViewModel.setSelectedRed(envelope.getArgb()[1]);
                 manualViewModel.setSelectedGreen(envelope.getArgb()[2]);
                 manualViewModel.setSelectedBlue(envelope.getArgb()[3]);
+
+                DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
+                DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
+                DeviceStatusService.latestBlue = manualViewModel.getSelectedBlue().getValue().byteValue();
             }
         });
 
@@ -245,10 +249,6 @@ public class ManualFragment extends Fragment {
             } else {
                 fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
-
-            DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
-            DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
-            DeviceStatusService.latestBlue = manualViewModel.getSelectedBlue().getValue().byteValue();
         });
 
         manualViewModel.getSelectedGreen().observe(requireActivity(), integer -> {
@@ -260,10 +260,6 @@ public class ManualFragment extends Fragment {
             } else {
                 fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
-
-            DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
-            DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
-            DeviceStatusService.latestBlue = manualViewModel.getSelectedBlue().getValue().byteValue();
         });
 
         manualViewModel.getSelectedBlue().observe(requireActivity(), integer -> {
@@ -275,10 +271,6 @@ public class ManualFragment extends Fragment {
             } else {
                 fragmentManualBinding.colorPicker.setInitialColor(Color.rgb(manualViewModel.getSelectedRed().getValue(), manualViewModel.getSelectedGreen().getValue(), manualViewModel.getSelectedBlue().getValue()));
             }
-
-            DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
-            DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
-            DeviceStatusService.latestBlue = manualViewModel.getSelectedBlue().getValue().byteValue();
         });
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
