@@ -55,7 +55,12 @@ public class ProfileRepository {
         profileDao.delete(profile);
     }
 
+    /**
+     * Check and clean the name of profile.
+     * @param profile Profile where will be get the name to clean.
+     */
     private void cleanName(Profile profile) {
+        /* Checking and clean empty space at the start of name. */
         if (profile.name.charAt(0) == ' ') {
             profile.name = profile.name.substring(1);
         }

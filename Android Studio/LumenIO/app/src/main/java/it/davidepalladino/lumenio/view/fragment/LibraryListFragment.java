@@ -379,6 +379,7 @@ public class LibraryListFragment extends Fragment {
         }
     }
 
+    // TODO: Change the logic.
     public void updateDevice(byte red, byte green, byte blue) {
         if (bluetoothService.isConnected() && DeviceStatusService.isTurnedOn) {
             bluetoothService.writeData(new byte[]{red, green, blue});

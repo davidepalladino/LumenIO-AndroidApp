@@ -459,6 +459,7 @@ public class SceneFragment extends Fragment {
         }
     }
 
+    // TODO: Change the logic.
     public void turnOnDevice(byte red, byte green, byte blue) {
         if (bluetoothService.isConnected()) {
             bluetoothService.writeData(new byte[]{red, green, blue});
@@ -467,6 +468,7 @@ public class SceneFragment extends Fragment {
         }
     }
 
+    // TODO: Change the logic.
     public void uploadDevice(int sceneID, Profile profile) {
         if (bluetoothService.isConnected()) {
             String json = "";
