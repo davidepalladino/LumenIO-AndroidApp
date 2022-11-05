@@ -14,12 +14,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class BluetoothService {
-    public static final String INTENT_ACTION = "BLUETOOTH_CONNECTION";
-    public static final String STATUS = "STATUS";
-    public static final String STATUS_CONNECTED = "CONNECTED";
-    public static final String STATUS_DISCONNECTED = "DISCONNECTED";
-    public static final String STATUS_LOST = "LOST";
-    public static final String STATUS_ERROR = "ERROR";
+    public static final String ACTION_STATUS = "STATUS";
+
+    public static final String EXTRA_STATE = "STATUS";
+    public static final String EXTRA_CONNECTED = "CONNECTED";
+    public static final String EXTRA_DISCONNECTED = "DISCONNECTED";
+    public static final String EXTRA_ERROR = "ERROR";
+
     public static final int REQUIRE_ENABLE_BLUETOOTH = 1;
 
     private static Context context = null;
@@ -87,20 +88,20 @@ public class BluetoothService {
     public void connect() {
         if (bluetoothSocket != null && !bluetoothSocket.isConnected()) {
             new Thread(() -> {
-                String intentValue = null;
+                String intentExtra = null;
 
                 try {
                     bluetoothSocket.connect();
 
-                    intentValue = STATUS_CONNECTED;
+                    intentExtra = EXTRA_CONNECTED;
                     Log.i(BluetoothService.class.getSimpleName(), "Connected to device");
                 } catch (IOException e){
-                    intentValue = STATUS_ERROR;
+                    intentExtra = EXTRA_ERROR;
                     Log.e(BluetoothService.class.getSimpleName(), "Error connection with this reason: " + e);
                 }
 
-                Intent intent = new Intent(INTENT_ACTION);
-                intent.putExtra(STATUS, intentValue);
+                Intent intent = new Intent(ACTION_STATUS);
+                intent.putExtra(EXTRA_STATE, intentExtra);
                 context.sendBroadcast(intent);
             }).start();
         }
@@ -109,20 +110,20 @@ public class BluetoothService {
     public void disconnect() {
         if (bluetoothSocket != null && bluetoothSocket.isConnected()) {
             new Thread(() -> {
-                String intentValue = null;
+                String intentExtra = null;
 
                 try {
                     bluetoothSocket.close();
 
-                    intentValue = STATUS_DISCONNECTED;
+                    intentExtra = EXTRA_DISCONNECTED;
                     Log.i(BluetoothService.class.getSimpleName(), "Disconnected from device");
                 } catch (IOException e){
-                    intentValue = STATUS_ERROR;
+                    intentExtra = EXTRA_ERROR;
                     Log.e(BluetoothService.class.getSimpleName(), "Error disconnection with this reason: " + e);
                 }
 
-                Intent intent = new Intent(INTENT_ACTION);
-                intent.putExtra(STATUS, intentValue);
+                Intent intent = new Intent(ACTION_STATUS);
+                intent.putExtra(EXTRA_STATE, intentExtra);
                 context.sendBroadcast(intent);
             }).start();
         }

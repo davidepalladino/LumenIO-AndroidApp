@@ -71,87 +71,59 @@ public class LibraryListFragment extends Fragment {
 
                 String snackbarMessage = "";
 
-                final String state = intent.getStringExtra(BluetoothService.STATUS);
-                switch (state) {
-                    case BluetoothService.STATUS_CONNECTED:
-                        snackbarMessage = getString(R.string.device_disconnected);
+                String action = intent.getAction();
+                switch (action) {
+                    case BluetoothService.ACTION_STATUS:
+                        String extra = intent.getStringExtra(BluetoothService.EXTRA_STATE);
+                        switch (extra) {
+                            case BluetoothService.EXTRA_CONNECTED:
+                                snackbarMessage = getString(R.string.device_disconnected);
 
-                        DeviceStatusService.isTurnedOn = false;
+                                DeviceStatusService.isTurnedOn = false;
 
-                        itemStatus.setVisible(false);
-                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
-                        itemStatus.setTitle(R.string.status_off);
+                                itemStatus.setVisible(false);
+                                itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+                                itemStatus.setTitle(R.string.status_off);
 
-                        itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+                                itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
 
-                        break;
-                    case BluetoothService.STATUS_DISCONNECTED:
-                        snackbarMessage = getString(R.string.device_disconnected);
+                                break;
 
-                        DeviceStatusService.isTurnedOn = false;
+                            case BluetoothService.EXTRA_DISCONNECTED:
+                                snackbarMessage = getString(R.string.device_disconnected);
 
-                        itemStatus.setVisible(false);
-                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
-                        itemStatus.setTitle(R.string.status_off);
+                                DeviceStatusService.isTurnedOn = false;
 
-                        itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+                                itemStatus.setVisible(false);
+                                itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+                                itemStatus.setTitle(R.string.status_off);
 
-                        break;
-                    case BluetoothService.STATUS_LOST:
-                        snackbarMessage = getString(R.string.device_lost);
+                                itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
 
-                        DeviceStatusService.isTurnedOn = false;
+                                break;
 
-                        itemStatus.setVisible(false);
-                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
-                        itemStatus.setTitle(R.string.status_off);
+                            case BluetoothService.EXTRA_ERROR:
+                                snackbarMessage = getString(R.string.device_error);
 
-                        itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+                                DeviceStatusService.isTurnedOn = false;
 
-                        break;
-                    case BluetoothService.STATUS_ERROR:
-                        snackbarMessage = getString(R.string.device_error);
+                                itemStatus.setVisible(false);
+                                itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
+                                itemStatus.setTitle(R.string.status_off);
 
-                        DeviceStatusService.isTurnedOn = false;
+                                itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
 
-                        itemStatus.setVisible(false);
-                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
-                        itemStatus.setTitle(R.string.status_off);
-
-                        itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
-
-                        break;
-                }
-
-                Snackbar.make(fragmentLibraryListBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
-            }
-        }
-    };
-
-    private final BroadcastReceiver broadcastReceiverState = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (menu != null) {
-                MenuItem itemStatus = menu.findItem(R.id.status_light);
-                MenuItem itemBluetooth = menu.findItem(R.id.bluetooth);
-
-                String snackbarMessage = "";
-
-                final int stateChanged = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                switch (stateChanged) {
-                    case BluetoothAdapter.STATE_DISCONNECTED:
-                        snackbarMessage = getString(R.string.device_lost);
-
-                        DeviceStatusService.isTurnedOn = false;
-
-                        itemStatus.setVisible(false);
-                        itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
-                        itemStatus.setTitle(R.string.status_off);
-
-                        itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+                                break;
+                        }
 
                         break;
 
+                    case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                        if (bluetoothService.isConnected()) {
+                            bluetoothService.disconnect();
+                        }
+
+                        break;
                 }
 
                 Snackbar.make(fragmentLibraryListBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
@@ -242,8 +214,10 @@ public class LibraryListFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        requireActivity().registerReceiver(broadcastReceiver, new IntentFilter("BLUETOOTH_CONNECTION"));
-        requireActivity().registerReceiver(broadcastReceiverState, new IntentFilter("BluetoothAdapter.ACTION_STATE_CHANGED"));
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothService.ACTION_STATUS);
+        intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        requireActivity().registerReceiver(broadcastReceiver, intentFilter);
 
         /* Verify if the dialog for device selection is open, to update the list of devices. */
         if (dialogSelectDevice != null && dialogSelectDevice.isShowing()) {
@@ -269,9 +243,7 @@ public class LibraryListFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
         requireActivity().unregisterReceiver(broadcastReceiver);
-        requireActivity().unregisterReceiver(broadcastReceiverState);
     }
 
     @Override

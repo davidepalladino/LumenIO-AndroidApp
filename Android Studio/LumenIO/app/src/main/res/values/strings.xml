@@ -56,7 +56,6 @@
 
     <string name="device_connected">Connected to device.</string>
     <string name="device_disconnected">Disconnected from device.</string>
-    <string name="device_lost">Connection lost from device.</string>
     <string name="device_error">There is some error with connection.</string>
     <string name="device_select">Select a device</string>
     <string name="no_device">No device!</string>
