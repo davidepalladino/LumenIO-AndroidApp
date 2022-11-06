@@ -443,21 +443,22 @@ public class LibraryDetailFragment extends Fragment {
                 this.inflater.inflate(R.menu.menu_library_detail_no_edit, this.menu);
 
                 MenuItem itemBluetooth = menu.findItem(R.id.bluetooth);
+                MenuItem itemStatus = menu.findItem(R.id.status_light);
+
                 if (bluetoothHelper.isConnected()) {
                     itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
+                    itemStatus.setVisible(true);
                 } else {
                     itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+                    itemStatus.setVisible(false);
                 }
 
-                MenuItem itemStatus = menu.findItem(R.id.status_light);
                 if (DeviceStatusService.isTurnedOn) {
                     itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
                     itemStatus.setTitle(R.string.status_on);
-                    itemStatus.setVisible(true);
                 } else {
                     itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_off));
                     itemStatus.setTitle(R.string.status_off);
-                    itemStatus.setVisible(false);
                 }
 
                 break;
