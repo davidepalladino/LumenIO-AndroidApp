@@ -1,18 +1,20 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_no_margin">0dp</dimen>
     <dimen name="card_corner_radius">15dp</dimen>
     <dimen name="card_margin_top">10dp</dimen>
     <dimen name="card_margin_horizontal">10dp</dimen>
     <dimen name="card_margin_bottom">10dp</dimen>
+
     <dimen name="header_card_padding">10dp</dimen>
     <dimen name="header_card_margin_top">5dp</dimen>
     <dimen name="header_card_margin_start">5dp</dimen>
+
+    <dimen name="body_card_padding">10dp</dimen>
+
+    <dimen name="footer_card_color_status_scene">5dp</dimen>
+
     <dimen name="icon_header_card_margin_end">10dp</dimen>
     <dimen name="text_header_card_size">20sp</dimen>
-    <dimen name="body_card_padding">10dp</dimen>
     <dimen name="item_list_view_corner_radius">5dp</dimen>
-    <dimen name="seek_bar_height">20dp</dimen>
-    <dimen name="seek_bar_margin_vertical">5dp</dimen>
     <dimen name="message_text_view_size">12sp</dimen>
 </resources>

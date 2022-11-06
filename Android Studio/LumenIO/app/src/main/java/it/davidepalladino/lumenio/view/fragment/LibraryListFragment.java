@@ -52,11 +52,13 @@ import it.davidepalladino.lumenio.util.LibraryListAdapter;
 import it.davidepalladino.lumenio.util.NotificationService;
 import it.davidepalladino.lumenio.view.activity.MainActivity;
 import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
+import it.davidepalladino.lumenio.view.viewModel.ManualViewModel;
 
 public class LibraryListFragment extends Fragment {
     private FragmentLibraryListBinding fragmentLibraryListBinding;
 
     private LibraryViewModel libraryViewModel;
+    private ManualViewModel manualViewModel;
 
     private Menu menu;
     private MenuInflater inflater;
@@ -84,17 +86,17 @@ public class LibraryListFragment extends Fragment {
                         String extra = intent.getStringExtra(BluetoothHelper.EXTRA_STATE);
                         switch (extra) {
                             case BluetoothHelper.EXTRA_CONNECTED:
-                                snackbarMessage = getString(R.string.device_disconnected);
+                                snackbarMessage = getString(R.string.device_connected);
 
                                 notificationService.createNotification(getString(R.string.device_connected_name) + " " + bluetoothHelper.getDeviceName(), getString(R.string.notification_click_here_return_app));
 
-                                DeviceStatusService.isTurnedOn = false;
+                                DeviceStatusService.isTurnedOn = true;
 
-                                itemStatus.setVisible(false);
                                 itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
-                                itemStatus.setTitle(R.string.status_off);
+                                itemStatus.setTitle(R.string.status_on);
+                                itemStatus.setVisible(true);
 
-                                itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+                                itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
 
                                 break;
 
@@ -161,6 +163,7 @@ public class LibraryListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         libraryViewModel = new ViewModelProvider(requireActivity()).get(LibraryViewModel.class);
+        manualViewModel = new ViewModelProvider(requireActivity()).get(ManualViewModel.class);
 
         bluetoothHelper = BluetoothHelper.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter(), requireContext());
 
@@ -404,10 +407,12 @@ public class LibraryListFragment extends Fragment {
         }
     }
 
-    // TODO: Change the logic.
-    public void updateDevice(byte red, byte green, byte blue) {
+    public boolean updateDevice(byte red, byte green, byte blue) {
         if (bluetoothHelper.isConnected() && DeviceStatusService.isTurnedOn) {
             bluetoothHelper.writeData(new byte[]{red, green, blue});
+            return true;
         }
+
+        return false;
     }
 }

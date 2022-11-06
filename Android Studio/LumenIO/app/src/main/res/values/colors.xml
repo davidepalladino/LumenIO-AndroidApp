@@ -11,6 +11,8 @@
     <color name="primary_text_color">#ffffff</color>
     <color name="secondary_text_color">#000000</color>
 
-    <color name="background">#ECECEC</color>
-    <color name="error">#AF3636</color>
+    <color name="background">#ececec</color>
+    <color name="footer_card_color_background_scene_selected">#74bc74</color>
+    <color name="footer_card_color_background_scene_unselected">#fdfdfd</color>
+    <color name="error">#af3636</color>
 </resources>

@@ -517,11 +517,13 @@ public class ManualFragment extends Fragment {
         }
     }
 
-    // TODO: Change the logic.
-    public void updateDevice(byte red, byte green, byte blue) {
+    public boolean updateDevice(byte red, byte green, byte blue) {
         if (bluetoothHelper.isConnected() && DeviceStatusService.isTurnedOn) {
             bluetoothHelper.writeData(new byte[]{red, green, blue});
+            return true;
         }
+
+        return false;
     }
 
     @Override

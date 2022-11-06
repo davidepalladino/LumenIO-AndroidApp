@@ -42,9 +42,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import it.davidepalladino.lumenio.R;
@@ -75,6 +72,8 @@ public class SceneFragment extends Fragment {
     private Profile profileSceneOne;
     private Profile profileSceneTwo;
     private Profile profileSceneThree;
+
+    private int latestSceneSelected = 0;
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -147,6 +146,10 @@ public class SceneFragment extends Fragment {
                 if (!snackbarMessage.isEmpty()) {
                     Snackbar.make(fragmentSceneBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
                 }
+
+                updateSceneCard(profileSceneOne, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne);
+                updateSceneCard(profileSceneTwo, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo);
+                updateSceneCard(profileSceneThree, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree);
             }
         }
     };
@@ -183,10 +186,10 @@ public class SceneFragment extends Fragment {
                         sceneViewModel.getProfileById(scene.profileId).removeObservers(requireActivity());
                     }
 
-                    updateSceneCard(profile, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne, fragmentSceneBinding.uploadOne);
+                    updateSceneCard(profile, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne);
                 });
             } else {
-                updateSceneCard(null, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne, fragmentSceneBinding.uploadOne);
+                updateSceneCard(null, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne);
             }
         });
 
@@ -198,10 +201,10 @@ public class SceneFragment extends Fragment {
                         sceneViewModel.getProfileById(scene.profileId).removeObservers(requireActivity());
                     }
 
-                    updateSceneCard(profile, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo, fragmentSceneBinding.uploadTwo);
+                    updateSceneCard(profile, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo);
                 });
             } else {
-                updateSceneCard(null, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo, fragmentSceneBinding.uploadTwo);
+                updateSceneCard(null, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo);
             }
         });
 
@@ -213,10 +216,10 @@ public class SceneFragment extends Fragment {
                         sceneViewModel.getProfileById(scene.profileId).removeObservers(requireActivity());
                     }
 
-                    updateSceneCard(profile, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree, fragmentSceneBinding.uploadThree);
+                    updateSceneCard(profile, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree);
                 });
             } else {
-                updateSceneCard(null, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree, fragmentSceneBinding.uploadThree);
+                updateSceneCard(null, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree);
             }
         });
 
@@ -227,7 +230,14 @@ public class SceneFragment extends Fragment {
         fragmentSceneBinding.setSceneFragment(this);
 
         fragmentSceneBinding.turnOnOne.setOnClickListener(v -> {
-            turnOnDevice((byte) profileSceneOne.red, (byte) profileSceneOne.green, (byte) profileSceneOne.blue);
+            updateDevice((byte) profileSceneOne.red, (byte) profileSceneOne.green, (byte) profileSceneOne.blue);
+
+
+            updateStatusCard(latestSceneSelected, latestSceneSelected = 1);
+
+            SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+            sharedPreferencesEditor.putInt(getString(R.string.latest_scene_selected), latestSceneSelected);
+            sharedPreferencesEditor.apply();
 
             DeviceStatusService.latestRed = (byte) profileSceneOne.red;
             DeviceStatusService.latestGreen = (byte) profileSceneOne.green;
@@ -235,7 +245,13 @@ public class SceneFragment extends Fragment {
         });
 
         fragmentSceneBinding.turnOnTwo.setOnClickListener(v -> {
-            turnOnDevice((byte) profileSceneTwo.red, (byte) profileSceneTwo.green, (byte) profileSceneTwo.blue);
+            updateDevice((byte) profileSceneTwo.red, (byte) profileSceneTwo.green, (byte) profileSceneTwo.blue);
+
+            updateStatusCard(latestSceneSelected, latestSceneSelected = 2);
+
+            SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+            sharedPreferencesEditor.putInt(getString(R.string.latest_scene_selected), latestSceneSelected);
+            sharedPreferencesEditor.apply();
 
             DeviceStatusService.latestRed = (byte) profileSceneTwo.red;
             DeviceStatusService.latestGreen = (byte) profileSceneTwo.green;
@@ -243,23 +259,17 @@ public class SceneFragment extends Fragment {
         });
 
         fragmentSceneBinding.turnOnThree.setOnClickListener(v -> {
-            turnOnDevice((byte) profileSceneTwo.red, (byte) profileSceneTwo.green, (byte) profileSceneTwo.blue);
+            updateDevice((byte) profileSceneTwo.red, (byte) profileSceneTwo.green, (byte) profileSceneTwo.blue);
+
+            updateStatusCard(latestSceneSelected, latestSceneSelected = 3);
+
+            SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+            sharedPreferencesEditor.putInt(getString(R.string.latest_scene_selected), latestSceneSelected);
+            sharedPreferencesEditor.apply();
 
             DeviceStatusService.latestRed = (byte) profileSceneThree.red;
             DeviceStatusService.latestGreen = (byte) profileSceneThree.green;
             DeviceStatusService.latestBlue = (byte) profileSceneThree.blue;
-        });
-
-        fragmentSceneBinding.uploadOne.setOnClickListener(v -> {
-            uploadDevice(1, profileSceneOne);
-        });
-
-        fragmentSceneBinding.uploadTwo.setOnClickListener(v -> {
-            uploadDevice(2, profileSceneTwo);
-        });
-
-        fragmentSceneBinding.uploadThree.setOnClickListener(v -> {
-            uploadDevice(3, profileSceneThree);
         });
 
         fragmentSceneBinding.editOne.setOnClickListener(v -> {
@@ -277,7 +287,36 @@ public class SceneFragment extends Fragment {
             searchProfilesDialog.show(getParentFragmentManager(), SceneFragment.class.getSimpleName());
         });
 
+        SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
+        updateStatusCard(latestSceneSelected, latestSceneSelected = sharedPreferences.getInt(getString(R.string.latest_scene_selected), 0));
+
         return fragmentSceneBinding.getRoot();
+    }
+
+    private void updateStatusCard(int oldScene, int newScene) {
+        switch (oldScene) {
+            case 1:
+                fragmentSceneBinding.statusSceneOne.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_unselected));
+                break;
+            case 2:
+                fragmentSceneBinding.statusSceneTwo.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_unselected));
+                break;
+            case 3:
+                fragmentSceneBinding.statusSceneThree.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_unselected));
+                break;
+        }
+
+        switch (newScene) {
+            case 1:
+                fragmentSceneBinding.statusSceneOne.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_selected));
+                break;
+            case 2:
+                fragmentSceneBinding.statusSceneTwo.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_selected));
+                break;
+            case 3:
+                fragmentSceneBinding.statusSceneThree.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_selected));
+                break;
+        }
     }
 
     @Override
@@ -316,7 +355,6 @@ public class SceneFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
         requireActivity().unregisterReceiver(broadcastReceiver);
     }
 
@@ -366,7 +404,7 @@ public class SceneFragment extends Fragment {
                         itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_off));
                         itemStatus.setTitle(R.string.status_off);
 
-                        turnOnDevice((byte) 0, (byte ) 0, (byte) 0);
+                        updateDevice((byte) 0, (byte ) 0, (byte) 0);
 
                         DeviceStatusService.isTurnedOn = false;
                     } else {
@@ -374,7 +412,7 @@ public class SceneFragment extends Fragment {
                         itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
                         itemStatus.setTitle(R.string.status_on);
 
-                        turnOnDevice(DeviceStatusService.latestRed, DeviceStatusService.latestGreen, DeviceStatusService.latestBlue);
+                        updateDevice(DeviceStatusService.latestRed, DeviceStatusService.latestGreen, DeviceStatusService.latestBlue);
                     }
                 }
 
@@ -398,7 +436,7 @@ public class SceneFragment extends Fragment {
         return true;
     }
 
-    private void updateSceneCard(Profile profile, TextView name, View preview, TextView values, ImageView turnOn, ImageView transfer) {
+    private void updateSceneCard(Profile profile, TextView name, View preview, TextView values, ImageView turnOn) {
         if (profile != null)  {
             name.setText(profile.name);
 
@@ -412,8 +450,11 @@ public class SceneFragment extends Fragment {
             preview.setBackground(new ColorDrawable(Color.rgb(profile.red, profile.green, profile.blue)));
             preview.setVisibility(View.VISIBLE);
 
-            turnOn.setVisibility(View.VISIBLE);
-            transfer.setVisibility(View.VISIBLE);
+            if (bluetoothHelper.isConnected()) {
+                turnOn.setVisibility(View.VISIBLE);
+            } else {
+                turnOn.setVisibility(View.GONE);
+            }
         } else {
             String notSet = getString(R.string.not_set);
             SpannableString spannableNameNotSet = new SpannableString(notSet);
@@ -425,8 +466,7 @@ public class SceneFragment extends Fragment {
             preview.setBackground(new ColorDrawable(Color.argb(0, 0, 0,0)));
             preview.setVisibility(View.GONE);
 
-            turnOn.setVisibility(View.INVISIBLE);
-            transfer.setVisibility(View.INVISIBLE);
+            turnOn.setVisibility(View.GONE);
         }
     }
 
@@ -484,35 +524,13 @@ public class SceneFragment extends Fragment {
         }
     }
 
-    // TODO: Change the logic.
-    public void turnOnDevice(byte red, byte green, byte blue) {
+    public boolean updateDevice(byte red, byte green, byte blue) {
         if (bluetoothHelper.isConnected()) {
             bluetoothHelper.writeData(new byte[]{red, green, blue});
+            return true;
         } else {
             Snackbar.make(fragmentSceneBinding.getRoot(), R.string.request_connection_execute_action, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
-        }
-    }
-
-    // TODO: Change the logic.
-    public void uploadDevice(int sceneID, Profile profile) {
-        if (bluetoothHelper.isConnected()) {
-            String json = "";
-            try {
-                json = new JSONObject()
-                        .put(getString(R.string.request), 1)
-                        .put(getString(R.string.values), new JSONObject()
-                                .put(getString(R.string.red), profile.red)
-                                .put(getString(R.string.green), profile.green)
-                                .put(getString(R.string.blue), profile.blue)
-                        )
-                        .toString();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-//            bluetoothService.writeData(requireContext(), json);
-        } else {
-            Snackbar.make(fragmentSceneBinding.getRoot(), R.string.request_connection_execute_action, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
+            return false;
         }
     }
 }
