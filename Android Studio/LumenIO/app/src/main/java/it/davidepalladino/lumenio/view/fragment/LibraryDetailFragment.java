@@ -164,7 +164,7 @@ public class LibraryDetailFragment extends Fragment {
         }
     };
 
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection notificationServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             notificationService = ((NotificationService.LocalBinder) service).getService();
@@ -254,7 +254,7 @@ public class LibraryDetailFragment extends Fragment {
         requireActivity().registerReceiver(broadcastReceiver, intentFilter);
 
         Intent intentDatabaseService = new Intent(getActivity(), NotificationService.class);
-        requireActivity().bindService(intentDatabaseService, serviceConnection, BIND_AUTO_CREATE);
+        requireActivity().bindService(intentDatabaseService, notificationServiceConnection, BIND_AUTO_CREATE);
 
         /* Verify if the dialog for device selection is open, to update the list of devices. */
         if (dialogSelectDevice != null && dialogSelectDevice.isShowing()) {
