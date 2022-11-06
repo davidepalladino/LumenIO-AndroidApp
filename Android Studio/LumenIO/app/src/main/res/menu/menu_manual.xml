@@ -25,4 +25,11 @@
         android:icon="@drawable/ic_round_add"
         android:title="@string/add"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/bluetooth_settings"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_round_bluetooth_settings"
+        android:title="@string/bluetooth_settings"
+        app:showAsAction="never" />
 </menu>

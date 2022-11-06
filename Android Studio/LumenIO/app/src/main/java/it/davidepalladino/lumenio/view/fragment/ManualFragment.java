@@ -397,6 +397,10 @@ public class ManualFragment extends Fragment {
 
                 break;
 
+            case R.id.bluetooth_settings:
+                showDialogSelectDevice();
+                break;
+
             case R.id.add:
                 dialogSaveProfileBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_save_profile, null, false);
                 dialogSaveProfileBinding.setManualFragment(this);
@@ -474,52 +478,56 @@ public class ManualFragment extends Fragment {
 
         /* If the device is never been set, or the actual device is now not bonded, will be an AlertDialog for a selection. */
         if (deviceSelected.isEmpty() || (!deviceSelected.isEmpty() && bluetoothHelper.getBluetoothAdapter().getRemoteDevice(deviceSelected).getBondState() == 10)) {
-            ArrayList<BluetoothDevice> bluetoothDevices = bluetoothHelper.getList(getString(R.string.app_name));
-            deviceArrayAdapter = new DeviceArrayAdapter(requireContext(), bluetoothDevices);
-
-            View view = requireActivity().getLayoutInflater().inflate(R.layout.dialog_search_device, null);
-
-            dialogSelectDevice = new AlertDialog.Builder(requireActivity())
-                    .setView(view)
-                    .create();
-
-            ImageView buttonBluetoothSetting = view.findViewById(R.id.button_setting_dialog_search_device);
-            buttonBluetoothSetting.setOnClickListener(v -> {
-                Intent intentBluetoothSetting = new Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
-                startActivity(intentBluetoothSetting);
-            });
-
-            ListView listView = view.findViewById(R.id.list_dialog_search_device);
-            listView.setAdapter(deviceArrayAdapter);
-            listView.setOnItemClickListener((parent, view1, position, id) -> {
-                String selection = deviceArrayAdapter.getItem(position).getAddress();
-                SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
-                sharedPreferencesEditor.putString(getString(R.string.device_selected), selection);
-                sharedPreferencesEditor.apply();
-
-                if (bluetoothHelper.pair(selection)) {
-                    bluetoothHelper.connect();
-                }
-
-                dialogSelectDevice.dismiss();
-            });
-
-            LinearLayout noDevice = view.findViewById(R.id.no_device_dialog_search_device);
-
-            if (bluetoothDevices.size() > 0) {
-                noDevice.setVisibility(View.GONE);
-                listView.setVisibility(View.VISIBLE);
-            } else {
-                noDevice.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.GONE);
-            }
-
-            dialogSelectDevice.show();
+            showDialogSelectDevice();
         } else {
             if (bluetoothHelper.pair(deviceSelected)) {
                 bluetoothHelper.connect();
             }
         }
+    }
+
+    private void showDialogSelectDevice() {
+        ArrayList<BluetoothDevice> bluetoothDevices = bluetoothHelper.getList(getString(R.string.app_name));
+        deviceArrayAdapter = new DeviceArrayAdapter(requireContext(), bluetoothDevices);
+
+        View view = requireActivity().getLayoutInflater().inflate(R.layout.dialog_search_device, null);
+
+        dialogSelectDevice = new AlertDialog.Builder(requireActivity())
+                .setView(view)
+                .create();
+
+        ImageView buttonBluetoothSetting = view.findViewById(R.id.button_setting_dialog_search_device);
+        buttonBluetoothSetting.setOnClickListener(v -> {
+            Intent intentBluetoothSetting = new Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+            startActivity(intentBluetoothSetting);
+        });
+
+        ListView listView = view.findViewById(R.id.list_dialog_search_device);
+        listView.setAdapter(deviceArrayAdapter);
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            String selection = deviceArrayAdapter.getItem(position).getAddress();
+            SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+            sharedPreferencesEditor.putString(getString(R.string.device_selected), selection);
+            sharedPreferencesEditor.apply();
+
+            if (bluetoothHelper.pair(selection)) {
+                bluetoothHelper.connect();
+            }
+
+            dialogSelectDevice.dismiss();
+        });
+
+        LinearLayout noDevice = view.findViewById(R.id.no_device_dialog_search_device);
+
+        if (bluetoothDevices.size() > 0) {
+            noDevice.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+        } else {
+            noDevice.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.GONE);
+        }
+
+        dialogSelectDevice.show();
     }
 
     public void updateDevice(byte red, byte green, byte blue) {
