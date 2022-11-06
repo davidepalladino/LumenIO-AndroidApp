@@ -53,11 +53,14 @@ import it.davidepalladino.lumenio.util.DeviceStatusService;
 import it.davidepalladino.lumenio.util.NotificationService;
 import it.davidepalladino.lumenio.view.activity.MainActivity;
 import it.davidepalladino.lumenio.view.dialog.SearchProfileSceneDialog;
+import it.davidepalladino.lumenio.view.viewModel.ManualViewModel;
 import it.davidepalladino.lumenio.view.viewModel.SceneViewModel;
 
 public class SceneFragment extends Fragment {
     private FragmentSceneBinding fragmentSceneBinding;
+
     private SceneViewModel sceneViewModel;
+    private ManualViewModel manualViewModel;
 
     private Menu menu;
     private MenuInflater inflater;
@@ -72,8 +75,6 @@ public class SceneFragment extends Fragment {
     private Profile profileSceneOne;
     private Profile profileSceneTwo;
     private Profile profileSceneThree;
-
-    private int latestSceneSelected = 0;
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -147,9 +148,9 @@ public class SceneFragment extends Fragment {
                     Snackbar.make(fragmentSceneBinding.getRoot(), snackbarMessage, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
                 }
 
-                updateSceneCard(profileSceneOne, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne);
-                updateSceneCard(profileSceneTwo, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo);
-                updateSceneCard(profileSceneThree, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree);
+                updateInfoSceneCard(profileSceneOne, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne);
+                updateInfoSceneCard(profileSceneTwo, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo);
+                updateInfoSceneCard(profileSceneThree, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree);
             }
         }
     };
@@ -172,8 +173,12 @@ public class SceneFragment extends Fragment {
         setHasOptionsMenu(true);
 
         sceneViewModel = new ViewModelProvider(requireActivity()).get(SceneViewModel.class);
+        manualViewModel = new ViewModelProvider(requireActivity()).get(ManualViewModel.class);
 
         bluetoothHelper = BluetoothHelper.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter(), requireContext());
+
+        SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
+        DeviceStatusService.latestSceneLoaded = sharedPreferences.getInt(getString(R.string.latest_scene_selected), 0);
     }
 
     @Override
@@ -184,12 +189,18 @@ public class SceneFragment extends Fragment {
                     profileSceneOne = profile;
                     if (profile == null) {
                         sceneViewModel.getProfileById(scene.profileId).removeObservers(requireActivity());
+                    } else {
+                        if (DeviceStatusService.latestSceneLoaded == scene.id) {
+                            DeviceStatusService.latestRed = (byte) profile.red;
+                            DeviceStatusService.latestGreen = (byte) profile.green;
+                            DeviceStatusService.latestBlue = (byte) profile.blue;
+                        }
                     }
 
-                    updateSceneCard(profile, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne);
+                    updateInfoSceneCard(profile, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne);
                 });
             } else {
-                updateSceneCard(null, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne);
+                updateInfoSceneCard(null, fragmentSceneBinding.nameOne, fragmentSceneBinding.previewOne, fragmentSceneBinding.valuesOne, fragmentSceneBinding.turnOnOne);
             }
         });
 
@@ -199,12 +210,18 @@ public class SceneFragment extends Fragment {
                     profileSceneTwo = profile;
                     if (profile == null) {
                         sceneViewModel.getProfileById(scene.profileId).removeObservers(requireActivity());
+                    } else {
+                        if (DeviceStatusService.latestSceneLoaded == scene.id) {
+                            DeviceStatusService.latestRed = (byte) profile.red;
+                            DeviceStatusService.latestGreen = (byte) profile.green;
+                            DeviceStatusService.latestBlue = (byte) profile.blue;
+                        }
                     }
 
-                    updateSceneCard(profile, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo);
+                    updateInfoSceneCard(profile, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo);
                 });
             } else {
-                updateSceneCard(null, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo);
+                updateInfoSceneCard(null, fragmentSceneBinding.nameTwo, fragmentSceneBinding.previewTwo, fragmentSceneBinding.valuesTwo, fragmentSceneBinding.turnOnTwo);
             }
         });
 
@@ -214,12 +231,18 @@ public class SceneFragment extends Fragment {
                     profileSceneThree = profile;
                     if (profile == null) {
                         sceneViewModel.getProfileById(scene.profileId).removeObservers(requireActivity());
+                    } else {
+                        if (DeviceStatusService.latestSceneLoaded == scene.id) {
+                            DeviceStatusService.latestRed = (byte) profile.red;
+                            DeviceStatusService.latestGreen = (byte) profile.green;
+                            DeviceStatusService.latestBlue = (byte) profile.blue;
+                        }
                     }
 
-                    updateSceneCard(profile, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree);
+                    updateInfoSceneCard(profile, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree);
                 });
             } else {
-                updateSceneCard(null, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree);
+                updateInfoSceneCard(null, fragmentSceneBinding.nameThree, fragmentSceneBinding.previewThree, fragmentSceneBinding.valuesThree, fragmentSceneBinding.turnOnThree);
             }
         });
 
@@ -232,44 +255,58 @@ public class SceneFragment extends Fragment {
         fragmentSceneBinding.turnOnOne.setOnClickListener(v -> {
             updateDevice((byte) profileSceneOne.red, (byte) profileSceneOne.green, (byte) profileSceneOne.blue);
 
-
-            updateStatusCard(latestSceneSelected, latestSceneSelected = 1);
-
-            SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
-            sharedPreferencesEditor.putInt(getString(R.string.latest_scene_selected), latestSceneSelected);
-            sharedPreferencesEditor.apply();
-
             DeviceStatusService.latestRed = (byte) profileSceneOne.red;
             DeviceStatusService.latestGreen = (byte) profileSceneOne.green;
             DeviceStatusService.latestBlue = (byte) profileSceneOne.blue;
+
+            updateStatusSceneCards(DeviceStatusService.latestSceneLoaded, DeviceStatusService.latestSceneLoaded = 1);
+
+            SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+            sharedPreferencesEditor.putInt(getString(R.string.latest_scene_selected), DeviceStatusService.latestSceneLoaded);
+            sharedPreferencesEditor.apply();
+
+            sharedPreferencesEditor.putLong(getString(R.string.latest_profile_selected), profileSceneOne.id);
+            sharedPreferencesEditor.apply();
+
+            new Thread(() -> manualViewModel.loadByID(profileSceneOne.id)).start();
         });
 
         fragmentSceneBinding.turnOnTwo.setOnClickListener(v -> {
             updateDevice((byte) profileSceneTwo.red, (byte) profileSceneTwo.green, (byte) profileSceneTwo.blue);
 
-            updateStatusCard(latestSceneSelected, latestSceneSelected = 2);
-
-            SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
-            sharedPreferencesEditor.putInt(getString(R.string.latest_scene_selected), latestSceneSelected);
-            sharedPreferencesEditor.apply();
-
             DeviceStatusService.latestRed = (byte) profileSceneTwo.red;
             DeviceStatusService.latestGreen = (byte) profileSceneTwo.green;
             DeviceStatusService.latestBlue = (byte) profileSceneTwo.blue;
+
+            updateStatusSceneCards(DeviceStatusService.latestSceneLoaded, DeviceStatusService.latestSceneLoaded = 2);
+
+            SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+            sharedPreferencesEditor.putInt(getString(R.string.latest_scene_selected), DeviceStatusService.latestSceneLoaded);
+            sharedPreferencesEditor.apply();
+
+            sharedPreferencesEditor.putLong(getString(R.string.latest_profile_selected), profileSceneTwo.id);
+            sharedPreferencesEditor.apply();
+
+            new Thread(() -> manualViewModel.loadByID(profileSceneTwo.id)).start();
         });
 
         fragmentSceneBinding.turnOnThree.setOnClickListener(v -> {
             updateDevice((byte) profileSceneTwo.red, (byte) profileSceneTwo.green, (byte) profileSceneTwo.blue);
 
-            updateStatusCard(latestSceneSelected, latestSceneSelected = 3);
-
-            SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
-            sharedPreferencesEditor.putInt(getString(R.string.latest_scene_selected), latestSceneSelected);
-            sharedPreferencesEditor.apply();
-
             DeviceStatusService.latestRed = (byte) profileSceneThree.red;
             DeviceStatusService.latestGreen = (byte) profileSceneThree.green;
             DeviceStatusService.latestBlue = (byte) profileSceneThree.blue;
+
+            updateStatusSceneCards(DeviceStatusService.latestSceneLoaded, DeviceStatusService.latestSceneLoaded = 3);
+
+            SharedPreferences.Editor sharedPreferencesEditor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit();
+            sharedPreferencesEditor.putInt(getString(R.string.latest_scene_selected), DeviceStatusService.latestSceneLoaded);
+            sharedPreferencesEditor.apply();
+
+            sharedPreferencesEditor.putLong(getString(R.string.latest_profile_selected), profileSceneThree.id);
+            sharedPreferencesEditor.apply();
+
+            new Thread(() -> manualViewModel.loadByID(profileSceneThree.id)).start();
         });
 
         fragmentSceneBinding.editOne.setOnClickListener(v -> {
@@ -287,36 +324,9 @@ public class SceneFragment extends Fragment {
             searchProfilesDialog.show(getParentFragmentManager(), SceneFragment.class.getSimpleName());
         });
 
-        SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
-        updateStatusCard(latestSceneSelected, latestSceneSelected = sharedPreferences.getInt(getString(R.string.latest_scene_selected), 0));
+        updateStatusSceneCards(DeviceStatusService.latestSceneLoaded, DeviceStatusService.latestSceneLoaded);
 
         return fragmentSceneBinding.getRoot();
-    }
-
-    private void updateStatusCard(int oldScene, int newScene) {
-        switch (oldScene) {
-            case 1:
-                fragmentSceneBinding.statusSceneOne.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_unselected));
-                break;
-            case 2:
-                fragmentSceneBinding.statusSceneTwo.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_unselected));
-                break;
-            case 3:
-                fragmentSceneBinding.statusSceneThree.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_unselected));
-                break;
-        }
-
-        switch (newScene) {
-            case 1:
-                fragmentSceneBinding.statusSceneOne.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_selected));
-                break;
-            case 2:
-                fragmentSceneBinding.statusSceneTwo.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_selected));
-                break;
-            case 3:
-                fragmentSceneBinding.statusSceneThree.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_selected));
-                break;
-        }
     }
 
     @Override
@@ -436,7 +446,7 @@ public class SceneFragment extends Fragment {
         return true;
     }
 
-    private void updateSceneCard(Profile profile, TextView name, View preview, TextView values, ImageView turnOn) {
+    private void updateInfoSceneCard(Profile profile, TextView name, View preview, TextView values, ImageView turnOn) {
         if (profile != null)  {
             name.setText(profile.name);
 
@@ -467,6 +477,32 @@ public class SceneFragment extends Fragment {
             preview.setVisibility(View.GONE);
 
             turnOn.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateStatusSceneCards(int oldScene, int newScene) {
+        switch (oldScene) {
+            case 1:
+                fragmentSceneBinding.statusSceneOne.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_unselected));
+                break;
+            case 2:
+                fragmentSceneBinding.statusSceneTwo.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_unselected));
+                break;
+            case 3:
+                fragmentSceneBinding.statusSceneThree.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_unselected));
+                break;
+        }
+
+        switch (newScene) {
+            case 1:
+                fragmentSceneBinding.statusSceneOne.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_selected));
+                break;
+            case 2:
+                fragmentSceneBinding.statusSceneTwo.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_selected));
+                break;
+            case 3:
+                fragmentSceneBinding.statusSceneThree.setBackground(ContextCompat.getDrawable(requireContext(), R.color.footer_card_color_background_scene_selected));
+                break;
         }
     }
 
@@ -524,13 +560,11 @@ public class SceneFragment extends Fragment {
         }
     }
 
-    public boolean updateDevice(byte red, byte green, byte blue) {
+    public void updateDevice(byte red, byte green, byte blue) {
         if (bluetoothHelper.isConnected()) {
             bluetoothHelper.writeData(new byte[]{red, green, blue});
-            return true;
         } else {
             Snackbar.make(fragmentSceneBinding.getRoot(), R.string.request_connection_execute_action, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
-            return false;
         }
     }
 }

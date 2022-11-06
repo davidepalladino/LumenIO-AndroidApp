@@ -407,12 +407,9 @@ public class LibraryListFragment extends Fragment {
         }
     }
 
-    public boolean updateDevice(byte red, byte green, byte blue) {
+    public void updateDevice(byte red, byte green, byte blue) {
         if (bluetoothHelper.isConnected() && DeviceStatusService.isTurnedOn) {
             bluetoothHelper.writeData(new byte[]{red, green, blue});
-            return true;
         }
-
-        return false;
     }
 }

@@ -5,5 +5,5 @@ public class DeviceStatusService {
     public static byte latestRed = 0;
     public static byte latestGreen = 0;
     public static byte latestBlue = 0;
-    public static byte sceneLoaded = 0;
+    public static int latestSceneLoaded = 0;
 }

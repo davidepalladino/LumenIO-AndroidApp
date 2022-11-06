@@ -105,7 +105,7 @@ public class ManualFragment extends Fragment {
 
                                 itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
 
-                                updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
+//                                updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
 
                                 DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
                                 DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
@@ -212,6 +212,10 @@ public class ManualFragment extends Fragment {
         });
         fragmentManualBinding.colorPicker.setColorListener((ColorEnvelopeListener) (envelope, fromUser) -> {
             if (fromUser) {
+                if (DeviceStatusService.latestSceneLoaded != 0) {
+                    DeviceStatusService.latestSceneLoaded = 0;
+                }
+
                 manualViewModel.setSelectedHex(envelope.getHexCode().substring(2, 8));
                 manualViewModel.setSelectedRed(envelope.getArgb()[1]);
                 manualViewModel.setSelectedGreen(envelope.getArgb()[2]);
@@ -517,13 +521,10 @@ public class ManualFragment extends Fragment {
         }
     }
 
-    public boolean updateDevice(byte red, byte green, byte blue) {
+    public void updateDevice(byte red, byte green, byte blue) {
         if (bluetoothHelper.isConnected() && DeviceStatusService.isTurnedOn) {
             bluetoothHelper.writeData(new byte[]{red, green, blue});
-            return true;
         }
-
-        return false;
     }
 
     @Override
