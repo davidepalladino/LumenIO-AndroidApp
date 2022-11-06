@@ -24,6 +24,8 @@
     <string name="scene_one">Scene 1</string>
     <string name="scene_two">Scene 2</string>
     <string name="scene_three">Scene 3</string>
+    <string name="scene_edit">Edit</string>
+    <string name="scene_select">Select</string>
 
     <string name="field_empty">This field cannot be empty</string>
     <string name="field_incorrect_start">This field cannot start with white character</string>
@@ -66,5 +68,4 @@
     <string name="notification_channel_name_device">Bluetooth connection</string>
     <string name="notification_channel_description_device">Current status of Bluetooth connection</string>
     <string name="notification_click_here_return_app">Click here to return to the app</string>
-
 </resources>

@@ -40,6 +40,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -448,7 +449,7 @@ public class SceneFragment extends Fragment {
         return true;
     }
 
-    private void updateInfoSceneCard(Profile profile, TextView name, View preview, TextView values, ImageView turnOn) {
+    private void updateInfoSceneCard(Profile profile, TextView name, View preview, TextView values, MaterialButton turnOn) {
         if (profile != null)  {
             name.setText(profile.name);
 

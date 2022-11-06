@@ -109,27 +109,39 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <ImageView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/edit_one"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:src="@drawable/ic_round_edit_scene"
+                        android:layout_marginEnd="3dp"
+                        android:gravity="center"
+                        android:text="@string/scene_edit"
+                        android:textSize="10sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:cornerRadius="@dimen/body_card_padding"
+                        app:iconGravity="textStart"
+                        app:iconSize="16dp"
+                        app:icon="@drawable/ic_round_edit_scene" />
 
-                    <ImageView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/turn_on_one"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:src="@drawable/ic_round_transfer_scene"
+                        android:layout_marginEnd="5dp"
+                        android:gravity="center"
+                        android:text="@string/scene_select"
+                        android:textSize="10sp"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/edit_one"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:visibility="visible" />
+                        tools:visibility="visible"
+                        app:cornerRadius="@dimen/body_card_padding"
+                        app:iconGravity="textStart"
+                        app:iconSize="16dp"
+                        app:icon="@drawable/ic_round_transfer_scene" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
@@ -232,27 +244,39 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <ImageView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/edit_two"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:src="@drawable/ic_round_edit_scene"
+                        android:layout_marginEnd="3dp"
+                        android:gravity="center"
+                        android:text="@string/scene_edit"
+                        android:textSize="10sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:cornerRadius="@dimen/body_card_padding"
+                        app:iconGravity="textStart"
+                        app:iconSize="16dp"
+                        app:icon="@drawable/ic_round_edit_scene" />
 
-                    <ImageView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/turn_on_two"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:src="@drawable/ic_round_transfer_scene"
+                        android:layout_marginEnd="5dp"
+                        android:gravity="center"
+                        android:text="@string/scene_select"
+                        android:textSize="10sp"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/edit_two"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:visibility="visible" />
+                        tools:visibility="visible"
+                        app:cornerRadius="@dimen/body_card_padding"
+                        app:iconGravity="textStart"
+                        app:iconSize="16dp"
+                        app:icon="@drawable/ic_round_transfer_scene" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
@@ -356,27 +380,39 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <ImageView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/edit_three"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:src="@drawable/ic_round_edit_scene"
+                        android:layout_marginEnd="3dp"
+                        android:gravity="center"
+                        android:text="@string/scene_edit"
+                        android:textSize="10sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:cornerRadius="@dimen/body_card_padding"
+                        app:iconGravity="textStart"
+                        app:iconSize="16dp"
+                        app:icon="@drawable/ic_round_edit_scene" />
 
-                    <ImageView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/turn_on_three"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:src="@drawable/ic_round_transfer_scene"
+                        android:layout_marginEnd="5dp"
+                        android:gravity="center"
+                        android:text="@string/scene_select"
+                        android:textSize="10sp"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/edit_three"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:visibility="visible" />
+                        tools:visibility="visible"
+                        app:cornerRadius="@dimen/body_card_padding"
+                        app:iconGravity="textStart"
+                        app:iconSize="16dp"
+                        app:icon="@drawable/ic_round_transfer_scene" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
