@@ -105,7 +105,7 @@ public class ManualFragment extends Fragment {
 
                                 itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
 
-//                                updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
+                                updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
 
                                 DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
                                 DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();

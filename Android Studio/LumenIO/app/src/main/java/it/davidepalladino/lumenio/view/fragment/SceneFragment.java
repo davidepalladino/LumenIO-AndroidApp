@@ -103,6 +103,8 @@ public class SceneFragment extends Fragment {
 
                                 itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
 
+                                updateDevice(DeviceStatusService.latestRed, DeviceStatusService.latestGreen, DeviceStatusService.latestBlue);
+
                                 break;
 
                             case BluetoothHelper.EXTRA_DISCONNECTED:
