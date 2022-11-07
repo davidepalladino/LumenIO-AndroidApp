@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class BluetoothHelper {
     public static final String ACTION_STATUS = "STATUS";
@@ -20,6 +21,7 @@ public class BluetoothHelper {
     public static final String EXTRA_CONNECTED = "CONNECTED";
     public static final String EXTRA_DISCONNECTED = "DISCONNECTED";
     public static final String EXTRA_ERROR = "ERROR";
+    public static final String EXTRA_SWITCHED = "SWITCHED";
 
     public static final int REQUIRE_ENABLE_BLUETOOTH = 1;
 
@@ -30,6 +32,8 @@ public class BluetoothHelper {
     private static BluetoothAdapter bluetoothAdapter;
     private static BluetoothDevice bluetoothDevice;
     private static BluetoothSocket bluetoothSocket;
+
+    public static boolean isRequestedSwitch = false;        // To avoid the latency of `ACTION_ACL_DISCONNECTED`.
 
     private BluetoothHelper() { }
 
@@ -124,6 +128,8 @@ public class BluetoothHelper {
                 try {
                     bluetoothSocket.connect();
 
+                    isRequestedSwitch = false;
+
                     intentExtra = EXTRA_CONNECTED;
                     Log.i(BluetoothHelper.class.getSimpleName(), "Connected to device");
                 } catch (IOException e){
@@ -149,8 +155,39 @@ public class BluetoothHelper {
                 try {
                     bluetoothSocket.close();
 
+                    isRequestedSwitch = false;
+
                     intentExtra = EXTRA_DISCONNECTED;
                     Log.i(BluetoothHelper.class.getSimpleName(), "Disconnected from device");
+                } catch (IOException e){
+                    intentExtra = EXTRA_ERROR;
+                    Log.e(BluetoothHelper.class.getSimpleName(), "Error disconnection with this reason: " + e);
+                }
+
+                Intent intent = new Intent(ACTION_STATUS);
+                intent.putExtra(EXTRA_STATE, intentExtra);
+                context.sendBroadcast(intent);
+            }).start();
+        }
+    }
+
+    public void switchConnection(String macAddressTo) {
+        if (bluetoothSocket != null && bluetoothSocket.isConnected()) {
+            new Thread(() -> {
+                String intentExtra = null;
+
+                try {
+                    bluetoothSocket.close();
+
+                    bluetoothDevice = bluetoothAdapter.getRemoteDevice(macAddressTo);
+                    bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(bluetoothDevice.getUuids()[0].getUuid());
+
+                    bluetoothSocket.connect();
+
+                    isRequestedSwitch = true;
+
+                    intentExtra = EXTRA_SWITCHED;
+                    Log.i(BluetoothHelper.class.getSimpleName(), "Switched between device");
                 } catch (IOException e){
                     intentExtra = EXTRA_ERROR;
                     Log.e(BluetoothHelper.class.getSimpleName(), "Error disconnection with this reason: " + e);

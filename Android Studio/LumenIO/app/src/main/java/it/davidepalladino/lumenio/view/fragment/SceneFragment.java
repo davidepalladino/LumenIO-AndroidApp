@@ -92,7 +92,7 @@ public class SceneFragment extends Fragment {
                         String extra = intent.getStringExtra(BluetoothHelper.EXTRA_STATE);
                         switch (extra) {
                             case BluetoothHelper.EXTRA_CONNECTED:
-                                snackbarMessage = getString(R.string.device_connected);
+                                snackbarMessage = getString(R.string.device_connected) + " " + bluetoothHelper.getDeviceName();
 
                                 notificationService.createNotification(getString(R.string.device_connected_name) + " " + bluetoothHelper.getDeviceName(), getString(R.string.notification_click_here_return_app));
 
@@ -105,6 +105,19 @@ public class SceneFragment extends Fragment {
                                 itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
 
                                 updateDevice(DeviceStatusService.latestRed, DeviceStatusService.latestGreen, DeviceStatusService.latestBlue);
+
+                                break;
+
+                            case BluetoothHelper.EXTRA_SWITCHED:
+                                snackbarMessage = getString(R.string.device_switched) + " " + bluetoothHelper.getDeviceName();
+
+                                notificationService.destroyNotification();
+                                notificationService.createNotification(getString(R.string.device_connected_name) + " " + bluetoothHelper.getDeviceName(), getString(R.string.notification_click_here_return_app));
+
+                                updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
+                                DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
+                                DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
+                                DeviceStatusService.latestBlue = manualViewModel.getSelectedBlue().getValue().byteValue();
 
                                 break;
 
@@ -140,8 +153,10 @@ public class SceneFragment extends Fragment {
                         break;
 
                     case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-                        if (bluetoothHelper.isConnected()) {
+                        if (bluetoothHelper.isConnected() && !BluetoothHelper.isRequestedSwitch) {
                             bluetoothHelper.disconnect();
+                        } else if (BluetoothHelper.isRequestedSwitch) {
+                            BluetoothHelper.isRequestedSwitch = false;
                         }
 
                         break;
@@ -552,8 +567,12 @@ public class SceneFragment extends Fragment {
             sharedPreferencesEditor.putString(getString(R.string.device_selected), selection);
             sharedPreferencesEditor.apply();
 
-            if (bluetoothHelper.pair(selection)) {
-                bluetoothHelper.connect();
+            if (bluetoothHelper.isConnected()) {
+                bluetoothHelper.switchConnection(selection);
+            } else {
+                if (bluetoothHelper.pair(selection)) {
+                    bluetoothHelper.connect();
+                }
             }
 
             dialogSelectDevice.dismiss();

@@ -57,7 +57,8 @@
     <string name="not_found">Not found!</string>
     <string name="no_found_description">The searched element doesn\'t exist</string>
 
-    <string name="device_connected">Connected to device</string>
+    <string name="device_connected">Connected to</string>
+    <string name="device_switched">Switched to new device</string>
     <string name="device_disconnected">Disconnected from device</string>
     <string name="device_error">There is some error with connection</string>
     <string name="device_select">Select a device</string>
