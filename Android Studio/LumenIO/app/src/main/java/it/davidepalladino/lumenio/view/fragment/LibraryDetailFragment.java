@@ -400,10 +400,14 @@ public class LibraryDetailFragment extends Fragment {
             itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
             itemStatus.setTitle(R.string.status_on);
             itemStatus.setVisible(true);
+
+            updateActonBarSubtitle(getString(R.string.on) + " " + bluetoothHelper.getDeviceName());
         } else {
             itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_off));
             itemStatus.setTitle(R.string.status_off);
             itemStatus.setVisible(false);
+
+            updateActonBarSubtitle("");
         }
     }
 

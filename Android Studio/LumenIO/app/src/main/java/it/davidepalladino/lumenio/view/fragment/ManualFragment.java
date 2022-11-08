@@ -365,10 +365,16 @@ public class ManualFragment extends Fragment {
 
         if (bluetoothHelper.isConnected()) {
             itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_connected));
+            itemStatus.setTitle(R.string.status_on);
             itemStatus.setVisible(true);
+
+            updateActonBarSubtitle(getString(R.string.on) + " " + bluetoothHelper.getDeviceName());
         } else {
             itemBluetooth.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_bluetooth_disconnected));
+            itemStatus.setTitle(R.string.status_off);
             itemStatus.setVisible(false);
+
+            updateActonBarSubtitle("");
         }
 
         if (DeviceStatusService.isTurnedOn) {
