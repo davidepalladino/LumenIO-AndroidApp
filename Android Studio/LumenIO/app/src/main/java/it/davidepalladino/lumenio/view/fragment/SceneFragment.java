@@ -1,5 +1,6 @@
 package it.davidepalladino.lumenio.view.fragment;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.BIND_AUTO_CREATE;
 import static it.davidepalladino.lumenio.util.BluetoothHelper.REQUIRE_ENABLE_BLUETOOTH;
 
@@ -96,6 +97,8 @@ public class SceneFragment extends Fragment {
 
                                 notificationService.createNotification(getString(R.string.device_connected_name) + " " + bluetoothHelper.getDeviceName(), getString(R.string.notification_click_here_return_app));
 
+                                updateActonBarSubtitle(getString(R.string.on) + " " + bluetoothHelper.getDeviceName());
+
                                 DeviceStatusService.isTurnedOn = true;
 
                                 itemStatus.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_status_on));
@@ -114,6 +117,8 @@ public class SceneFragment extends Fragment {
                                 notificationService.destroyNotification();
                                 notificationService.createNotification(getString(R.string.device_connected_name) + " " + bluetoothHelper.getDeviceName(), getString(R.string.notification_click_here_return_app));
 
+                                updateActonBarSubtitle(getString(R.string.on) + " " + bluetoothHelper.getDeviceName());
+
                                 updateDevice(manualViewModel.getSelectedRed().getValue().byteValue(), manualViewModel.getSelectedGreen().getValue().byteValue(), manualViewModel.getSelectedBlue().getValue().byteValue());
                                 DeviceStatusService.latestRed = manualViewModel.getSelectedRed().getValue().byteValue();
                                 DeviceStatusService.latestGreen = manualViewModel.getSelectedGreen().getValue().byteValue();
@@ -125,6 +130,8 @@ public class SceneFragment extends Fragment {
                                 snackbarMessage = getString(R.string.device_disconnected);
 
                                 notificationService.destroyNotification();
+
+                                updateActonBarSubtitle("");
 
                                 DeviceStatusService.isTurnedOn = false;
 
@@ -469,6 +476,17 @@ public class SceneFragment extends Fragment {
         return true;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUIRE_ENABLE_BLUETOOTH) {
+                pairAndConnectDevice();
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void updateInfoSceneCard(Profile profile, TextView name, View preview, TextView values, MaterialButton turnOn) {
         if (profile != null)  {
             name.setText(profile.name);
@@ -597,5 +615,10 @@ public class SceneFragment extends Fragment {
         } else {
             Snackbar.make(fragmentSceneBinding.getRoot(), R.string.request_connection_execute_action, 5000).setAnchorView(((MainActivity) requireActivity()).activityMainBinding.bottomNavigation).show();
         }
+    }
+
+    private void updateActonBarSubtitle(String subtitle) {
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        appCompatActivity.getSupportActionBar().setSubtitle(subtitle);
     }
 }

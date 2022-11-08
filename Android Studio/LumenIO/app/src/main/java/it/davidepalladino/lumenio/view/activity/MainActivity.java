@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        fragmentManager.beginTransaction().attach(manualFragment).commit();
+        fragmentManager.beginTransaction().attach(actualFragment).commit();
 
         /*
          * Unregister the Broadcast and unbind the ServiceConnection when the App is in resume state.
