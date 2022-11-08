@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 public class BluetoothHelper {
     public static final String ACTION_STATUS = "STATUS";
@@ -23,7 +22,7 @@ public class BluetoothHelper {
     public static final String EXTRA_ERROR = "ERROR";
     public static final String EXTRA_SWITCHED = "SWITCHED";
 
-    public static final int REQUIRE_ENABLE_BLUETOOTH = 1;
+    public static final int REQUEST_CODE_REQUIRE_ENABLE_BLUETOOTH = 1;
 
     private static Context context = null;
 

@@ -2,7 +2,7 @@ package it.davidepalladino.lumenio.view.fragment;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.BIND_AUTO_CREATE;
-import static it.davidepalladino.lumenio.util.BluetoothHelper.REQUIRE_ENABLE_BLUETOOTH;
+import static it.davidepalladino.lumenio.util.BluetoothHelper.REQUEST_CODE_REQUIRE_ENABLE_BLUETOOTH;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -444,7 +444,7 @@ public class LibraryDetailFragment extends Fragment {
                 if (!bluetoothHelper.isConnected()) {
                     if (!bluetoothHelper.getBluetoothAdapter().isEnabled()) {
                         Intent intentRequestEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(intentRequestEnable, REQUIRE_ENABLE_BLUETOOTH);
+                        startActivityForResult(intentRequestEnable, REQUEST_CODE_REQUIRE_ENABLE_BLUETOOTH);
                     } else {
                         pairAndConnectDevice();
                     }
@@ -516,7 +516,7 @@ public class LibraryDetailFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUIRE_ENABLE_BLUETOOTH) {
+            if (requestCode == REQUEST_CODE_REQUIRE_ENABLE_BLUETOOTH) {
                 pairAndConnectDevice();
             }
         }

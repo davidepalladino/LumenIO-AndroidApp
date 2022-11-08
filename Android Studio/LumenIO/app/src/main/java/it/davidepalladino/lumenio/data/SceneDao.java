@@ -16,6 +16,9 @@ public interface SceneDao {
     @Delete
     void delete(Scene scene);
 
+    @Query("DELETE FROM scenes")
+    void deleteAll();
+
     @Query("SELECT * FROM `scenes`")
     LiveData<List<Scene>> getAll();
 

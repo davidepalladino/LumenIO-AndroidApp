@@ -16,7 +16,9 @@ public class ProfileRepository {
         profileDao = database.profileDao();
     }
 
-    public LiveData<List<Profile>> getAll() { return profileDao.getAll(); }
+    public List<Profile> getAll() { return profileDao.getAll(); }
+
+    public LiveData<List<Profile>> getAllLive() { return profileDao.getAllLive(); }
 
     public LiveData<List<Profile>> getAllByName(String name) { return profileDao.getAllByName("%" + name + "%"); }
 
@@ -54,6 +56,8 @@ public class ProfileRepository {
     public void delete(Profile profile) {
         profileDao.delete(profile);
     }
+
+    public void deleteAll() { profileDao.deleteAll(); }
 
     /**
      * Check and clean the name of profile.

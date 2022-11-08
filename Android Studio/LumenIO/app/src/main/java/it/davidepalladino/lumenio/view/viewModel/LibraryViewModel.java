@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.data.Profile;
@@ -36,7 +35,7 @@ public class LibraryViewModel extends AndroidViewModel {
         super(application);
 
         profileRepository = new ProfileRepository(application);
-        profilesAll = profileRepository.getAll();
+        profilesAll = profileRepository.getAllLive();
     }
 
     public LiveData<Long> getSelectedID() { return selectedID; }
@@ -73,12 +72,20 @@ public class LibraryViewModel extends AndroidViewModel {
 
     public Profile getOneByID(long id) { return profileRepository.getOneById(id); }
 
-    public LiveData<List<Profile>> getAll() {
+    public LiveData<List<Profile>> getAllLive() {
         return profilesAll;
+    }
+
+    public List<Profile> getAll() {
+        return profileRepository.getAll();
     }
 
     public LiveData<List<Profile>> getAllByName(String name) {
         return profileRepository.getAllByName(name);
+    }
+
+    public void insert(Profile profile) {
+        profileRepository.insert(profile);
     }
 
     public void updateValues() {
@@ -97,6 +104,8 @@ public class LibraryViewModel extends AndroidViewModel {
     public void delete() {
         profileRepository.delete(profileSelected);
     }
+
+    public void deleteAll() { profileRepository.deleteAll(); }
 
     public void loadByID(long id) {
         profileSelected = getOneByID(id);

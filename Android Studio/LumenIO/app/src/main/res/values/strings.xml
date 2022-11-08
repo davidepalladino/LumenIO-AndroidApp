@@ -33,6 +33,8 @@
     <string name="library">Library</string>
     <string name="library_list_empty">No profile yet!</string>
     <string name="library_list_empty_description">You can save a profile to the library by the Manual tab</string>
+    <string name="library_export">Export library</string>
+    <string name="library_import">Import library</string>
 
     <string name="add">Add</string>
     <string name="save">Save</string>

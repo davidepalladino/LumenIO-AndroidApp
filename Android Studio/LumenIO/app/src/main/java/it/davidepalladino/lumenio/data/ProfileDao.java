@@ -15,8 +15,14 @@ public interface ProfileDao {
     @Delete
     void delete(Profile profile);
 
+    @Query("DELETE FROM profiles")
+    void deleteAll();
+
     @Query("SELECT * FROM `profiles` ORDER BY `name` ASC")
-    LiveData<List<Profile>> getAll();
+    List<Profile> getAll();
+
+    @Query("SELECT * FROM `profiles` ORDER BY `name` ASC")
+    LiveData<List<Profile>> getAllLive();
 
     @Query("SELECT * FROM `profiles` WHERE `name` LIKE :name ORDER BY `name` ASC")
     LiveData<List<Profile>> getAllByName(String name);

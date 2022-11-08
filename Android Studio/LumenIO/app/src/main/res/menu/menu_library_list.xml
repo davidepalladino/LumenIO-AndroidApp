@@ -19,6 +19,20 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/library_export"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_round_library_export"
+        android:title="@string/library_export"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/library_import"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_round_library_import"
+        android:title="@string/library_import"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/bluetooth_settings"
         android:orderInCategory="100"
         android:icon="@drawable/ic_round_bluetooth_settings"

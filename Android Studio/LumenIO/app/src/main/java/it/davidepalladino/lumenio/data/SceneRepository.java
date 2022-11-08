@@ -29,4 +29,6 @@ public class SceneRepository {
     }
 
     public void delete(Scene scene) { sceneDao.delete(scene); }
+
+    public void deleteAll() { sceneDao.deleteAll(); }
 }

@@ -2,7 +2,7 @@ package it.davidepalladino.lumenio.view.fragment;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.BIND_AUTO_CREATE;
-import static it.davidepalladino.lumenio.util.BluetoothHelper.REQUIRE_ENABLE_BLUETOOTH;
+import static it.davidepalladino.lumenio.util.BluetoothHelper.REQUEST_CODE_REQUIRE_ENABLE_BLUETOOTH;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -15,8 +15,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.ParcelFileDescriptor;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,8 +43,19 @@ import androidx.transition.TransitionInflater;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import it.davidepalladino.lumenio.R;
 import it.davidepalladino.lumenio.data.Profile;
@@ -54,11 +68,18 @@ import it.davidepalladino.lumenio.util.NotificationService;
 import it.davidepalladino.lumenio.view.activity.MainActivity;
 import it.davidepalladino.lumenio.view.viewModel.LibraryViewModel;
 import it.davidepalladino.lumenio.view.viewModel.ManualViewModel;
+import it.davidepalladino.lumenio.view.viewModel.SceneViewModel;
 
 public class LibraryListFragment extends Fragment {
+    private final int REQUEST_CODE_LIBRARY_EXPORT = 2;
+    private final int REQUEST_CODE_LIBRARY_IMPORT = 3;
+    private final String NAMEFILE_LIBRARY_EXPORT_IMPORT = "lumenio_library.json";
+    private final String MIMETYPE_LIBRARY_EXPORT_IMPORT = "application/json";
+
     private FragmentLibraryListBinding fragmentLibraryListBinding;
 
     private LibraryViewModel libraryViewModel;
+    private SceneViewModel sceneViewModel;
     private ManualViewModel manualViewModel;
 
     private Menu menu;
@@ -185,6 +206,7 @@ public class LibraryListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         libraryViewModel = new ViewModelProvider(requireActivity()).get(LibraryViewModel.class);
+        sceneViewModel = new ViewModelProvider(requireActivity()).get(SceneViewModel.class);
         manualViewModel = new ViewModelProvider(requireActivity()).get(ManualViewModel.class);
 
         bluetoothHelper = BluetoothHelper.getInstance(requireActivity().getSystemService(BluetoothManager.class).getAdapter(), requireContext());
@@ -240,10 +262,10 @@ public class LibraryListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.length() != 0) {
-                    libraryViewModel.getAll().removeObserver(profileGetAllObserver);
+                    libraryViewModel.getAllLive().removeObserver(profileGetAllObserver);
                     libraryViewModel.getAllByName(newText).observe(requireActivity(), profileGetAllByNameObserver);
                 } else {
-                    libraryViewModel.getAll().observe(requireActivity(), profileGetAllObserver);
+                    libraryViewModel.getAllLive().observe(requireActivity(), profileGetAllObserver);
 
                     fragmentLibraryListBinding.list.setVisibility(View.VISIBLE);
                     fragmentLibraryListBinding.itemNoFound.setVisibility(View.GONE);
@@ -253,7 +275,7 @@ public class LibraryListFragment extends Fragment {
             }
         });
 
-        libraryViewModel.getAll().observe(requireActivity(), profileGetAllObserver);
+        libraryViewModel.getAllLive().observe(requireActivity(), profileGetAllObserver);
 
         return fragmentLibraryListBinding.getRoot();
     }
@@ -368,7 +390,7 @@ public class LibraryListFragment extends Fragment {
                 if (!bluetoothHelper.isConnected()) {
                     if (!bluetoothHelper.getBluetoothAdapter().isEnabled()) {
                         Intent intentRequestEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(intentRequestEnable, REQUIRE_ENABLE_BLUETOOTH);
+                        startActivityForResult(intentRequestEnable, REQUEST_CODE_REQUIRE_ENABLE_BLUETOOTH);
                     } else {
                         pairAndConnectDevice();
                     }
@@ -381,6 +403,28 @@ public class LibraryListFragment extends Fragment {
             case R.id.bluetooth_settings:
                 showDialogSelectDevice();
                 break;
+
+            case R.id.library_export:
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+                String actualDatetime = simpleDateFormat.format(new Date());
+
+                Intent intentExport = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intentExport.addCategory(Intent.CATEGORY_OPENABLE);
+                intentExport.setType(MIMETYPE_LIBRARY_EXPORT_IMPORT);
+                intentExport.putExtra(Intent.EXTRA_TITLE, actualDatetime + "_" + NAMEFILE_LIBRARY_EXPORT_IMPORT);
+
+                startActivityForResult(intentExport, REQUEST_CODE_LIBRARY_EXPORT);
+
+                break;
+
+            case R.id.library_import:
+                Intent intentImport = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intentImport.addCategory(Intent.CATEGORY_OPENABLE);
+                intentImport.setType(MIMETYPE_LIBRARY_EXPORT_IMPORT);
+
+                startActivityForResult(intentImport, REQUEST_CODE_LIBRARY_IMPORT);
+
+                break;
         }
 
         return true;
@@ -389,12 +433,107 @@ public class LibraryListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUIRE_ENABLE_BLUETOOTH) {
+            if (requestCode == REQUEST_CODE_REQUIRE_ENABLE_BLUETOOTH) {
                 pairAndConnectDevice();
+            } else if ((requestCode == REQUEST_CODE_LIBRARY_EXPORT) || (requestCode == REQUEST_CODE_LIBRARY_IMPORT)) {
+                Uri uri = null;
+                if (data != null) {
+                    uri = data.getData();
+
+                    final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    getActivity().getContentResolver().takePersistableUriPermission(uri, takeFlags);
+
+                    switch (requestCode) {
+                        case REQUEST_CODE_LIBRARY_EXPORT:
+                            exportLibrary(uri);
+                            break;
+                        case REQUEST_CODE_LIBRARY_IMPORT:
+                            importLibrary(uri);
+                            break;
+                    }
+                }
             }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * Export the library to a JSON file provided by the Storage Access Framework.
+     * @param uri URI in object format.
+     */
+    private void exportLibrary(Uri uri) {
+        new Thread(() -> {
+            try {
+                List<Profile> listProfiles = libraryViewModel.getAll();
+                JSONArray jsonArray = new JSONArray();
+
+                for (Profile profile : listProfiles) {
+                    JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("id", profile.id);
+                        jsonObject.put("name", profile.name);
+                        jsonObject.put("red", profile.red);
+                        jsonObject.put("green", profile.green);
+                        jsonObject.put("blue", profile.blue);
+                        jsonObject.put("createdAt", profile.createdAt);
+                        jsonObject.put("updatedAt", profile.createdAt);
+                        jsonObject.put("usedAt", profile.createdAt);
+
+                        jsonArray.put(jsonObject);
+
+                }
+
+                ParcelFileDescriptor parcelFileDescriptor = getActivity().getContentResolver().openFileDescriptor(uri, "w");
+                FileOutputStream fileOutputStream = new FileOutputStream(parcelFileDescriptor.getFileDescriptor());
+
+                fileOutputStream.write((jsonArray.toString()).getBytes());
+
+                fileOutputStream.close();
+                parcelFileDescriptor.close();
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    /**
+     * Import the library from a JSON file provided by the Storage Access Framework.
+     * @param uri URI in object format.
+     */
+    private void importLibrary(Uri uri) {
+        new Thread(() -> {
+            try {
+                InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(inputStream)));
+
+                String line;
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+
+                sceneViewModel.deleteAllScene();
+                libraryViewModel.deleteAll();
+                manualViewModel.loadByID(0);
+
+                DeviceStatusService.latestSceneLoaded = 0;
+
+                JSONArray jsonArray = new JSONArray(stringBuilder.toString());
+
+                for (int j = 0 ; j < jsonArray.length(); j++) {
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(j);
+                    Profile profile = new Profile(jsonObject.getString("name"), jsonObject.getInt("red"), jsonObject.getInt("green"), jsonObject.getInt("blue"));
+                    profile.id = jsonObject.getLong("id");
+                    profile.createdAt = jsonObject.getLong("createdAt");
+                    profile.updatedAt = jsonObject.getLong("updatedAt");
+                    profile.usedAt = jsonObject.getLong("usedAt");
+
+                    libraryViewModel.insert(profile);
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     private void pairAndConnectDevice() {
