@@ -316,7 +316,7 @@ public class SceneFragment extends Fragment {
         });
 
         fragmentSceneBinding.turnOnThree.setOnClickListener(v -> {
-            updateDevice((byte) profileSceneTwo.red, (byte) profileSceneTwo.green, (byte) profileSceneTwo.blue);
+            updateDevice((byte) profileSceneThree.red, (byte) profileSceneThree.green, (byte) profileSceneThree.blue);
 
             DeviceStatusService.latestRed = (byte) profileSceneThree.red;
             DeviceStatusService.latestGreen = (byte) profileSceneThree.green;
